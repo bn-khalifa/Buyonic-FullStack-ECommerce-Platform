@@ -1,0 +1,11 @@
+appsettings.Development.json
+*.env
+
+# VS files
+.vs/
+*.suo
+*.user
+
+# Build output
+bin/
+obj/

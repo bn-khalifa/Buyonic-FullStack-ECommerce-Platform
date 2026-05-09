@@ -1,0 +1,6 @@
+@Buyonic.API_HostAddress = http://localhost:5181
+
+GET {{Buyonic.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
