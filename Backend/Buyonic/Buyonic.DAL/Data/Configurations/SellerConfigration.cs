@@ -10,8 +10,10 @@ namespace Buyonic.DAL.Data.Configurations
 {
     internal class SellerConfigration : IEntityTypeConfiguration<Seller>
     {
+
         public void Configure(EntityTypeBuilder<Seller> builder)
         {
+            /*
             // Table Name (اختياري)
             builder.ToTable("Sellers");
 
@@ -40,6 +42,7 @@ namespace Buyonic.DAL.Data.Configurations
                    .WithOne(p => p.Seller)
                    .HasForeignKey(p => p.sellerId)
                    .OnDelete(DeleteBehavior.Cascade);
+            */
         }
     }
 }

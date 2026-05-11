@@ -12,6 +12,7 @@ namespace Buyonic.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
+            /*
             builder.ToTable("Categories");
 
             builder.HasKey(c => c.Id);
@@ -26,6 +27,8 @@ namespace Buyonic.DAL.Data.Configurations
                    .WithOne(p => p.Category)
                    .HasForeignKey(p => p.categoryId)
                    .OnDelete(DeleteBehavior.Restrict);
+            */
         }
+
     }
 }

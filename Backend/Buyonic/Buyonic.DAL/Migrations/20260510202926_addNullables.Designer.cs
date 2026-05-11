@@ -4,6 +4,7 @@ using Buyonic.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Buyonic.DAL.Migrations
 {
     [DbContext(typeof(BuyonicContext))]
-    partial class BuyonicContextModelSnapshot : ModelSnapshot
+    [Migration("20260510202926_addNullables")]
+    partial class addNullables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,7 +194,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("customerId")
                         .IsUnique();
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
 
                     b.HasData(
                         new
@@ -229,7 +232,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("productId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
 
                     b.HasData(
                         new
@@ -259,7 +262,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -301,7 +304,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("userId")
                         .IsUnique();
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
 
                     b.HasData(
                         new
@@ -338,7 +341,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("paymentMethodId");
 
-                    b.ToTable("CustomerPayments", (string)null);
+                    b.ToTable("CustomerPayments");
 
                     b.HasData(
                         new
@@ -385,7 +388,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("paymentMethodId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
 
                     b.HasData(
                         new
@@ -425,7 +428,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("productId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
 
                     b.HasData(
                         new
@@ -460,7 +463,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods", (string)null);
+                    b.ToTable("PaymentMethods");
 
                     b.HasData(
                         new
@@ -529,7 +532,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("sellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -598,7 +601,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("userId")
                         .IsUnique();
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
 
                     b.HasData(
                         new
@@ -626,7 +629,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("customerId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists", (string)null);
+                    b.ToTable("Wishlists");
 
                     b.HasData(
                         new
@@ -661,7 +664,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("wishlistId");
 
-                    b.ToTable("WishlistItems", (string)null);
+                    b.ToTable("WishlistItems");
 
                     b.HasData(
                         new

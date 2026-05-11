@@ -36,15 +36,23 @@ namespace Buyonic.DAL
 
         public async Task<Customer> GetCustomerByIdAsync(int id)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
-            return customer;
+            return await _context.Customers
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public new async Task<IEnumerable<Customer>> GetAllAsync()
+        {
+            return await _context.Customers
+                .Include(c => c.User)
+                .ToListAsync();
         }
 
         public async Task<Customer> GetCustomerByEmailAsync(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.userId == user.Id);
-            return customer;
+            return await _context.Customers
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.User.Email == email);
         }
     }
 }
