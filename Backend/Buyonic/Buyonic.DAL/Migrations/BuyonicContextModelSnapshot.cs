@@ -191,7 +191,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("customerId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
 
                     b.HasData(
                         new
@@ -229,7 +229,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("productId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
 
                     b.HasData(
                         new
@@ -259,7 +259,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -301,7 +301,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("userId")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
 
                     b.HasData(
                         new
@@ -338,7 +338,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("paymentMethodId");
 
-                    b.ToTable("CustomerPayments");
+                    b.ToTable("CustomerPayments", (string)null);
 
                     b.HasData(
                         new
@@ -385,7 +385,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("paymentMethodId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
 
                     b.HasData(
                         new
@@ -425,7 +425,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("productId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
 
                     b.HasData(
                         new
@@ -460,7 +460,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
 
                     b.HasData(
                         new
@@ -529,7 +529,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("sellerId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -599,7 +599,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("userId")
                         .IsUnique();
 
-                    b.ToTable("Sellers");
+                    b.ToTable("Sellers", (string)null);
 
                     b.HasData(
                         new
@@ -627,7 +627,7 @@ namespace Buyonic.DAL.Migrations
                     b.HasIndex("customerId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlists", (string)null);
 
                     b.HasData(
                         new
@@ -662,7 +662,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("wishlistId");
 
-                    b.ToTable("WishlistItems");
+                    b.ToTable("WishlistItems", (string)null);
 
                     b.HasData(
                         new
