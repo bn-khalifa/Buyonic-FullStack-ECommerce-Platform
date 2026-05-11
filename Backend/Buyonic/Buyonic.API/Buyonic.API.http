@@ -1,6 +1,2 @@
-@Buyonic.API_HostAddress = http://localhost:5181
-
-GET {{Buyonic.API_HostAddress}}/weatherforecast/
+GET http://localhost:5181/api/category/with-products
 Accept: application/json
-
-###

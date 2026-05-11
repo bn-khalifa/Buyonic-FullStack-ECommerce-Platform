@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -45,34 +45,61 @@ namespace Buyonic.API.Controllers
 
         // Seller Related Actions
         [HttpGet("seller")]
-        public async Task<ActionResult<IEnumerable<SellerDTO>>> GetAllSellers()
+        public async Task<ActionResult> GetAllSellers([FromQuery] bool includeProducts)
         {
-            var sellers = await _sellerManager.GetSellersAsync();
-            return Ok(sellers);
+            if (includeProducts)
+            {
+                var sellers = await _sellerManager.GetSellersWithProductsAsync();
+                return Ok(sellers);
+            }
+            else
+            {
+                var sellers = await _sellerManager.GetSellersAsync();
+                return Ok(sellers);
+            }
         }
 
         [HttpGet("seller/{id:int}")]
-        public async Task<ActionResult<SellerDTO>> GetSellerById([FromRoute] int id)
+        public async Task<ActionResult<SellerDTO>> GetSellerById([FromRoute] int id, [FromQuery] bool includeProducts)
         {
-            var seller = await _sellerManager.GetSellerByIdAsync(id);
-            if (seller == null) return NotFound();
-            return Ok(seller);
+            if (includeProducts)
+            {
+                var seller = await _sellerManager.GetSellerByIdWithProductsAsync(id);
+                if (seller == null) return NotFound();
+                return Ok(seller);
+            }
+            else
+            {
+                var seller = await _sellerManager.GetSellerByIdAsync(id);
+                if (seller == null) return NotFound();
+                return Ok(seller);
+            }
         }
+
 
         [HttpGet("seller/search")]
-        public async Task<ActionResult<SellerDTO>> GetSellerByEmail([FromQuery] string email)
+        public async Task<ActionResult> GetSellerByEmail([FromQuery] string email, [FromQuery] bool includeProducts)
         {
-            var seller = await _sellerManager.GetSellerByEmailAsync(email);
-            if (seller == null) return NotFound();
-            return Ok(seller);
+            if (includeProducts)
+            {
+                var result = await _sellerManager.GetSellerByEmailWithProductsAsync(email);
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
+            else
+            {
+                var result = await _sellerManager.GetSellerByEmailAsync(email);
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
         }
 
-        [HttpGet("{id:int}/products")]
-        public async Task<ActionResult<SellerWithProductsDTO>> GetSellerWithProducts([FromRoute] int id)
-        {
-            var seller = await _sellerManager.GetSellerWithProductsAsync(id);
-            if (seller == null) return NotFound();
-            return Ok(seller);
-        }
+        //[HttpGet("{id:int}/products")]
+        //public async Task<ActionResult<SellerWithProductsDTO>> GetSellerWithProducts([FromRoute] int id)
+        //{
+        //    var seller = await _sellerManager.GetSellerByIdWithProductsAsync(id);
+        //    if (seller == null) return NotFound();
+        //    return Ok(seller);
+        //}
     }
 }

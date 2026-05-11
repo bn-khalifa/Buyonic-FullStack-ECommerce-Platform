@@ -1,3 +1,4 @@
+
 using Buyonic.BLL;
 using Buyonic.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -96,10 +97,9 @@ namespace Buyonic.API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                //app.MapOpenApi();
+                app.MapOpenApi();
             }
 
-            app.UseCors("AngularPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 

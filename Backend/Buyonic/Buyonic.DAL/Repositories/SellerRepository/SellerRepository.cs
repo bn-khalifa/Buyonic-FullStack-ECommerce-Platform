@@ -1,42 +1,50 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Buyonic.DAL.Repositories
+namespace Buyonic.DAL
 {
     public class SellerRepository : GenericRepository<Seller>, ISellerRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public SellerRepository(BuyonicContext context, 
-                                UserManager<ApplicationUser> userManager) : base(context) 
+        public SellerRepository(BuyonicContext context,
+                                UserManager<ApplicationUser> userManager) : base(context)
         {
             _userManager = userManager;
         }
 
         public new async Task<IEnumerable<Seller>> GetAllAsync()
+        // sellers with products
+
         {
             return await _context.Sellers
                 .Include(s => s.User)
+                .Include(s=>s.Products)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Seller>> GetAllSellersWithProductsAsync()
         {
-            var sellers = await _context.Sellers.Include(s => s.Products).ToListAsync();
-            return sellers;
+            return await _context.Sellers
+                .Include(s => s.Products)
+                .Include(s => s.User)
+                .ToListAsync();
+        }
+        
+        // get seller by store name
+        public async Task<Seller> GetSellerByStoreNameAsync(string storeName)
+        {
+            return await _context.Sellers
+                .FirstOrDefaultAsync(s => s.storeName == storeName);
         }
 
         public async Task<Seller> GetSellerByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) { 
-                return null; 
+            if (user == null)
+            {
+                return null;
             }
-            
+
             var seller = await _context.Sellers.FirstOrDefaultAsync(s => s.userId == user.Id);
             return seller;
         }
