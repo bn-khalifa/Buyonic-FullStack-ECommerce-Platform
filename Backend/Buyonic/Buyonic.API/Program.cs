@@ -33,6 +33,15 @@ namespace Buyonic.API
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
+            // to avoid Circular Reference! 
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler =
+                        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
