@@ -1,5 +1,8 @@
 
 using Buyonic.DAL;
+using Buyonic.DAL.Repositories.CartRepository;
+using Buyonic.DAL.Repositories.OrderRepository;
+using Buyonic.DAL.Repositories.PaymentMethodRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +13,20 @@ namespace Buyonic.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //
+                   builder.Services.AddControllers()
+           .AddJsonOptions(options =>
+           {
+               options.JsonSerializerOptions.ReferenceHandler =
+                   System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+           });
+
+            builder.Services.AddControllers()
+           .AddJsonOptions(options =>
+           {
+           options.JsonSerializerOptions.ReferenceHandler =
+           System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+           });
 
             // Add services to the container.
 
@@ -31,6 +48,10 @@ namespace Buyonic.API
             builder.Services.AddScoped<ISellerRepository, SellerRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();

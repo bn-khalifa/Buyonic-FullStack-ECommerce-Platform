@@ -1,2 +1,3 @@
-GET http://localhost:5181/api/category/with-products
+GET http://localhost:5181/api/PaymentMethod/1
+
 Accept: application/json
