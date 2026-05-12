@@ -1,9 +1,19 @@
+
+
+using Buyonic.BLL.Managers.Cart;
+using Buyonic.BLL.Managers.Order;
+using Buyonic.BLL.Managers.Payment;
+using Buyonic.DAL.Repositories.CartRepository;
+using Buyonic.DAL.Repositories.CustomerPaymentRepository;
+using Buyonic.DAL.Repositories.OrderRepository;
+using Buyonic.DAL.Repositories.PaymentMethodRepository;
 using Buyonic.BLL.Managers.CategoryMng;
 using Buyonic.BLL.Managers.ProductMng;
 using Buyonic.BLL.Managers.SellerMng;
 using Buyonic.DAL;
 using Buyonic.DAL.Repositories.ProductRepository;
 using Buyonic.BLL;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +28,24 @@ namespace Buyonic.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //
+                   builder.Services.AddControllers()
+           .AddJsonOptions(options =>
+           {
+               options.JsonSerializerOptions.ReferenceHandler =
+                   System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+           });
+
+         //   builder.Services.AddControllers()
+           //.AddJsonOptions(options =>
+           //{
+           //options.JsonSerializerOptions.ReferenceHandler =
+           //System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+           //});
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+            
 
             // DbContext
             builder.Services.AddDbContext<BuyonicContext>(options =>
@@ -31,6 +56,24 @@ namespace Buyonic.API
                 .AddEntityFrameworkStores<BuyonicContext>()
                 .AddDefaultTokenProviders();
 
+            // Repositories & UnitOfWork
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<ISellerRepository, SellerRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<ICartManager, CartManager>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderManager, OrderManager>();
+            builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            builder.Services.AddScoped<IPaymentManager, PaymentManager>();
+            builder.Services.AddScoped<ICustomerPaymentRepository, CustomerPaymentRepository>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+           
+           
             // Repositories & UnitOfWork & Managers
             builder.Services.AddDALServices();
             builder.Services.AddBLLServices();
