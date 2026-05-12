@@ -34,5 +34,10 @@ namespace Buyonic.DAL.Repositories.CartRepository
                     ci.cartId == cartId &&
                     ci.productId == productId);
         }
+
+        public void DeleteCartItem(CartItem cartItem)
+        {
+            _context.CartItems.Remove(cartItem);
+        }
     }
 }

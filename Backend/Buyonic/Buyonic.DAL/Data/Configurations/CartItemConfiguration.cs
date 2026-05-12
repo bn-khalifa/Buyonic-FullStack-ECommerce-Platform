@@ -12,19 +12,19 @@ namespace Buyonic.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<CartItem> builder)
         {
-            builder.HasKey(ci => new
-            {
-                ci.Id,
-                ci.productId
-            });
+            //builder.HasKey(ci => new
+            //{
+            //    ci.Id,
+            //    ci.productId
+            //});
 
-            builder.HasOne(ci => ci.Cart)
-                   .WithMany(c => c.CartItems)
-                   .HasForeignKey(ci => ci.Id);
+            //builder.HasOne(ci => ci.Cart)
+            //       .WithMany(c => c.CartItems)
+            //       .HasForeignKey(ci => ci.Id);
 
-            builder.HasOne(ci => ci.Product)
-                   .WithMany(p => p.CartItems)
-                   .HasForeignKey(ci => ci.productId);
+            //builder.HasOne(ci => ci.Product)
+            //       .WithMany(p => p.CartItems)
+            //       .HasForeignKey(ci => ci.productId);
         }
     }
 }

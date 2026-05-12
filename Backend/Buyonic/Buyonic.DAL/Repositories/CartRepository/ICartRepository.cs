@@ -13,5 +13,7 @@ namespace Buyonic.DAL.Repositories.CartRepository
         Task<Cart> GetCartWithItemsAsync(int cartId);
 
         Task<CartItem> GetCartItemAsync(int cartId, int productId);
+
+        void DeleteCartItem(CartItem cartItem);
     }
 }

@@ -34,6 +34,9 @@ namespace Buyonic.DAL
             SellerRepository = sellerRepository;
             CategoryRepository = categoryRepository;
             ProductRepository = productRepository;
+            this.CartRepository = CartRepository;      
+            this.OrderRepository = OrderRepository;     
+            this.PaymentRepository = PaymentRepository;
         }
 
         public async Task SaveAsync()

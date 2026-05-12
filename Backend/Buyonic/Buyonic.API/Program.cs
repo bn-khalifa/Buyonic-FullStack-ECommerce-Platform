@@ -1,5 +1,6 @@
 
 using Buyonic.BLL;
+using Buyonic.BLL.Managers.Cart;
 using Buyonic.DAL;
 
 using Buyonic.DAL.Repositories.CartRepository;
@@ -42,6 +43,7 @@ namespace Buyonic.API
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+            
 
             // DbContext
             builder.Services.AddDbContext<BuyonicContext>(options =>
@@ -63,6 +65,8 @@ namespace Buyonic.API
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddScoped<ICartManager, CartManager>();
+           
             // Repositories & UnitOfWork & Managers
             builder.Services.AddDALServices();
             builder.Services.AddBLLServices();
