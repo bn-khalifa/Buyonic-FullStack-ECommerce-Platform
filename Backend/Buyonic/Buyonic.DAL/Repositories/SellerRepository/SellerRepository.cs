@@ -16,6 +16,12 @@ namespace Buyonic.DAL
                 .ToListAsync();
         }
 
+        public async Task<Seller> GetSellerByEmailAsync(string email)
+        {
+            return await _context.Sellers
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.User.Email == email);
+        }
         // get seller by id
         public async Task<Seller> GetSellerByIdAsync(int id)
         {

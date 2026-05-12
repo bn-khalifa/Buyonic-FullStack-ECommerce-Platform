@@ -1,5 +1,8 @@
-
+using Buyonic.BLL.Managers.CategoryMng;
+using Buyonic.BLL.Managers.ProductMng;
+using Buyonic.BLL.Managers.SellerMng;
 using Buyonic.DAL;
+using Buyonic.DAL.Repositories.ProductRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +14,7 @@ namespace Buyonic.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
             // DbContext
@@ -33,8 +33,12 @@ namespace Buyonic.API
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            // Managers ← ضيفيهم هنا
+            builder.Services.AddScoped<ISellerManager, SellerManager>();
+            builder.Services.AddScoped<IProductManager, ProductManager>();
+            builder.Services.AddScoped<ICategoryManager, CategoryManager>();
 
-            // to avoid Circular Reference! 
+            // to avoid Circular Reference!
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -44,17 +48,13 @@ namespace Buyonic.API
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
             }
 
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

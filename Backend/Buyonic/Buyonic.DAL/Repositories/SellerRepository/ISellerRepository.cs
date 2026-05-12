@@ -7,5 +7,8 @@
         Task<Seller> GetSellerByIdAsync(int id);
 
         Task<Seller> GetSellerByStoreNameAsync(string storeName);
+
+        Task<Seller> GetSellerByEmailAsync(string email);
+
     }
 }
