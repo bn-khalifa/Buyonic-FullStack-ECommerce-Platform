@@ -1,4 +1,5 @@
 ﻿using Buyonic.DAL.Repositories.CartRepository;
+using Buyonic.DAL.Repositories.CustomerPaymentRepository;
 using Buyonic.DAL.Repositories.OrderRepository;
 using Buyonic.DAL.Repositories.PaymentMethodRepository;
 
@@ -15,8 +16,9 @@ namespace Buyonic.DAL
         public ICartRepository CartRepository { get; }
 
         public IOrderRepository OrderRepository { get; }
-        public IPaymentMethodRepository PaymentRepository { get; }
-
+       
+        public ICustomerPaymentRepository CustomerPaymentRepository { get; }
+        public IPaymentMethodRepository PaymentMethodRepository { get; }
         public UnitOfWork(
             BuyonicContext context,
             ICustomerRepository customerRepository,
@@ -25,8 +27,9 @@ namespace Buyonic.DAL
             IProductRepository productRepository,
             ICartRepository CartRepository,
             IOrderRepository OrderRepository,
-            IPaymentMethodRepository PaymentRepository
-
+            IPaymentMethodRepository PaymentMethodRepository,
+            ICustomerPaymentRepository customerPaymentRepository
+            
             )
         {
             _context = context;
@@ -35,8 +38,9 @@ namespace Buyonic.DAL
             CategoryRepository = categoryRepository;
             ProductRepository = productRepository;
             this.CartRepository = CartRepository;      
-            this.OrderRepository = OrderRepository;     
-            this.PaymentRepository = PaymentRepository;
+            this.OrderRepository = OrderRepository;
+            this.PaymentMethodRepository = PaymentMethodRepository;
+            this.CustomerPaymentRepository = customerPaymentRepository;
         }
 
         public async Task SaveAsync()

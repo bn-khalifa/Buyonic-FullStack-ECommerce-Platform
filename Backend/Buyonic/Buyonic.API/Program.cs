@@ -2,9 +2,11 @@
 using Buyonic.BLL;
 using Buyonic.BLL.Managers.Cart;
 using Buyonic.BLL.Managers.Order;
+using Buyonic.BLL.Managers.Payment;
 using Buyonic.DAL;
 
 using Buyonic.DAL.Repositories.CartRepository;
+using Buyonic.DAL.Repositories.CustomerPaymentRepository;
 using Buyonic.DAL.Repositories.OrderRepository;
 using Buyonic.DAL.Repositories.PaymentMethodRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,12 +35,12 @@ namespace Buyonic.API
                    System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
            });
 
-            builder.Services.AddControllers()
-           .AddJsonOptions(options =>
-           {
-           options.JsonSerializerOptions.ReferenceHandler =
-           System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-           });
+         //   builder.Services.AddControllers()
+           //.AddJsonOptions(options =>
+           //{
+           //options.JsonSerializerOptions.ReferenceHandler =
+           //System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+           //});
 
             // Add services to the container.
 
@@ -60,14 +62,18 @@ namespace Buyonic.API
             builder.Services.AddScoped<ISellerRepository, SellerRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
             builder.Services.AddScoped<ICartRepository, CartRepository>();
-            builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            builder.Services.AddScoped<ICartManager, CartManager>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IOrderManager, OrderManager>();
+            builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            builder.Services.AddScoped<IPaymentManager, PaymentManager>();
+            builder.Services.AddScoped<ICustomerPaymentRepository, CustomerPaymentRepository>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<ICartManager, CartManager>();
+           
            
             // Repositories & UnitOfWork & Managers
             builder.Services.AddDALServices();

@@ -1,4 +1,5 @@
 ﻿using Buyonic.DAL.Repositories.CartRepository;
+using Buyonic.DAL.Repositories.CustomerPaymentRepository;
 using Buyonic.DAL.Repositories.OrderRepository;
 using Buyonic.DAL.Repositories.PaymentMethodRepository;
 
@@ -14,7 +15,10 @@ namespace Buyonic.DAL
         public ICartRepository CartRepository { get; }
 
         public IOrderRepository OrderRepository { get; }
-        //public IPaymentMethodRepository PaymentMethodRepository { get; }
+        public IPaymentMethodRepository PaymentMethodRepository { get; }
+
+        public ICustomerPaymentRepository CustomerPaymentRepository { get; }
+        
 
         public Task SaveAsync();
     }
