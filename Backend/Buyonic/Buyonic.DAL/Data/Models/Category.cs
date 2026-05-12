@@ -6,6 +6,6 @@
         public string name { get; set; }
         public string description { get; set; }
 
-        public ICollection<Product>?products { get; set; } = new List<Product>();
+        public ICollection<Product> products { get; set; } = new List<Product>();
     }
 }

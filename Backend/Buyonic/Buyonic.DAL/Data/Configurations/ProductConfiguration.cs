@@ -12,40 +12,7 @@ namespace Buyonic.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            // Table name (optional)
-            builder.ToTable("Products");
-
-            // Primary Key
-            builder.HasKey(p => p.Id);
-
-            // Properties
-            builder.Property(p => p.name)
-                   .IsRequired()
-                   .HasMaxLength(100);
-
-            builder.Property(p => p.description)
-                   .HasMaxLength(500);
-
-            builder.Property(p => p.price)
-                   .HasColumnType("decimal(18,2)")
-                   .IsRequired();
-
-            builder.Property(p => p.stockQuantity)
-                   .IsRequired();
-
-            // Relationships
-
-            // Product → Category
-            builder.HasOne(p => p.Category)
-                   .WithMany(c => c.products)
-                   .HasForeignKey(p => p.categoryId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            // Product → Seller
-            builder.HasOne(p => p.Seller)
-                   .WithMany(s => s.Products)
-                   .HasForeignKey(p => p.sellerId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(p => p.price).HasColumnType("decimal(18, 2)");
         }
     }
 }

@@ -4,22 +4,9 @@
     {
         private readonly BuyonicContext _context;
         public ICustomerRepository CustomerRepository { get; }
-        public ISellerRepository SellerRepository { get; }
-        public ICategoryRepository CategoryRepository { get; }
-        public IProductRepository ProductRepository { get; }
-
-        public UnitOfWork(
-            BuyonicContext context,
-            ICustomerRepository customerRepository,
-            ISellerRepository sellerRepository,
-            ICategoryRepository categoryRepository,
-            IProductRepository productRepository)
-        {
+        public UnitOfWork(BuyonicContext context, ICustomerRepository customerReopsitory) {
             _context = context;
-            CustomerRepository = customerRepository;
-            SellerRepository = sellerRepository;
-            CategoryRepository = categoryRepository;
-            ProductRepository = productRepository;
+            CustomerRepository = customerReopsitory;
         }
 
         public async Task SaveAsync()

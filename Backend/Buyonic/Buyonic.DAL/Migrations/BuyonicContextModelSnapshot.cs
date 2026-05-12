@@ -70,9 +70,6 @@ namespace Buyonic.DAL.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SellerId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -110,8 +107,6 @@ namespace Buyonic.DAL.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("SellerId");
-
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
@@ -119,7 +114,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2989b6fc-deda-497d-a344-13dbef5b4367",
+                            ConcurrencyStamp = "efe39ae0-281e-4db3-95ba-3d72642cca52",
                             Email = "ahmed@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -140,7 +135,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1867a9a9-1206-4eb3-8141-cf8db209a870",
+                            ConcurrencyStamp = "94b46493-ca8e-4635-b05e-823d70870e3c",
                             Email = "sara@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -161,7 +156,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ea709dd4-122f-49de-8097-ee0688ce966e",
+                            ConcurrencyStamp = "acd5a8ed-c51f-42a4-9b67-460f03124647",
                             Email = "store@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -260,12 +255,11 @@ namespace Buyonic.DAL.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -502,25 +496,20 @@ namespace Buyonic.DAL.Migrations
 
                     b.Property<string>("description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("discount")
                         .HasColumnType("real");
-
-                    b.Property<string>("imageUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<float>("rating")
                         .HasColumnType("real");
@@ -540,7 +529,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("sellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -550,7 +539,6 @@ namespace Buyonic.DAL.Migrations
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             description = "15-inch laptop",
                             discount = 0f,
-                            imageUrl = "",
                             isDeleted = false,
                             name = "Laptop Pro",
                             price = 1200m,
@@ -565,7 +553,6 @@ namespace Buyonic.DAL.Migrations
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             description = "Ergonomic mouse",
                             discount = 0f,
-                            imageUrl = "",
                             isDeleted = false,
                             name = "Wireless Mouse",
                             price = 25m,
@@ -580,7 +567,6 @@ namespace Buyonic.DAL.Migrations
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             description = "Comfortable fit",
                             discount = 0f,
-                            imageUrl = "",
                             isDeleted = false,
                             name = "Cotton T-Shirt",
                             price = 15m,
@@ -603,17 +589,17 @@ namespace Buyonic.DAL.Migrations
 
                     b.Property<string>("storeName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("userId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("userId")
+                        .IsUnique();
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
 
                     b.HasData(
                         new
@@ -857,16 +843,6 @@ namespace Buyonic.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Buyonic.DAL.ApplicationUser", b =>
-                {
-                    b.HasOne("Buyonic.DAL.Seller", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Seller");
-                });
-
             modelBuilder.Entity("Buyonic.DAL.Cart", b =>
                 {
                     b.HasOne("Buyonic.DAL.Customer", "Customer")
@@ -987,8 +963,8 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.Seller", b =>
                 {
                     b.HasOne("Buyonic.DAL.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("userId")
+                        .WithOne("Seller")
+                        .HasForeignKey("Buyonic.DAL.Seller", "userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1079,6 +1055,8 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.ApplicationUser", b =>
                 {
                     b.Navigation("Customer");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Buyonic.DAL.Cart", b =>

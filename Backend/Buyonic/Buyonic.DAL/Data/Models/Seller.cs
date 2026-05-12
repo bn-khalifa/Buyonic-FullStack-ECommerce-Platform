@@ -7,7 +7,7 @@
         public float rating { get; set; }
         public int userId { get; set; }
 
-        public ICollection<Product>?Products { get; set; } = new HashSet<Product>();
-        public ApplicationUser?User { get; set; }
+        public ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public ApplicationUser User { get; set; }
     }
 }
