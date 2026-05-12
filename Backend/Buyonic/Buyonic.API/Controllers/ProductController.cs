@@ -81,7 +81,7 @@ namespace Buyonic.API.Controllers
         {
             if (id != product.Id)
                 return BadRequest();
-
+            product.Id = id;
             await _productManager.UpdateProductAsync(product);
             return NoContent();
         }

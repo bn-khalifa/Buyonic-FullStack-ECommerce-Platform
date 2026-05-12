@@ -81,7 +81,7 @@ namespace Buyonic.API.Controllers
         {
             if (id != category.Id)
                 return BadRequest();
-
+            category.Id = id;
             await _categoryManager.UpdateCategoryAsync(category);
             return NoContent();
         }

@@ -23,10 +23,12 @@ namespace Buyonic.DAL
                 .FirstOrDefaultAsync(s => s.User.Email == email);
         }
         // get seller by id
+
         public async Task<Seller> GetSellerByIdAsync(int id)
         {
             return await _context.Sellers
                 .Include(s => s.Products)
+                .Include(s => s.User)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -38,6 +40,12 @@ namespace Buyonic.DAL
         }
 
         
+        public async Task<IEnumerable<Seller>> GetAllSellersAsync()
+        {
+            return await _context.Sellers
+                .Include(s => s.User)
+                .ToListAsync();
+        }
 
     }
 }

@@ -13,6 +13,8 @@ namespace Buyonic.BLL.Managers.SellerMng
         Task<SellerWithProductsDTO?> GetSellerByIdWithProductsAsync(int id);
         Task<SellerWithProductsDTO?> GetSellerByEmailWithProductsAsync(string email);
 
+        
+
         // POST - PUT - DELETE
         Task AddSellerAsync(Seller seller);
         Task UpdateSellerAsync(Seller seller);

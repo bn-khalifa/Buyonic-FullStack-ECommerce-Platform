@@ -10,5 +10,7 @@
 
         Task<Seller> GetSellerByEmailAsync(string email);
 
+        Task<IEnumerable<Seller>> GetAllSellersAsync();
+
     }
 }

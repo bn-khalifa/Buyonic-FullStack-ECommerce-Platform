@@ -10,7 +10,7 @@ namespace Buyonic.BLL.Managers.SellerMng
 
         public async Task<IEnumerable<SellerDTO>> GetSellersAsync()
         {
-            var sellers = await _uniteOfWork.SellerRepository.GetAllAsync();
+            var sellers = await _uniteOfWork.SellerRepository.GetAllSellersAsync();
             return sellers.Select(SellerDTOsMappers.SellerDtoMapper);
         }
         public async Task<IEnumerable<SellerWithProductsDTO>> GetSellersWithProductsAsync()
@@ -70,5 +70,6 @@ namespace Buyonic.BLL.Managers.SellerMng
             _uniteOfWork.SellerRepository.Delete(seller);
             await _uniteOfWork.SaveAsync();
         }
+        
     }
 }
