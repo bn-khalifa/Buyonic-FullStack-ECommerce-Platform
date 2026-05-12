@@ -1,6 +1,9 @@
-
-using Buyonic.BLL;
+using Buyonic.BLL.Managers.CategoryMng;
+using Buyonic.BLL.Managers.ProductMng;
+using Buyonic.BLL.Managers.SellerMng;
 using Buyonic.DAL;
+using Buyonic.DAL.Repositories.ProductRepository;
+using Buyonic.BLL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +18,6 @@ namespace Buyonic.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -90,9 +91,21 @@ namespace Buyonic.API
                 });
             });
 
+            // Managers ← ضيفيهم هنا
+            builder.Services.AddScoped<ISellerManager, SellerManager>();
+            builder.Services.AddScoped<IProductManager, ProductManager>();
+            builder.Services.AddScoped<ICategoryManager, CategoryManager>();
+
+            // to avoid Circular Reference!
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler =
+                        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                });
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -102,10 +115,7 @@ namespace Buyonic.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }
