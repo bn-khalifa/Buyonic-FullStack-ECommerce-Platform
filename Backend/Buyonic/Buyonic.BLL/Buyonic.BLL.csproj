@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Managers\Category\" />
-    <Folder Include="Managers\Order\" />
     <Folder Include="Managers\Product\" />
   </ItemGroup>
 

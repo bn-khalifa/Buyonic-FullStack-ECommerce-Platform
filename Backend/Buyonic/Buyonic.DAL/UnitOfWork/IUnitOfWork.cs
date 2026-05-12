@@ -13,7 +13,7 @@ namespace Buyonic.DAL
 
         public ICartRepository CartRepository { get; }
 
-        //public IOrderRepository OrderRepository { get; }
+        public IOrderRepository OrderRepository { get; }
         //public IPaymentMethodRepository PaymentMethodRepository { get; }
 
         public Task SaveAsync();

@@ -1,6 +1,7 @@
 
 using Buyonic.BLL;
 using Buyonic.BLL.Managers.Cart;
+using Buyonic.BLL.Managers.Order;
 using Buyonic.DAL;
 
 using Buyonic.DAL.Repositories.CartRepository;
@@ -62,6 +63,7 @@ namespace Buyonic.API
             builder.Services.AddScoped<ICartRepository, CartRepository>();
             builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderManager, OrderManager>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -1,4 +1,6 @@
-﻿using Buyonic.DAL.Repositories.OrderRepository;
+﻿using Buyonic.BLL.DTOs.Order;
+using Buyonic.BLL.Managers.Order;
+using Buyonic.DAL.Repositories.OrderRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,37 +10,52 @@ namespace Buyonic.API.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
+        private readonly IOrderManager _orderManager;
 
-        private readonly IOrderRepository _orderRepository;
-
-        public OrderController(IOrderRepository orderRepository)
+        public OrderController(IOrderManager orderManager)
         {
-            _orderRepository = orderRepository;
+            _orderManager = orderManager;
         }
 
-        // GET: api/Order/customer/Id
+        // GET api/order/customer/{customerId}
         [HttpGet("customer/{customerId}")]
-        public async Task<IActionResult> GetOrdersByCustomerId(int customerId)
+        public async Task<IActionResult> GetOrdersByCustomer(int customerId)
         {
-            var orders = await _orderRepository.GetOrdersByCustomerIdAsync(customerId);
-
-            if (orders == null || !orders.Any())
-                return NotFound("No orders found for this customer");
-
+            var orders = await _orderManager.GetOrdersByCustomerIdAsync(customerId);
             return Ok(orders);
         }
 
-        // GET: api/Order/id
+        // GET api/order/{orderId}
         [HttpGet("{orderId}")]
-        public async Task<IActionResult> GetOrderById(int orderId)
+        public async Task<IActionResult> GetOrder(int orderId)
         {
-            var order = await _orderRepository.GetOrderWithItemsAsync(orderId);
-
+            var order = await _orderManager.GetOrderWithItemsAsync(orderId);
             if (order == null)
-                return NotFound("Order not found");
+                return NotFound("Order not found.");
+
+            return Ok(order);
+        }
+
+        // POST api/order
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder(CreateOrderDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var order = await _orderManager.CreateOrderFromCartAsync(dto);
+            return Ok(order);
+        }
+
+        // PUT api/order/{orderId}/status
+        [HttpPut("{orderId}/status")]
+        public async Task<IActionResult> UpdateStatus(int orderId, string status)
+        {
+            var order = await _orderManager.UpdateOrderStatusAsync(orderId, status);
+            if (order == null)
+                return NotFound("Order not found.");
 
             return Ok(order);
         }
     }
 }
-

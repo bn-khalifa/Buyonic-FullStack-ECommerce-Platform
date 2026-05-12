@@ -75,34 +75,12 @@ namespace Buyonic.BLL.Managers.Cart
         }
 
 
-        //public async Task RemoveFromCartAsync(int cartId, int productId)
-        //{
-        //    var cart = await _uniteOfWork.CartRepository.GetCartWithItemsAsync(cartId);
-        //    if (cart == null) return;
-
-        //    var cartItem = cart.CartItems.FirstOrDefault(i => i.productId == productId);
-        //    if (cartItem == null) return;
-
-        //    cart.CartItems.Remove(cartItem);
-        //    await _uniteOfWork.SaveAsync();
-        //}
-
-        //public async Task ClearCartAsync(int cartId)
-        //{
-        //    var cart = await _uniteOfWork.CartRepository.GetCartWithItemsAsync(cartId);
-        //    if (cart == null) return;
-
-        //    cart.CartItems.Clear();
-        //    await _uniteOfWork.SaveAsync();
-        //}
-
-
         public async Task RemoveFromCartAsync(int cartId, int productId)
         {
             var cartItem = await _uniteOfWork.CartRepository.GetCartItemAsync(cartId, productId);
             if (cartItem == null) return;
 
-            _uniteOfWork.CartRepository.DeleteCartItem(cartItem); // ✅
+            _uniteOfWork.CartRepository.DeleteCartItem(cartItem); 
             await _uniteOfWork.SaveAsync();
         }
 
@@ -112,7 +90,7 @@ namespace Buyonic.BLL.Managers.Cart
             if (cart == null) return;
 
             foreach (var item in cart.CartItems.ToList())
-                _uniteOfWork.CartRepository.DeleteCartItem(item); // ✅
+                _uniteOfWork.CartRepository.DeleteCartItem(item); 
 
             await _uniteOfWork.SaveAsync();
         }
