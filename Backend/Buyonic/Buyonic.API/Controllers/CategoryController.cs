@@ -1,4 +1,5 @@
-﻿using Buyonic.DAL;
+﻿using Buyonic.BLL.Managers.CategoryMng;
+using Buyonic.DAL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
@@ -7,20 +8,18 @@ namespace Buyonic.API.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICategoryManager _categoryManager;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CategoryController(ICategoryManager categoryManager)
         {
-            _unitOfWork = unitOfWork;
+            _categoryManager = categoryManager;
         }
 
         // GET: api/category
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var categories = await _unitOfWork.CategoryRepository
-                .GetAllAsync();
-
+            var categories = await _categoryManager.GetCategoriesAsync();
             return Ok(categories);
         }
 
@@ -28,9 +27,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("with-products")]
         public async Task<IActionResult> GetAllWithProducts()
         {
-            var categories = await _unitOfWork.CategoryRepository
-                .GetAllCategoriesWithProductsAsync();
-
+            var categories = await _categoryManager.GetCategoriesWithProductsAsync();
             return Ok(categories);
         }
 
@@ -38,8 +35,19 @@ namespace Buyonic.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var category = await _unitOfWork.CategoryRepository
-                .GetCategoryByIdAsync(id);
+            var category = await _categoryManager.GetCategoryByIdAsync(id);
+
+            if (category == null)
+                return NotFound();
+
+            return Ok(category);
+        }
+
+        // GET: api/category/5/with-products
+        [HttpGet("{id}/with-products")]
+        public async Task<IActionResult> GetByIdWithProducts(int id)
+        {
+            var category = await _categoryManager.GetCategoryByIdWithProductsAsync(id);
 
             if (category == null)
                 return NotFound();
@@ -51,8 +59,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("by-name/{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
-            var category = await _unitOfWork.CategoryRepository
-                .GetCategoryByNameAsync(name);
+            var category = await _categoryManager.GetCategoryByNameAsync(name);
 
             if (category == null)
                 return NotFound();
@@ -64,10 +71,7 @@ namespace Buyonic.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Category category)
         {
-            _unitOfWork.CategoryRepository.Add(category);
-
-            await _unitOfWork.SaveAsync();
-
+            await _categoryManager.AddCategoryAsync(category);
             return Ok(category);
         }
 
@@ -77,11 +81,8 @@ namespace Buyonic.API.Controllers
         {
             if (id != category.Id)
                 return BadRequest();
-
-            _unitOfWork.CategoryRepository.Update(category);
-
-            await _unitOfWork.SaveAsync();
-
+            category.Id = id;
+            await _categoryManager.UpdateCategoryAsync(category);
             return NoContent();
         }
 
@@ -89,16 +90,7 @@ namespace Buyonic.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _unitOfWork.CategoryRepository
-                .GetByIdAsync(id);
-
-            if (category == null)
-                return NotFound();
-
-            _unitOfWork.CategoryRepository.Delete(category);
-
-            await _unitOfWork.SaveAsync();
-
+            await _categoryManager.DeleteCategoryAsync(id);
             return NoContent();
         }
     }

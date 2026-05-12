@@ -4,6 +4,7 @@ using Buyonic.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Buyonic.DAL.Migrations
 {
     [DbContext(typeof(BuyonicContext))]
-    partial class BuyonicContextModelSnapshot : ModelSnapshot
+    [Migration("20260512133642_addimgprod")]
+    partial class addimgprod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +122,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d762414-871e-4c80-becc-49ce3bc8550e",
+                            ConcurrencyStamp = "2989b6fc-deda-497d-a344-13dbef5b4367",
                             Email = "ahmed@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -140,7 +143,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ecfc7444-95e0-4f8d-a4bf-c2fc0245e8cf",
+                            ConcurrencyStamp = "1867a9a9-1206-4eb3-8141-cf8db209a870",
                             Email = "sara@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -161,7 +164,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "162ad971-c072-4c7b-9560-8c95da7ab1c5",
+                            ConcurrencyStamp = "ea709dd4-122f-49de-8097-ee0688ce966e",
                             Email = "store@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -522,7 +525,7 @@ namespace Buyonic.DAL.Migrations
                     b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<float?>("rating")
+                    b.Property<float>("rating")
                         .HasColumnType("real");
 
                     b.Property<int>("sellerId")
@@ -598,14 +601,13 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<float?>("rating")
+                    b.Property<float>("rating")
                         .HasColumnType("real");
 
                     b.Property<string>("storeName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("userId")
                         .HasColumnType("int");
