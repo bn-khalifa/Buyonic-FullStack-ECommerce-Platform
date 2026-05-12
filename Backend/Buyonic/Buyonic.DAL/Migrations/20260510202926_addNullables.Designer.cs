@@ -4,6 +4,7 @@ using Buyonic.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Buyonic.DAL.Migrations
 {
     [DbContext(typeof(BuyonicContext))]
-    partial class BuyonicContextModelSnapshot : ModelSnapshot
+    [Migration("20260510202926_addNullables")]
+    partial class addNullables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,6 @@ namespace Buyonic.DAL.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SellerId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -109,8 +109,6 @@ namespace Buyonic.DAL.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("SellerId");
 
                     b.ToTable("AspNetUsers", (string)null);
 
@@ -260,12 +258,11 @@ namespace Buyonic.DAL.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -502,25 +499,20 @@ namespace Buyonic.DAL.Migrations
 
                     b.Property<string>("description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("discount")
                         .HasColumnType("real");
-
-                    b.Property<string>("imageUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<float?>("rating")
                         .HasColumnType("real");
@@ -540,7 +532,7 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasIndex("sellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -550,7 +542,6 @@ namespace Buyonic.DAL.Migrations
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             description = "15-inch laptop",
                             discount = 0f,
-                            imageUrl = "",
                             isDeleted = false,
                             name = "Laptop Pro",
                             price = 1200m,
@@ -565,7 +556,6 @@ namespace Buyonic.DAL.Migrations
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             description = "Ergonomic mouse",
                             discount = 0f,
-                            imageUrl = "",
                             isDeleted = false,
                             name = "Wireless Mouse",
                             price = 25m,
@@ -580,7 +570,6 @@ namespace Buyonic.DAL.Migrations
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             description = "Comfortable fit",
                             discount = 0f,
-                            imageUrl = "",
                             isDeleted = false,
                             name = "Cotton T-Shirt",
                             price = 15m,
@@ -602,9 +591,6 @@ namespace Buyonic.DAL.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("storeName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("userId")
@@ -612,9 +598,10 @@ namespace Buyonic.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("userId")
+                        .IsUnique();
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
 
                     b.HasData(
                         new
@@ -858,16 +845,6 @@ namespace Buyonic.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Buyonic.DAL.ApplicationUser", b =>
-                {
-                    b.HasOne("Buyonic.DAL.Seller", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Seller");
-                });
-
             modelBuilder.Entity("Buyonic.DAL.Cart", b =>
                 {
                     b.HasOne("Buyonic.DAL.Customer", "Customer")
@@ -988,8 +965,8 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.Seller", b =>
                 {
                     b.HasOne("Buyonic.DAL.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("userId")
+                        .WithOne("Seller")
+                        .HasForeignKey("Buyonic.DAL.Seller", "userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1080,6 +1057,8 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.ApplicationUser", b =>
                 {
                     b.Navigation("Customer");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Buyonic.DAL.Cart", b =>

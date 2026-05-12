@@ -12,7 +12,7 @@ namespace Buyonic.DAL
         public decimal price { get; set; }
         public float discount { get; set; } = 0;
         public int stockQuantity { get; set; }
-        public float rating { get; set; }
+        public float? rating { get; set; }
         [ForeignKey("Seller")]
         public int sellerId { get; set; }
         [ForeignKey("Category")]
@@ -20,7 +20,7 @@ namespace Buyonic.DAL
 
         public DateTime createdAt { get; set; }
         public DateTime? updatedAt { get; set; }
-        public bool isDeleted { get; set; }
+        public bool isDeleted { get; set; } = false;
 
         public Category?Category { get; set; }
         public Seller?Seller { get; set; }

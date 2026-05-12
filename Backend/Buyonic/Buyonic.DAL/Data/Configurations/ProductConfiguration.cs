@@ -12,6 +12,7 @@ namespace Buyonic.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
+            /*
             // Table name (optional)
             builder.ToTable("Products");
 
@@ -46,6 +47,7 @@ namespace Buyonic.DAL.Data.Configurations
                    .WithMany(s => s.Products)
                    .HasForeignKey(p => p.sellerId)
                    .OnDelete(DeleteBehavior.Restrict);
+            */
         }
     }
 }

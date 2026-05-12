@@ -1,18 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Buyonic.DAL
 {
     public class SellerRepository : GenericRepository<Seller>, ISellerRepository
     {
-        public SellerRepository(BuyonicContext context) : base(context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public SellerRepository(BuyonicContext context,
+                                UserManager<ApplicationUser> userManager) : base(context)
         {
+            _userManager = userManager;
         }
-        
+
+        public new async Task<IEnumerable<Seller>> GetAllAsync()
         // sellers with products
-        public async Task<IEnumerable<Seller>> GetAllSellersWithProductsAsync()
+
         {
             return await _context.Sellers
-                .Include(s => s.Products)
+                .Include(s => s.User)
+                .Include(s=>s.Products)
                 .ToListAsync();
         }
 
@@ -25,13 +31,14 @@ namespace Buyonic.DAL
         // get seller by id
 
         public async Task<Seller> GetSellerByIdAsync(int id)
+        public async Task<IEnumerable<Seller>> GetAllSellersWithProductsAsync()
         {
             return await _context.Sellers
                 .Include(s => s.Products)
                 .Include(s => s.User)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
-
+        
         // get seller by store name
         public async Task<Seller> GetSellerByStoreNameAsync(string storeName)
         {
@@ -47,5 +54,10 @@ namespace Buyonic.DAL
                 .ToListAsync();
         }
 
+        public async Task<Seller> GetSellerByIdAsync(int id)
+        {
+            var seller = await _context.Sellers.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == id);
+            return seller;
+        }
     }
 }
