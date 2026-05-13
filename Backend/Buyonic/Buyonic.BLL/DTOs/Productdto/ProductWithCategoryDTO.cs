@@ -1,4 +1,4 @@
-﻿namespace Buyonic.BLL.DTOs.Productdto
+﻿namespace Buyonic.BLL
 {
     public class ProductWithCategoryDTO
     {

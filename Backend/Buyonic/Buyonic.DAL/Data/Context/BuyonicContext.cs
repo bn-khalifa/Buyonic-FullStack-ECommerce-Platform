@@ -43,5 +43,6 @@ namespace Buyonic.DAL
         public virtual DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
         public virtual DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
         public virtual DbSet<CustomerPayment> CustomerPayments => Set<CustomerPayment>();
+        public virtual DbSet<Review> Reviews => Set<Review>();
     }
 }

@@ -1,11 +1,6 @@
 ﻿using Buyonic.BLL.DTOs.Cart;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Buyonic.BLL.Managers.Cart
+namespace Buyonic.BLL
 {
     public interface ICartManager
     {

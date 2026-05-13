@@ -24,8 +24,10 @@ namespace Buyonic.DAL
 
         public Category?Category { get; set; }
         public Seller?Seller { get; set; }
-        public ICollection<OrderItem>?OrderItems { get; set; } = new List<OrderItem>();
-        public ICollection<CartItem>?artItems { get; set; } = new List<CartItem>();
-        public ICollection<WishlistItem>?WishlistItems { get; set; } = new List<WishlistItem>();
+        public ICollection<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
+        public ICollection<CartItem>? CartItems { get; set; } = new List<CartItem>();
+        public ICollection<WishlistItem>? WishlistItems { get; set; } = new List<WishlistItem>();
+
+        public int? ReviewCount { get; set; } = 0;
     }
 }

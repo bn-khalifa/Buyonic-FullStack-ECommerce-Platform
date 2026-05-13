@@ -1,9 +1,4 @@
-﻿using Buyonic.DAL.Repositories.CartRepository;
-using Buyonic.DAL.Repositories.CustomerPaymentRepository;
-using Buyonic.DAL.Repositories.OrderRepository;
-using Buyonic.DAL.Repositories.PaymentMethodRepository;
-
-namespace Buyonic.DAL
+﻿namespace Buyonic.DAL
 {
     public interface IUnitOfWork
     {
@@ -18,8 +13,8 @@ namespace Buyonic.DAL
         public IPaymentMethodRepository PaymentMethodRepository { get; }
 
         public ICustomerPaymentRepository CustomerPaymentRepository { get; }
-        
 
+        public IReviewRepository ReviewRepository { get; }
         public Task SaveAsync();
     }
 }

@@ -30,13 +30,12 @@ namespace Buyonic.DAL
         }
         // get seller by id
 
-        public async Task<Seller> GetSellerByIdAsync(int id)
         public async Task<IEnumerable<Seller>> GetAllSellersWithProductsAsync()
         {
             return await _context.Sellers
                 .Include(s => s.Products)
                 .Include(s => s.User)
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .ToListAsync();
         }
         
         // get seller by store name

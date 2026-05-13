@@ -1,13 +1,8 @@
 ﻿using Buyonic.BLL.DTOs.Cart;
 using Buyonic.BLL.Mappers;
 using Buyonic.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Buyonic.BLL.Managers.Cart
+namespace Buyonic.BLL
 {
 
     public class CartManager : ICartManager
@@ -35,7 +30,7 @@ namespace Buyonic.BLL.Managers.Cart
             return CartDTOsMappers.CartDtoMapper(cart);
         }
 
-    
+
 
         public async Task AddToCartAsync(int customerId, int productId, int quantity)
         {
@@ -56,7 +51,7 @@ namespace Buyonic.BLL.Managers.Cart
             {
                 cart.CartItems.Add(new global::Buyonic.DAL.CartItem
                 {
-                    
+
                     productId = productId,
                     quantity = quantity
                 });
@@ -80,7 +75,7 @@ namespace Buyonic.BLL.Managers.Cart
             var cartItem = await _uniteOfWork.CartRepository.GetCartItemAsync(cartId, productId);
             if (cartItem == null) return;
 
-            _uniteOfWork.CartRepository.DeleteCartItem(cartItem); 
+            _uniteOfWork.CartRepository.DeleteCartItem(cartItem);
             await _uniteOfWork.SaveAsync();
         }
 
@@ -90,7 +85,7 @@ namespace Buyonic.BLL.Managers.Cart
             if (cart == null) return;
 
             foreach (var item in cart.CartItems.ToList())
-                _uniteOfWork.CartRepository.DeleteCartItem(item); 
+                _uniteOfWork.CartRepository.DeleteCartItem(item);
 
             await _uniteOfWork.SaveAsync();
         }

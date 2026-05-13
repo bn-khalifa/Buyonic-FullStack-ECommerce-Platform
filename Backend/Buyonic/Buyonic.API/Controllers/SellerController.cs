@@ -1,5 +1,4 @@
-﻿using Buyonic.BLL.Managers.SellerMng;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 ﻿using Buyonic.BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +26,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/with-products
+        [Authorize(Roles ="Admin")]
         [HttpGet("with-products")]
         public async Task<IActionResult> GetAllWithProducts()
         {
@@ -35,6 +35,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/5
+        [Authorize(Roles ="Admin,Seller")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -47,6 +48,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/5/with-products
+        [Authorize(Roles = "Admin,Seller")]
         [HttpGet("{id}/with-products")]
         public async Task<IActionResult> GetByIdWithProducts(int id)
         {
@@ -59,8 +61,9 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/by-email/test@test.com
-        [HttpGet("by-email/{email}")]
-        public async Task<IActionResult> GetByEmail(string email)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("by-email")]
+        public async Task<IActionResult> GetByEmail([FromQuery] string email)
         {
             var seller = await _sellerManager.GetSellerByEmailAsync(email);
 
@@ -71,6 +74,7 @@ namespace Buyonic.API.Controllers
         }
 
         // POST: api/seller
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(Seller seller)
         {
@@ -79,6 +83,7 @@ namespace Buyonic.API.Controllers
         }
 
         // PUT: api/seller/5
+        [Authorize(Roles = "Admin,Seller")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Seller seller)
         {
@@ -90,6 +95,7 @@ namespace Buyonic.API.Controllers
         }
 
         // DELETE: api/seller/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

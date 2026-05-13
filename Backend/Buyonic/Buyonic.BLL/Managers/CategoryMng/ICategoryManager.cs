@@ -1,7 +1,6 @@
-﻿using Buyonic.BLL.DTOs.Categorydto;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 
-namespace Buyonic.BLL.Managers.CategoryMng
+namespace Buyonic.BLL
 {
     public interface ICategoryManager
     {

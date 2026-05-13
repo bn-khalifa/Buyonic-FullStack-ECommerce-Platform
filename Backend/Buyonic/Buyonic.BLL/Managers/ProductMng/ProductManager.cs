@@ -1,6 +1,4 @@
-﻿using Buyonic.BLL.DTOs.Productdto;
-using Buyonic.BLL.Mappers;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 
 namespace Buyonic.BLL.Managers.ProductMng
 {

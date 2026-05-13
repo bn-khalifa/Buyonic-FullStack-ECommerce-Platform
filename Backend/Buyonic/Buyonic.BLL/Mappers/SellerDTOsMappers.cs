@@ -1,8 +1,6 @@
-using Buyonic.BLL.DTOs.Sellerdto;
-using Buyonic.BLL.Mappers;
 using Buyonic.DAL;
 
-namespace Buyonic.BLL.Mappers // ← غيري من Buyonic.BLL
+namespace Buyonic.BLL
 {
     public class SellerDTOsMappers
     {

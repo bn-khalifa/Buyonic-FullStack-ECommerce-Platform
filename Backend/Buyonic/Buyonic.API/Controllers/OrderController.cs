@@ -1,7 +1,4 @@
-﻿using Buyonic.BLL.DTOs.Order;
-using Buyonic.BLL.Managers.Order;
-using Buyonic.DAL.Repositories.OrderRepository;
-using Microsoft.AspNetCore.Http;
+﻿using Buyonic.BLL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers

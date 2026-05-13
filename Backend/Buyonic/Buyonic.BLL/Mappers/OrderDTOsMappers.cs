@@ -1,12 +1,6 @@
-﻿using Buyonic.BLL.DTOs.Order;
-using Buyonic.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Buyonic.DAL;
 
-namespace Buyonic.BLL.Mappers
+namespace Buyonic.BLL
 {
     public class OrderDTOsMappers
     {

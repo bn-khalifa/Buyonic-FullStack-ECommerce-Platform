@@ -1,8 +1,6 @@
-﻿using Buyonic.BLL.DTOs.Productdto;
+﻿using Buyonic.DAL;
 
-using Buyonic.DAL;
-
-namespace Buyonic.BLL.Mappers
+namespace Buyonic.BLL
 {
     public class ProductDTOsMappers
     {

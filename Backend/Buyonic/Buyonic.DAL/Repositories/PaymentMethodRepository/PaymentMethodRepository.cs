@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Buyonic.DAL.Repositories.PaymentMethodRepository
+namespace Buyonic.DAL
 {
     public class PaymentMethodRepository :
           GenericRepository<PaymentMethod>,

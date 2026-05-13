@@ -13,12 +13,17 @@ namespace Buyonic.BLL
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public AuthManager(UserManager<ApplicationUser> userManager, IConfiguration configuration, IUnitOfWork unitOfWork)
+        public AuthManager(UserManager<ApplicationUser> userManager, 
+                            IConfiguration configuration, 
+                            IUnitOfWork unitOfWork, 
+                            IEmailService emailService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
         public async Task<IEnumerable<IdentityError>?> RegisterAsync(RegisterDTO dto)
@@ -87,6 +92,35 @@ namespace Buyonic.BLL
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<bool> ForgotPasswordAsync(string email, string resetBaseUrl)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return false;
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = Uri.EscapeDataString(token);
+            var resetLink = $"{resetBaseUrl}?email={email}&token={encodedToken}";
+
+            var body = $@"
+        <h3>Reset Your Password</h3>
+        <p>Click the link below to reset your password. This link expires in 1 hour.</p>
+        <a href='{resetLink}'>Reset Password</a>
+    ";
+
+            await _emailService.SendAsync(email, "Reset Your Buyonic Password", body);
+            return true;
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDTO dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null) return false;
+
+            var decodedToken = Uri.UnescapeDataString(dto.Token);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, dto.NewPassword);
+            return result.Succeeded;
         }
     }
 }

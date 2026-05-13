@@ -1,4 +1,4 @@
-﻿namespace Buyonic.BLL.DTOs.Sellerdto
+﻿namespace Buyonic.BLL
 {
     public class SellerDTO
     {

@@ -1,5 +1,4 @@
-﻿using Buyonic.BLL.DTOs.Productdto;
-using Buyonic.DAL; // ← دي بس كفاية
+﻿using Buyonic.DAL;
 
 namespace Buyonic.BLL.Managers.ProductMng
 {

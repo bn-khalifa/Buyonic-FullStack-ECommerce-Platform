@@ -1,7 +1,6 @@
-﻿using Buyonic.BLL.DTOs.Sellerdto;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 
-namespace Buyonic.BLL.Managers.SellerMng
+namespace Buyonic.BLL
 {
     public interface ISellerManager
     {
@@ -13,7 +12,7 @@ namespace Buyonic.BLL.Managers.SellerMng
         Task<SellerWithProductsDTO?> GetSellerByIdWithProductsAsync(int id);
         Task<SellerWithProductsDTO?> GetSellerByEmailWithProductsAsync(string email);
 
-        
+
 
         // POST - PUT - DELETE
         Task AddSellerAsync(Seller seller);

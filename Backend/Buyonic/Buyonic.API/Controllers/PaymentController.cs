@@ -1,7 +1,5 @@
 ﻿using Buyonic.BLL.DTOs.Payment;
 using Buyonic.BLL.Managers.Payment;
-using Buyonic.DAL.Repositories.PaymentMethodRepository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers

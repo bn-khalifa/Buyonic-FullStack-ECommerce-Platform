@@ -1,7 +1,5 @@
 ﻿using Buyonic.DAL;
-using Buyonic.BLL.DTOs.Sellerdto;
-using Buyonic.BLL.Mappers;
-namespace Buyonic.BLL.Managers.SellerMng
+namespace Buyonic.BLL
 {
     public class SellerManager : ISellerManager
     {
@@ -70,6 +68,6 @@ namespace Buyonic.BLL.Managers.SellerMng
             _uniteOfWork.SellerRepository.Delete(seller);
             await _uniteOfWork.SaveAsync();
         }
-        
+
     }
 }

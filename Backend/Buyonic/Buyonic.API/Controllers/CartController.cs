@@ -1,7 +1,5 @@
-﻿using Buyonic.BLL.Managers.Cart;
-using Buyonic.DAL.Repositories.CartRepository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Buyonic.BLL;
 
 namespace Buyonic.API.Controllers
 {

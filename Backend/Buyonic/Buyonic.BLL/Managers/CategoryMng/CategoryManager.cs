@@ -1,9 +1,7 @@
-﻿
-using Buyonic.BLL.DTOs.Categorydto;
-using Buyonic.BLL.Mappers;
+﻿using Buyonic.BLL.Mappers;
 using Buyonic.DAL;
 
-namespace Buyonic.BLL.Managers.CategoryMng
+namespace Buyonic.BLL
 {
     public class CategoryManager : ICategoryManager
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Buyonic.DAL.Repositories.ProductRepository
+namespace Buyonic.DAL
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
