@@ -41,16 +41,29 @@ namespace Buyonic.BLL
             if (category == null) return null;
             return CategoryDTOsMappers.CategoryDtoMapper(category);
         }
-        public async Task AddCategoryAsync(Category category)
+        public async Task AddCategoryAsync(CategoryDTO dto)
         {
+            var category = new Category
+            {
+                name = dto.Name,
+                description = dto.Description
+            };
             _unitOfWork.CategoryRepository.Add(category);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task UpdateCategoryAsync(Category category)
+        public async Task UpdateCategoryAsync(int id, CategoryDTO dto)
         {
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+            if (category == null) return;
+
+            category.name = dto.Name;
+            category.description = dto.Description;
+
             _unitOfWork.CategoryRepository.Update(category);
             await _unitOfWork.SaveAsync();
+
         }
 
         public async Task DeleteCategoryAsync(int id)

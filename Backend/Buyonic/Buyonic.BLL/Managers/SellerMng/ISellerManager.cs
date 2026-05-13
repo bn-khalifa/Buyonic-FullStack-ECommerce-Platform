@@ -15,8 +15,8 @@ namespace Buyonic.BLL
 
 
         // POST - PUT - DELETE
-        Task AddSellerAsync(Seller seller);
-        Task UpdateSellerAsync(Seller seller);
+        Task AddSellerAsync(CreateSellerDTO seller);
+        Task UpdateSellerAsync(int id, UpdateSellerDTO seller);
         Task DeleteSellerAsync(int id);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Buyonic.BLL;
-using Buyonic.DAL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
@@ -69,7 +68,7 @@ namespace Buyonic.API.Controllers
 
         // POST: api/category
         [HttpPost]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(CategoryDTO category)
         {
             await _categoryManager.AddCategoryAsync(category);
             return Ok(category);
@@ -77,12 +76,12 @@ namespace Buyonic.API.Controllers
 
         // PUT: api/category/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Category category)
+        public async Task<IActionResult> Update(int id, CategoryDTO category)
         {
             if (id != category.Id)
                 return BadRequest();
-            category.Id = id;
-            await _categoryManager.UpdateCategoryAsync(category);
+
+            await _categoryManager.UpdateCategoryAsync(id, category);
             return NoContent();
         }
 

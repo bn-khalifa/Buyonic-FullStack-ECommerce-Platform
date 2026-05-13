@@ -1,5 +1,5 @@
-﻿using Buyonic.BLL.Managers.ProductMng;
-using Buyonic.DAL;
+﻿using Buyonic.BLL;
+using Buyonic.BLL.Managers.ProductMng;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
@@ -69,7 +69,7 @@ namespace Buyonic.API.Controllers
 
         // POST: api/product
         [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(ProductDTO product)
         {
             await _productManager.AddProductAsync(product);
             return Ok(product);
@@ -77,12 +77,12 @@ namespace Buyonic.API.Controllers
 
         // PUT: api/product/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Product product)
+        public async Task<IActionResult> Update(int id, ProductDTO product)
         {
             if (id != product.Id)
                 return BadRequest();
-            product.Id = id;
-            await _productManager.UpdateProductAsync(product);
+
+            await _productManager.UpdateProductAsync(id, product);
             return NoContent();
         }
 

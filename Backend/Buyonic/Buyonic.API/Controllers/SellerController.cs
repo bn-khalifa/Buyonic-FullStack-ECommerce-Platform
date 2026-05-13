@@ -1,4 +1,3 @@
-﻿using Buyonic.DAL;
 ﻿using Buyonic.BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/with-products
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("with-products")]
         public async Task<IActionResult> GetAllWithProducts()
         {
@@ -35,7 +34,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/5
-        [Authorize(Roles ="Admin,Seller")]
+        [Authorize(Roles = "Admin,Seller")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -76,7 +75,7 @@ namespace Buyonic.API.Controllers
         // POST: api/seller
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(Seller seller)
+        public async Task<IActionResult> Create(CreateSellerDTO seller)
         {
             await _sellerManager.AddSellerAsync(seller);
             return Ok(seller);
@@ -85,12 +84,10 @@ namespace Buyonic.API.Controllers
         // PUT: api/seller/5
         [Authorize(Roles = "Admin,Seller")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Seller seller)
+        public async Task<IActionResult> Update(int id, UpdateSellerDTO seller)
         {
-            if (id != seller.Id)
-                return BadRequest();
-            seller.Id = id;
-            await _sellerManager.UpdateSellerAsync(seller);
+            await _sellerManager.UpdateSellerAsync(id, seller);
+
             return NoContent();
         }
 

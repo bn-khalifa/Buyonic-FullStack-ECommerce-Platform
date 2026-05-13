@@ -49,14 +49,25 @@ namespace Buyonic.BLL
         }
 
 
-        public async Task AddSellerAsync(Seller seller)
+        public async Task AddSellerAsync(CreateSellerDTO dto)
         {
+            var seller = new Seller
+            {
+                storeName = dto.StoreName,
+                userId = dto.UserId
+            };
             _uniteOfWork.SellerRepository.Add(seller);
             await _uniteOfWork.SaveAsync();
         }
 
-        public async Task UpdateSellerAsync(Seller seller)
+        public async Task UpdateSellerAsync(int id, UpdateSellerDTO dto)
         {
+            var seller = await _uniteOfWork.SellerRepository.GetByIdAsync(id);
+            if (seller == null) return;
+
+            seller.storeName = dto.storeName;
+            seller.rating = dto.rating;
+
             _uniteOfWork.SellerRepository.Update(seller);
             await _uniteOfWork.SaveAsync();
         }

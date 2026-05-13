@@ -1,7 +1,6 @@
 
 ### Get All Products
 GET http://localhost:5181/api/product
-
 Accept: application/json
 
 ### Create Product

@@ -9,8 +9,8 @@ namespace Buyonic.BLL
         Task<CategoryDTO?> GetCategoryByIdAsync(int id);
         Task<CategoryWithProductsDTO?> GetCategoryByIdWithProductsAsync(int id);
         Task<CategoryDTO?> GetCategoryByNameAsync(string name);
-        Task AddCategoryAsync(Category category);
-        Task UpdateCategoryAsync(Category category);
+        Task AddCategoryAsync(CategoryDTO category);
+        Task UpdateCategoryAsync(int id, CategoryDTO category);
         Task DeleteCategoryAsync(int id);
     }
 }

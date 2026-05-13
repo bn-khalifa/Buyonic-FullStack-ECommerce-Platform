@@ -45,14 +45,38 @@ namespace Buyonic.BLL.Managers.ProductMng
         }
 
 
-        public async Task AddProductAsync(Product product)
+        public async Task AddProductAsync(ProductDTO dto)
         {
+
+            var product = new Product
+            {
+                name = dto.Name,
+                imageUrl = dto.ImageUrl,
+                price = dto.Price,
+                discount = dto.Discount,
+                stockQuantity = dto.StockQuantity,
+                description = dto.Description,
+                categoryId = dto.CategoryId,
+                sellerId = dto.SellerId
+            };
             _unitOfWork.ProductRepository.Add(product);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task UpdateProductAsync(int id,ProductDTO dto)
         {
+            var product = await _unitOfWork.ProductRepository.GetByIdAsync(id);
+            if (product == null) return;
+
+            product.name = dto.Name;
+            product.imageUrl = dto.ImageUrl;
+            product.price = dto.Price;
+            product.discount = dto.Discount;
+            product.stockQuantity = dto.StockQuantity;
+            product.description = dto.Description;
+            product.sellerId = dto.SellerId;
+            product.categoryId = dto.CategoryId;
+
             _unitOfWork.ProductRepository.Update(product);
             await _unitOfWork.SaveAsync();
         }
