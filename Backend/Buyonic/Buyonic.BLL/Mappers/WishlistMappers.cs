@@ -15,10 +15,10 @@ namespace Buyonic.BLL
         {
             Id = i.Id,
             ProductId = i.productId,
-            ProductName = i.Product.name,
-            Price = i.Product.price,
-            Rating = i.Product.rating,
-            Discount = i.Product.discount
+            ProductName = i.Product.Name,
+            Price = i.Product.Price,
+            Rating = i.Product.Rating,
+            Discount = i.Product.Discount
         };
     }
 }

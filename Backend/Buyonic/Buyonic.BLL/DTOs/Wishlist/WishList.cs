@@ -13,8 +13,8 @@
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }
-        public float? Rating { get; set; }
-        public float Discount { get; set; }
+        public decimal? Rating { get; set; }
+        public decimal Discount { get; set; }
     }
 
     public class AddToWishlistDTO
