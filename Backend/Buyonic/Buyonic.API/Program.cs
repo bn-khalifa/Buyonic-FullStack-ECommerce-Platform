@@ -1,19 +1,20 @@
 
-using Buyonic.BLL;
+
 using Buyonic.BLL.Managers.Cart;
 using Buyonic.BLL.Managers.Order;
 using Buyonic.BLL.Managers.Payment;
-using Buyonic.DAL;
-
 using Buyonic.DAL.Repositories.CartRepository;
 using Buyonic.DAL.Repositories.CustomerPaymentRepository;
 using Buyonic.DAL.Repositories.OrderRepository;
 using Buyonic.DAL.Repositories.PaymentMethodRepository;
+using Buyonic.BLL.Managers.CategoryMng;
+using Buyonic.BLL.Managers.ProductMng;
+using Buyonic.BLL.Managers.SellerMng;
+using Buyonic.DAL;
+using Buyonic.DAL.Repositories.ProductRepository;
+using Buyonic.BLL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -41,8 +42,6 @@ namespace Buyonic.API
            //options.JsonSerializerOptions.ReferenceHandler =
            //System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
            //});
-
-            // Add services to the container.
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -135,10 +134,21 @@ namespace Buyonic.API
                 });
             });
 
+            // Managers ← ضيفيهم هنا
+            builder.Services.AddScoped<ISellerManager, SellerManager>();
+            builder.Services.AddScoped<IProductManager, ProductManager>();
+            builder.Services.AddScoped<ICategoryManager, CategoryManager>();
+
+            // to avoid Circular Reference!
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler =
+                        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -148,10 +158,7 @@ namespace Buyonic.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

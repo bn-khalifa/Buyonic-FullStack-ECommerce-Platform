@@ -1,5 +1,6 @@
-﻿using Buyonic.BLL;
+﻿using Buyonic.BLL.Managers.SellerMng;
 using Buyonic.DAL;
+﻿using Buyonic.BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,20 +11,26 @@ namespace Buyonic.API.Controllers
     [ApiController]
     public class SellerController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ISellerManager _sellerManager;
 
-        public SellerController(IUnitOfWork unitOfWork)
+        public SellerController(ISellerManager sellerManager)
         {
-            _unitOfWork = unitOfWork;
+            _sellerManager = sellerManager;
         }
 
         // GET: api/seller
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var sellers = await _unitOfWork.SellerRepository
-                .GetAllSellersWithProductsAsync();
+            var sellers = await _sellerManager.GetSellersAsync();
+            return Ok(sellers);
+        }
 
+        // GET: api/seller/with-products
+        [HttpGet("with-products")]
+        public async Task<IActionResult> GetAllWithProducts()
+        {
+            var sellers = await _sellerManager.GetSellersWithProductsAsync();
             return Ok(sellers);
         }
 
@@ -31,8 +38,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var seller = await _unitOfWork.SellerRepository
-                .GetSellerByIdAsync(id);
+            var seller = await _sellerManager.GetSellerByIdAsync(id);
 
             if (seller == null)
                 return NotFound();
@@ -40,12 +46,23 @@ namespace Buyonic.API.Controllers
             return Ok(seller);
         }
 
-        // GET: api/seller/by-name/store1
-        [HttpGet("by-name/{name}")]
-        public async Task<IActionResult> GetByStoreName(string name)
+        // GET: api/seller/5/with-products
+        [HttpGet("{id}/with-products")]
+        public async Task<IActionResult> GetByIdWithProducts(int id)
         {
-            var seller = await _unitOfWork.SellerRepository
-                .GetSellerByStoreNameAsync(name);
+            var seller = await _sellerManager.GetSellerByIdWithProductsAsync(id);
+
+            if (seller == null)
+                return NotFound();
+
+            return Ok(seller);
+        }
+
+        // GET: api/seller/by-email/test@test.com
+        [HttpGet("by-email/{email}")]
+        public async Task<IActionResult> GetByEmail(string email)
+        {
+            var seller = await _sellerManager.GetSellerByEmailAsync(email);
 
             if (seller == null)
                 return NotFound();
@@ -57,10 +74,7 @@ namespace Buyonic.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Seller seller)
         {
-            _unitOfWork.SellerRepository.Add(seller);
-
-            await _unitOfWork.SaveAsync();
-
+            await _sellerManager.AddSellerAsync(seller);
             return Ok(seller);
         }
 
@@ -70,11 +84,8 @@ namespace Buyonic.API.Controllers
         {
             if (id != seller.Id)
                 return BadRequest();
-
-            _unitOfWork.SellerRepository.Update(seller);
-
-            await _unitOfWork.SaveAsync();
-
+            seller.Id = id;
+            await _sellerManager.UpdateSellerAsync(seller);
             return NoContent();
         }
 
@@ -82,16 +93,7 @@ namespace Buyonic.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var seller = await _unitOfWork.SellerRepository
-                .GetByIdAsync(id);
-
-            if (seller == null)
-                return NotFound();
-
-            _unitOfWork.SellerRepository.Delete(seller);
-
-            await _unitOfWork.SaveAsync();
-
+            await _sellerManager.DeleteSellerAsync(id);
             return NoContent();
         }
     }

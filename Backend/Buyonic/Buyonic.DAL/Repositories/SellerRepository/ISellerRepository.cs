@@ -7,5 +7,10 @@
         Task<Seller> GetSellerByIdAsync(int id);
         Task<Seller> GetSellerByEmailAsync(string email);
         Task<Seller> GetSellerByStoreNameAsync(string storeName);
+
+        Task<Seller> GetSellerByEmailAsync(string email);
+
+        Task<IEnumerable<Seller>> GetAllSellersAsync();
+
     }
 }

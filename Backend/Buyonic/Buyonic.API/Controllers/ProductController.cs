@@ -1,4 +1,5 @@
-﻿using Buyonic.DAL;
+﻿using Buyonic.BLL.Managers.ProductMng;
+using Buyonic.DAL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
@@ -7,20 +8,18 @@ namespace Buyonic.API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductManager _productManager;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IProductManager productManager)
         {
-            _unitOfWork = unitOfWork;
+            _productManager = productManager;
         }
 
         // GET: api/product
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var products = await _unitOfWork.ProductRepository
-                .GetAllAsync();
-
+            var products = await _productManager.GetProductsAsync();
             return Ok(products);
         }
 
@@ -28,9 +27,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("with-sellers")]
         public async Task<IActionResult> GetAllWithSellers()
         {
-            var products = await _unitOfWork.ProductRepository
-                .GetAllProductsWithSellersAsync();
-
+            var products = await _productManager.GetProductsWithSellersAsync();
             return Ok(products);
         }
 
@@ -38,19 +35,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("with-categories")]
         public async Task<IActionResult> GetAllWithCategories()
         {
-            var products = await _unitOfWork.ProductRepository
-                .GetAllProductsWithCategoriesAsync();
-
-            return Ok(products);
-        }
-
-        // GET: api/product/with-order-items
-        [HttpGet("with-order-items")]
-        public async Task<IActionResult> GetAllWithOrderItems()
-        {
-            var products = await _unitOfWork.ProductRepository
-                .GetAllProductsWithOrderItemsAsync();
-
+            var products = await _productManager.GetProductsWithCategoriesAsync();
             return Ok(products);
         }
 
@@ -58,8 +43,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var product = await _unitOfWork.ProductRepository
-                .GetProductByIdAsync(id);
+            var product = await _productManager.GetProductByIdAsync(id);
 
             if (product == null)
                 return NotFound();
@@ -71,9 +55,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("by-category/{categoryId}")]
         public async Task<IActionResult> GetByCategory(int categoryId)
         {
-            var products = await _unitOfWork.ProductRepository
-                .GetProductsByCategoryAsync(categoryId);
-
+            var products = await _productManager.GetProductsByCategoryAsync(categoryId);
             return Ok(products);
         }
 
@@ -81,9 +63,7 @@ namespace Buyonic.API.Controllers
         [HttpGet("by-seller/{sellerId}")]
         public async Task<IActionResult> GetBySeller(int sellerId)
         {
-            var products = await _unitOfWork.ProductRepository
-                .GetProductsBySellerAsync(sellerId);
-
+            var products = await _productManager.GetProductsBySellerAsync(sellerId);
             return Ok(products);
         }
 
@@ -91,10 +71,7 @@ namespace Buyonic.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            _unitOfWork.ProductRepository.Add(product);
-
-            await _unitOfWork.SaveAsync();
-
+            await _productManager.AddProductAsync(product);
             return Ok(product);
         }
 
@@ -104,11 +81,8 @@ namespace Buyonic.API.Controllers
         {
             if (id != product.Id)
                 return BadRequest();
-
-            _unitOfWork.ProductRepository.Update(product);
-
-            await _unitOfWork.SaveAsync();
-
+            product.Id = id;
+            await _productManager.UpdateProductAsync(product);
             return NoContent();
         }
 
@@ -116,16 +90,7 @@ namespace Buyonic.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _unitOfWork.ProductRepository
-                .GetByIdAsync(id);
-
-            if (product == null)
-                return NotFound();
-
-            _unitOfWork.ProductRepository.Delete(product);
-
-            await _unitOfWork.SaveAsync();
-
+            await _productManager.DeleteProductAsync(id);
             return NoContent();
         }
     }
