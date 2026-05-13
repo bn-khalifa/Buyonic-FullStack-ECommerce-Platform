@@ -15,6 +15,7 @@
         public ICustomerPaymentRepository CustomerPaymentRepository { get; }
 
         public IReviewRepository ReviewRepository { get; }
+        IWishlistRepository WishlistRepository { get; }
         public Task SaveAsync();
     }
 }

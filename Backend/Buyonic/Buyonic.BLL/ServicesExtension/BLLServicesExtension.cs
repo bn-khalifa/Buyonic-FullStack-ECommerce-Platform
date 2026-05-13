@@ -23,6 +23,7 @@ namespace Buyonic.BLL
             services.AddScoped<IProductManager, ProductManager>();
             services.AddScoped<ICategoryManager, CategoryManager>();
             services.AddScoped<IReviewManager, ReviewManager>();
+            services.AddScoped<IWishlistManager, WishlistManager>();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Security.Claims;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReviewController : ControllerBase

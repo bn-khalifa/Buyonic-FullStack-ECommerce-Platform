@@ -16,6 +16,7 @@
         public IPaymentMethodRepository PaymentMethodRepository { get; }
 
         public IReviewRepository ReviewRepository { get; }
+        public IWishlistRepository WishlistRepository { get; }
 
         public UnitOfWork(
             BuyonicContext context,
@@ -27,7 +28,8 @@
             IOrderRepository orderRepository,
             IPaymentMethodRepository paymentMethodRepository,
             ICustomerPaymentRepository customerPaymentRepository,
-            IReviewRepository reviewRepository
+            IReviewRepository reviewRepository,
+            IWishlistRepository wishlistRepository
             )
         {
             _context = context;
@@ -35,11 +37,12 @@
             SellerRepository = sellerRepository;
             CategoryRepository = categoryRepository;
             ProductRepository = productRepository;
-            this.CartRepository = cartRepository;
-            this.OrderRepository = orderRepository;
-            this.PaymentMethodRepository = paymentMethodRepository;
-            this.CustomerPaymentRepository = customerPaymentRepository;
-            this.ReviewRepository = reviewRepository;
+            CartRepository = cartRepository;
+            OrderRepository = orderRepository;
+            PaymentMethodRepository = paymentMethodRepository;
+            CustomerPaymentRepository = customerPaymentRepository;
+            ReviewRepository = reviewRepository;
+            WishlistRepository = wishlistRepository;
         }
 
         public async Task SaveAsync()

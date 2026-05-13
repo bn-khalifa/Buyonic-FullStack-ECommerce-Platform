@@ -16,6 +16,7 @@ namespace Buyonic.DAL
             services.AddScoped<ICustomerPaymentRepository, CustomerPaymentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IWishlistRepository, WishlistRepository>();
         }
     }
 }
