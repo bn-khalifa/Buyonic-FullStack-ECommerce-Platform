@@ -67,7 +67,7 @@ namespace Buyonic.DAL
 
             // 9. Orders
             modelBuilder.Entity<Order>().HasData(
-                new Order { Id = 1, customerId = 1, paymentMethodId = 1, status = "Pending", totalAmount = 1225m, createdAt = seedDate }
+                new Order { Id = 1, customerId = 1, paymentMethodId = 1,ShippingAddress="Cairo" ,status = "Pending", totalAmount = 1225m, createdAt = seedDate }
             );
 
             // 10. Carts

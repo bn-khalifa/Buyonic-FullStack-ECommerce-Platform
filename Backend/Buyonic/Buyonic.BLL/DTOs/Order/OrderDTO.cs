@@ -1,4 +1,6 @@
-﻿namespace Buyonic.BLL
+﻿using Buyonic.BLL.DTOs.Order;
+
+namespace Buyonic.BLL
 {
     public class OrderDTO
     {
