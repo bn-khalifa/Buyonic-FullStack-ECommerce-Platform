@@ -16,6 +16,7 @@ namespace Buyonic.BLL.Mappers
             CustomerId = o.customerId,
             PaymentMethodId = o.paymentMethodId,
             Status = o.status,
+            ShippingAddress = o.ShippingAddress,
             CreatedAt = o.createdAt,
             UpdatedAt = o.updatedAt,
             DeliveredAt = o.deliveredAt,

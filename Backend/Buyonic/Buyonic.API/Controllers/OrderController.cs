@@ -43,7 +43,7 @@ namespace Buyonic.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var order = await _orderManager.CreateOrderFromCartAsync(dto);
+            var order = await _orderManager.CreateOrderAsync(dto);
             return Ok(order);
         }
 
