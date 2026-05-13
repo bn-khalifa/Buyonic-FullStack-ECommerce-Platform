@@ -1,2 +1,92 @@
-GET http://localhost:5181/api/category/with-products
+
+### Get All Products
+GET http://localhost:5181/api/product
+
 Accept: application/json
+
+### Create Product
+POST http://localhost:5181/api/product
+Content-Type: application/json
+
+
+{
+  "name": "Test Prod",
+  "imageUrl": "newImg.png",
+  "price": 25.00,
+  "discount": 0,
+  "rating": 4.3,
+  "stockQuantity": 200,
+  "description": "test",
+  "sellerId": 1,
+  "categoryId": 1
+}
+
+### Edit Product
+PUT http://localhost:5181/api/product/5
+Content-Type: application/json
+
+
+{
+  "id":5,
+  "name": "update Prod",
+  "imageUrl": "newImg.png",
+  "price": 25.00,
+  "discount": 0,
+  "rating": 4.3,
+  "stockQuantity": 100,
+  "description": " Updated test",
+  "sellerId": 1,
+  "categoryId": 1
+}
+
+###Delete Prouct
+DELETE http://localhost:5181/api/product/5
+Content-Type: application/json
+
+
+### Get All Sellers
+GET http://localhost:5181/api/seller
+Content-Type: application/json
+
+
+### Get seller with products
+GET http://localhost:5181/api/seller/with-products
+Content-Type: application/json
+
+
+### Get seller 1
+GET http://localhost:5181/api/seller/1
+Content-Type: application/json
+
+### GET seller 1 with-products
+GET http://localhost:5181/api/seller/1/with-products
+Content-Type: application/json
+
+### Get Seller By email
+GET http://localhost:5181/api/seller/by-email/store@mail.com
+Content-Type: application/json
+
+### creat Seller
+post http://localhost:5181/api/seller
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "storeName": "Test",
+  "rating": 4.5,
+  "firstName": "Amira",
+  "lastName": "Owner",
+  "email": "test@mail.com"
+}
+
+###  update seller
+
+put http://localhost:5181/api/seller/3
+Content-Type: application/json
+
+{
+  "id": 3,
+  "storeName": "Updated Test",
+  "rating": 4.5,
+  "userId": 1
+}

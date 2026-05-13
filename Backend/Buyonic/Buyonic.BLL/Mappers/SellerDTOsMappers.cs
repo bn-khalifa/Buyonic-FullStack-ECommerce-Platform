@@ -1,4 +1,4 @@
-﻿using Buyonic.DAL;
+using Buyonic.DAL;
 
 namespace Buyonic.BLL
 {
@@ -19,15 +19,7 @@ namespace Buyonic.BLL
             Id = s.Id,
             StoreName = s.storeName,
             Rating = s.rating,
-            Products = s.Products.Select(p => new ProductDTO
-            {
-                Id = p.Id,
-                Name = p.name,
-                Price = p.price,
-                Discount = p.discount,
-                Rating = p.rating,
-                StockQuantity = p.stockQuantity
-            })
+            Products = s.Products.Select(ProductDTOsMappers.ProductDtoMapper)
         };
     }
 }

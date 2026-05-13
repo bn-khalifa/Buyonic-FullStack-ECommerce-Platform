@@ -1,57 +1,42 @@
 ﻿using Buyonic.BLL;
-using Buyonic.BLL.Buyonic.BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly ICustomerManager _customerManager;
         private readonly ISellerManager _sellerManager;
+        private readonly IAuthManager _authManager;
 
-        public UserController(ICustomerManager customerManager, ISellerManager sellerManager)
+        public UserController(ICustomerManager customerManager, ISellerManager sellerManager, IAuthManager authManager)
         {
             _customerManager = customerManager;
             _sellerManager = sellerManager;
+            _authManager = authManager;
         }
-
-        // Customer Related Actions
-        [HttpGet("customer")]
-        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetAllCustomers([FromQuery] bool includeOrders)
+        // Add Admin
+        [Authorize(Roles = "Admin")]
+        [HttpPost("admin")]
+        public async Task<IActionResult> CreateAdmin([FromBody] RegisterDTO dto)
         {
-            if (includeOrders)
-            {
-                var customers = await _customerManager.GetAllCustomersWithOrdersAsync();
-                return Ok(customers);
-            }
-            else
-            {
-                 var customers = await _customerManager.GetCustomersAsync();
-                 return Ok(customers);
-            }
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        [HttpGet("customer/{id:int}")]
-        public async Task<ActionResult<CustomerDTO>> GetCustomerById([FromRoute] int id)
-        {
-            var customer = await _customerManager.GetCustomerByIdAsync(id);
-            if (customer == null) return NotFound();
-            return Ok(customer);
-        }
+            dto.AccountType = "Admin";
+            var errors = await _authManager.RegisterAsync(dto);
+            if (errors != null)
+                return BadRequest(errors);
 
-        [HttpGet("customer/search")]
-        public async Task<ActionResult<SellerDTO>> GetCustomerByEmail([FromQuery] string email)
-        {
-            var customer = await _customerManager.GetCustomerByEmailAsync(email);
-            if (customer == null) return NotFound();
-            return Ok(customer);
+            return Ok("Admin created successfully.");
         }
 
         // Seller Related Actions
+        [Authorize(Roles = "Admin")]
         [HttpGet("seller")]
         public async Task<ActionResult> GetAllSellers([FromQuery] bool includeProducts)
         {
@@ -67,6 +52,7 @@ namespace Buyonic.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin,Seller")]
         [HttpGet("seller/{id:int}")]
         public async Task<ActionResult<SellerDTO>> GetSellerById([FromRoute] int id, [FromQuery] bool includeProducts)
         {
@@ -84,7 +70,7 @@ namespace Buyonic.API.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("seller/search")]
         public async Task<ActionResult> GetSellerByEmail([FromQuery] string email, [FromQuery] bool includeProducts)
         {
@@ -102,12 +88,5 @@ namespace Buyonic.API.Controllers
             }
         }
 
-        //[HttpGet("{id:int}/products")]
-        //public async Task<ActionResult<SellerWithProductsDTO>> GetSellerWithProducts([FromRoute] int id)
-        //{
-        //    var seller = await _sellerManager.GetSellerByIdWithProductsAsync(id);
-        //    if (seller == null) return NotFound();
-        //    return Ok(seller);
-        //}
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Buyonic.DAL;
-
 namespace Buyonic.BLL
 {
     public class SellerManager : ISellerManager
@@ -9,12 +8,12 @@ namespace Buyonic.BLL
 
         public async Task<IEnumerable<SellerDTO>> GetSellersAsync()
         {
-            var sellers = await _uniteOfWork.SellerRepository.GetAllAsync();
+            var sellers = await _uniteOfWork.SellerRepository.GetAllSellersAsync();
             return sellers.Select(SellerDTOsMappers.SellerDtoMapper);
         }
         public async Task<IEnumerable<SellerWithProductsDTO>> GetSellersWithProductsAsync()
         {
-            var sellers = await _uniteOfWork.SellerRepository.GetAllAsync();
+            var sellers = await _uniteOfWork.SellerRepository.GetAllSellersWithProductsAsync();
             return sellers.Select(SellerDTOsMappers.SellerWithProdDtoMapper);
         }
 
@@ -48,5 +47,27 @@ namespace Buyonic.BLL
 
             return SellerDTOsMappers.SellerWithProdDtoMapper(seller);
         }
+
+
+        public async Task AddSellerAsync(Seller seller)
+        {
+            _uniteOfWork.SellerRepository.Add(seller);
+            await _uniteOfWork.SaveAsync();
+        }
+
+        public async Task UpdateSellerAsync(Seller seller)
+        {
+            _uniteOfWork.SellerRepository.Update(seller);
+            await _uniteOfWork.SaveAsync();
+        }
+
+        public async Task DeleteSellerAsync(int id)
+        {
+            var seller = await _uniteOfWork.SellerRepository.GetByIdAsync(id);
+            if (seller == null) return;
+            _uniteOfWork.SellerRepository.Delete(seller);
+            await _uniteOfWork.SaveAsync();
+        }
+
     }
 }

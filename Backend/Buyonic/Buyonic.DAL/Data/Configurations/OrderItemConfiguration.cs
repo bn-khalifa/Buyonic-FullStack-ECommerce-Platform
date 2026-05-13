@@ -8,6 +8,8 @@ namespace Buyonic.DAL
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
             builder.Property(oi => oi.price).HasColumnType("decimal(18, 2)");
+
+          
         }
     }
 }

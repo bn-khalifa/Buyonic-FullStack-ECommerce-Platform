@@ -6,7 +6,8 @@ namespace Buyonic.DAL
     {
         public int Id { get; set; }
         public string name { get; set; } = string.Empty;
-        public string? picture { get; set; }
+
+        public string? imageUrl { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public decimal price { get; set; }
         public float discount { get; set; } = 0;
@@ -21,10 +22,12 @@ namespace Buyonic.DAL
         public DateTime? updatedAt { get; set; }
         public bool isDeleted { get; set; } = false;
 
-        public Category Category { get; set; }
-        public Seller Seller { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-        public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
+        public Category?Category { get; set; }
+        public Seller?Seller { get; set; }
+        public ICollection<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
+        public ICollection<CartItem>? CartItems { get; set; } = new List<CartItem>();
+        public ICollection<WishlistItem>? WishlistItems { get; set; } = new List<WishlistItem>();
+
+        public int? ReviewCount { get; set; } = 0;
     }
 }

@@ -1,5 +1,4 @@
-﻿using Buyonic.BLL.Buyonic.BLL;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 namespace Buyonic.BLL
 {
     public interface ICustomerManager

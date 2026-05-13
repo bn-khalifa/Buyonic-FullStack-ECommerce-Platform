@@ -22,6 +22,14 @@ namespace Buyonic.DAL
                 .ToListAsync();
         }
 
+        public async Task<Seller> GetSellerByEmailAsync(string email)
+        {
+            return await _context.Sellers
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.User.Email == email);
+        }
+        // get seller by id
+
         public async Task<IEnumerable<Seller>> GetAllSellersWithProductsAsync()
         {
             return await _context.Sellers
@@ -37,16 +45,12 @@ namespace Buyonic.DAL
                 .FirstOrDefaultAsync(s => s.storeName == storeName);
         }
 
-        public async Task<Seller> GetSellerByEmailAsync(string email)
+        
+        public async Task<IEnumerable<Seller>> GetAllSellersAsync()
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var seller = await _context.Sellers.FirstOrDefaultAsync(s => s.userId == user.Id);
-            return seller;
+            return await _context.Sellers
+                .Include(s => s.User)
+                .ToListAsync();
         }
 
         public async Task<Seller> GetSellerByIdAsync(int id)

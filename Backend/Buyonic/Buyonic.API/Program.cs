@@ -1,5 +1,7 @@
 
+
 using Buyonic.BLL;
+using Buyonic.BLL.Managers.ProductMng;
 using Buyonic.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,10 +18,14 @@ namespace Buyonic.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddControllers()
+            .AddJsonOptions(options => 
+                options.JsonSerializerOptions.ReferenceHandler =
+                System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
-            builder.Services.AddControllers();
+            //builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
 
             // DbContext
             builder.Services.AddDbContext<BuyonicContext>(options =>
@@ -29,6 +35,7 @@ namespace Buyonic.API
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<BuyonicContext>()
                 .AddDefaultTokenProviders();
+
 
             // Repositories & UnitOfWork & Managers
             builder.Services.AddDALServices();
@@ -78,7 +85,7 @@ namespace Buyonic.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
             });
-            
+
             // CORS
             builder.Services.AddCors(options =>
             {
@@ -90,9 +97,9 @@ namespace Buyonic.API
                 });
             });
 
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -100,12 +107,10 @@ namespace Buyonic.API
                 app.MapOpenApi();
             }
 
+            app.UseCors("AngularPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

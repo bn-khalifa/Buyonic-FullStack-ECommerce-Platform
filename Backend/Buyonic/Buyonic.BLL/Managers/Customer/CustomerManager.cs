@@ -1,12 +1,12 @@
-﻿using Buyonic.BLL.Buyonic.BLL;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 
 namespace Buyonic.BLL
 {
     public class CustomerManager : ICustomerManager
     {
         private readonly IUnitOfWork _uniteOfWork;
-        public CustomerManager(IUnitOfWork unitOfWork) { 
+        public CustomerManager(IUnitOfWork unitOfWork)
+        {
             _uniteOfWork = unitOfWork;
         }
 
