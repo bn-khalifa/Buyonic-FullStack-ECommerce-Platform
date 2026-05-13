@@ -71,17 +71,25 @@ namespace Buyonic.API.Controllers
         public async Task<IActionResult> Create(CategoryDTO category)
         {
             await _categoryManager.AddCategoryAsync(category);
-            return Ok(category);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = category.Id },
+                category
+            );
         }
 
         // PUT: api/category/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CategoryDTO category)
         {
-            if (id != category.Id)
-                return BadRequest();
+            var result = await _categoryManager.GetCategoryByIdAsync(id);
+
+            if (result == null)
+                return NotFound();
 
             await _categoryManager.UpdateCategoryAsync(id, category);
+
             return NoContent();
         }
 
@@ -89,7 +97,13 @@ namespace Buyonic.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var result = await _categoryManager.GetCategoryByIdAsync(id);
+
+            if (result == null)
+                return NotFound();
+
             await _categoryManager.DeleteCategoryAsync(id);
+
             return NoContent();
         }
     }

@@ -4,22 +4,34 @@ namespace Buyonic.BLL
 {
     public class SellerDTOsMappers
     {
-        public static SellerDTO SellerDtoMapper(Seller s) => new SellerDTO
+        public static SellerDTO SellerDtoMapper(Seller s)
         {
-            Id = s.Id,
-            StoreName = s.storeName,
-            Rating = s.rating,
-            FirstName = s.User.firstName,
-            LastName = s.User.lastName,
-            Email = s.User.Email!
-        };
+            return new SellerDTO
+            {
+                Id = s.Id,
+                StoreName = s.StoreName,
+                Rating = s.Rating,
 
-        public static SellerWithProductsDTO SellerWithProdDtoMapper(Seller s) => new SellerWithProductsDTO
+                FirstName = s.User!.firstName,
+                LastName = s.User.lastName,
+                Email = s.User.Email!
+            };
+        }
+
+        public static SellerWithProductsDTO SellerWithProdDtoMapper(Seller s)
         {
-            Id = s.Id,
-            StoreName = s.storeName,
-            Rating = s.rating,
-            Products = s.Products.Select(ProductDTOsMappers.ProductDtoMapper)
-        };
+            return new SellerWithProductsDTO
+            {
+                Id = s.Id,
+                StoreName = s.StoreName,
+                Rating = s.Rating,
+
+                FirstName = s.User!.firstName,
+                LastName = s.User.lastName,
+                Email = s.User.Email!,
+
+                Products = s.Products.Select(ProductDTOsMappers.ProductDtoMapper)
+            };
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Buyonic.BLL;
 using Buyonic.BLL.Managers.ProductMng;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
@@ -15,82 +16,106 @@ namespace Buyonic.API.Controllers
             _productManager = productManager;
         }
 
-        // GET: api/product
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var products = await _productManager.GetProductsAsync();
+
             return Ok(products);
         }
 
-        // GET: api/product/with-sellers
         [HttpGet("with-sellers")]
         public async Task<IActionResult> GetAllWithSellers()
         {
             var products = await _productManager.GetProductsWithSellersAsync();
+
             return Ok(products);
         }
 
-        // GET: api/product/with-categories
         [HttpGet("with-categories")]
         public async Task<IActionResult> GetAllWithCategories()
         {
             var products = await _productManager.GetProductsWithCategoriesAsync();
+
             return Ok(products);
         }
 
-        // GET: api/product/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _productManager.GetProductByIdAsync(id);
 
             if (product == null)
-                return NotFound();
+            {
+                return NotFound(new
+                {
+                    message = "Product not found"
+                });
+            }
 
             return Ok(product);
         }
 
-        // GET: api/product/by-category/3
         [HttpGet("by-category/{categoryId}")]
         public async Task<IActionResult> GetByCategory(int categoryId)
         {
             var products = await _productManager.GetProductsByCategoryAsync(categoryId);
+
             return Ok(products);
         }
 
-        // GET: api/product/by-seller/2
         [HttpGet("by-seller/{sellerId}")]
         public async Task<IActionResult> GetBySeller(int sellerId)
         {
             var products = await _productManager.GetProductsBySellerAsync(sellerId);
+
             return Ok(products);
         }
 
-        // POST: api/product
+        [Authorize(Roles = "Admin,Seller")]
         [HttpPost]
-        public async Task<IActionResult> Create(ProductDTO product)
+        public async Task<IActionResult> Create(CreateProductDTO product)
         {
-            await _productManager.AddProductAsync(product);
-            return Ok(product);
+            var createdProduct = await _productManager.AddProductAsync(product);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = createdProduct.Id },
+                createdProduct
+            );
         }
 
-        // PUT: api/product/5
+        [Authorize(Roles = "Admin,Seller")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, ProductDTO product)
+        public async Task<IActionResult> Update(int id, UpdateProductDTO product)
         {
-            if (id != product.Id)
-                return BadRequest();
+            var updated = await _productManager.UpdateProductAsync(id, product);
 
-            await _productManager.UpdateProductAsync(id, product);
+            if (!updated)
+            {
+                return NotFound(new
+                {
+                    message = "Product not found"
+                });
+            }
+
             return NoContent();
         }
 
-        // DELETE: api/product/5
+        [Authorize(Roles = "Admin,Seller")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _productManager.DeleteProductAsync(id);
+            var deleted = await _productManager.DeleteProductAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound(new
+                {
+                    message = "Product not found"
+                });
+            }
+
             return NoContent();
         }
     }

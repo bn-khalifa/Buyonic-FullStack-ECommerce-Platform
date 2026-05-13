@@ -20,8 +20,8 @@ namespace Buyonic.BLL.Mappers
         public static CartItemDTO CartItemDtoMapper(CartItem i) => new CartItemDTO
         {
             ProductId = i.productId,
-            ProductName = i.Product.name,
-            ProductPrice = i.Product.price,
+            ProductName = i.Product.Name,
+            ProductPrice = i.Product.Price,
             Quantity = i.quantity
         };
     }

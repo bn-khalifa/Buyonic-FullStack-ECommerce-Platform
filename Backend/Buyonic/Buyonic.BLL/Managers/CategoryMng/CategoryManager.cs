@@ -29,9 +29,11 @@ namespace Buyonic.BLL
 
         public async Task<CategoryWithProductsDTO?> GetCategoryByIdWithProductsAsync(int id)
         {
-            var categories = await _unitOfWork.CategoryRepository.GetAllCategoriesWithProductsAsync();
-            var category = categories.FirstOrDefault(c => c.Id == id);
-            if (category == null) return null;
+            var category = await _unitOfWork.CategoryRepository.GetCategoryByIdAsync(id);
+
+            if (category == null)
+                return null;
+
             return CategoryDTOsMappers.CategoryWithProductsDtoMapper(category);
         }
 
@@ -45,8 +47,8 @@ namespace Buyonic.BLL
         {
             var category = new Category
             {
-                name = dto.Name,
-                description = dto.Description
+                Name = dto.Name,
+                Description = dto.Description
             };
             _unitOfWork.CategoryRepository.Add(category);
             await _unitOfWork.SaveAsync();
@@ -58,8 +60,8 @@ namespace Buyonic.BLL
             var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
             if (category == null) return;
 
-            category.name = dto.Name;
-            category.description = dto.Description;
+            category.Name = dto.Name;
+            category.Description = dto.Description;
 
             _unitOfWork.CategoryRepository.Update(category);
             await _unitOfWork.SaveAsync();
