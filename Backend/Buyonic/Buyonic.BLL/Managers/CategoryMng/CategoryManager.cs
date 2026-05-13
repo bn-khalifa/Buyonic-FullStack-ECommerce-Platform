@@ -29,9 +29,11 @@ namespace Buyonic.BLL
 
         public async Task<CategoryWithProductsDTO?> GetCategoryByIdWithProductsAsync(int id)
         {
-            var categories = await _unitOfWork.CategoryRepository.GetAllCategoriesWithProductsAsync();
-            var category = categories.FirstOrDefault(c => c.Id == id);
-            if (category == null) return null;
+            var category = await _unitOfWork.CategoryRepository.GetCategoryByIdAsync(id);
+
+            if (category == null)
+                return null;
+
             return CategoryDTOsMappers.CategoryWithProductsDtoMapper(category);
         }
 
@@ -41,16 +43,29 @@ namespace Buyonic.BLL
             if (category == null) return null;
             return CategoryDTOsMappers.CategoryDtoMapper(category);
         }
-        public async Task AddCategoryAsync(Category category)
+        public async Task AddCategoryAsync(CategoryDTO dto)
         {
+            var category = new Category
+            {
+                Name = dto.Name,
+                Description = dto.Description
+            };
             _unitOfWork.CategoryRepository.Add(category);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task UpdateCategoryAsync(Category category)
+        public async Task UpdateCategoryAsync(int id, CategoryDTO dto)
         {
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+            if (category == null) return;
+
+            category.Name = dto.Name;
+            category.Description = dto.Description;
+
             _unitOfWork.CategoryRepository.Update(category);
             await _unitOfWork.SaveAsync();
+
         }
 
         public async Task DeleteCategoryAsync(int id)

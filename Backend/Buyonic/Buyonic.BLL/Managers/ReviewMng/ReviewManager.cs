@@ -32,7 +32,7 @@ namespace Buyonic.BLL
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(dto.ProductId);
             if (product == null) return false;
 
-            product.rating = ((product.rating * product.ReviewCount) + dto.Rating) / (product.ReviewCount + 1);
+            product.Rating = ((product.Rating * product.ReviewCount) + dto.Rating) / (product.ReviewCount + 1);
             product.ReviewCount++;
             _unitOfWork.ProductRepository.Update(product);
 

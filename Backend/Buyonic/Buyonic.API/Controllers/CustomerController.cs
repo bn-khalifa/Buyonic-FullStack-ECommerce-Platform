@@ -1,7 +1,6 @@
 ﻿using Buyonic.BLL;
 using Buyonic.DAL;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
@@ -53,7 +52,7 @@ namespace Buyonic.API.Controllers
             return Ok(customer);
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -63,7 +62,7 @@ namespace Buyonic.API.Controllers
             return BadRequest($"Error during deleting the customer with ID {id}");
         }
 
-        [Authorize(Roles ="Admin,Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPut("update")]
         public async Task<ActionResult> Update(CustomerDTO customer)
         {

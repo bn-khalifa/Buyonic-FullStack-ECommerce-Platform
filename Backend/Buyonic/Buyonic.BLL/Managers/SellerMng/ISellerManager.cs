@@ -4,19 +4,22 @@ namespace Buyonic.BLL
 {
     public interface ISellerManager
     {
-        // GET
         Task<IEnumerable<SellerDTO>> GetSellersAsync();
+
         Task<IEnumerable<SellerWithProductsDTO>> GetSellersWithProductsAsync();
+
         Task<SellerDTO?> GetSellerByIdAsync(int id);
+
         Task<SellerDTO?> GetSellerByEmailAsync(string email);
+
         Task<SellerWithProductsDTO?> GetSellerByIdWithProductsAsync(int id);
+
         Task<SellerWithProductsDTO?> GetSellerByEmailWithProductsAsync(string email);
 
+        Task<SellerDTO> AddSellerAsync(CreateSellerDTO dto);
 
+        Task<bool> UpdateSellerAsync(int id, UpdateSellerDTO dto);
 
-        // POST - PUT - DELETE
-        Task AddSellerAsync(Seller seller);
-        Task UpdateSellerAsync(Seller seller);
-        Task DeleteSellerAsync(int id);
+        Task<bool> DeleteSellerAsync(int id);
     }
 }

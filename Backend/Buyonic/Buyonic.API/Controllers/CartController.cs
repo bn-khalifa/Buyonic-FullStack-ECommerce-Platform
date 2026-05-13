@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Buyonic.BLL;
+﻿using Buyonic.BLL;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {

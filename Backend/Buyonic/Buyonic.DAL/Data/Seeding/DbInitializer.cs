@@ -35,14 +35,14 @@ namespace Buyonic.DAL
 
             // 4. Categories
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, name = "Electronics", description = "Electronic devices and accessories" },
-                new Category { Id = 2, name = "Clothing", description = "Men and women clothing" },
-                new Category { Id = 3, name = "Home & Garden", description = "Home and garden supplies" }
+                new Category { Id = 1, Name = "Electronics", Description = "Electronic devices and accessories" },
+                new Category { Id = 2, Name = "Clothing", Description = "Men and women clothing" },
+                new Category { Id = 3, Name = "Home & Garden", Description = "Home and garden supplies" }
             );
 
             // 5. Sellers
             modelBuilder.Entity<Seller>().HasData(
-                new Seller { Id = 1, storeName = "TechZone", rating = 4.5f, userId = 3 }
+                new Seller { Id = 1, StoreName = "TechZone", Rating = 4.5m, UserId = 3 }
             );
 
             // 6. Customers
@@ -53,9 +53,9 @@ namespace Buyonic.DAL
 
             // 7. Products
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, name = "Laptop Pro", description = "15-inch laptop", price = 1200m, stockQuantity = 50, rating = 4.7f, discount = 0, sellerId = 1, categoryId = 1, createdAt = seedDate },
-                new Product { Id = 2, name = "Wireless Mouse", description = "Ergonomic mouse", price = 25m, stockQuantity = 200, rating = 4.3f, discount = 0, sellerId = 1, categoryId = 1, createdAt = seedDate },
-                new Product { Id = 3, name = "Cotton T-Shirt", description = "Comfortable fit", price = 15m, stockQuantity = 300, rating = 4.0f, discount = 0, sellerId = 1, categoryId = 2, createdAt = seedDate }
+                new Product { Id = 1, Name = "Laptop Pro", Description = "15-inch laptop", Price = 1200m, StockQuantity = 50, Rating = 4.7m, Discount = 0, SellerId = 1, CategoryId = 1, createdAt = seedDate },
+                new Product { Id = 2, Name = "Wireless Mouse", Description = "Ergonomic mouse", Price = 25m, StockQuantity = 200, Rating = 4.3m, Discount = 0, SellerId = 1, CategoryId = 1, createdAt = seedDate },
+                new Product { Id = 3, Name = "Cotton T-Shirt", Description = "Comfortable fit", Price = 15m, StockQuantity = 300, Rating = 4.0m, Discount = 0, SellerId = 1, CategoryId = 2, createdAt = seedDate }
             );
 
             // 8. PaymentMethods

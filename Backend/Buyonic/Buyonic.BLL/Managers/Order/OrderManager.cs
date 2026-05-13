@@ -39,7 +39,7 @@ namespace Buyonic.BLL
                 throw new InvalidOperationException("Cart is empty or not found.");
 
             // احسب الـ total من الـ items
-            var total = cart.CartItems.Sum(i => i.Product.price * i.quantity);
+            var total = cart.CartItems.Sum(i => i.Product.Price * i.quantity);
 
             // ابعت الـ Order
             var order = new global::Buyonic.DAL.Order
@@ -53,7 +53,7 @@ namespace Buyonic.BLL
                 {
                     productId = i.productId,
                     quantity = i.quantity,
-                    price = i.Product.price
+                    price = i.Product.Price
                 }).ToList()
             };
 

@@ -47,7 +47,7 @@ namespace Buyonic.BLL
             if (accountType == "Customer")
                 _unitOfWork.CustomerRepository.Add(new Customer { userId = user.Id, address = dto.Address });
             else if (accountType == "Seller")
-                _unitOfWork.SellerRepository.Add(new Seller { userId = user.Id, storeName = dto.StoreName });
+                _unitOfWork.SellerRepository.Add(new Seller { UserId = user.Id, StoreName = dto.StoreName });
 
             await _unitOfWork.SaveAsync();
             return null;

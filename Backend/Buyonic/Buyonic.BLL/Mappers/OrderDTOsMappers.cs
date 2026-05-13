@@ -20,7 +20,7 @@ namespace Buyonic.BLL
         public static OrderItemDTO OrderItemDtoMapper(OrderItem i) => new OrderItemDTO
         {
             ProductId = i.productId,
-            ProductName = i.Product.name,
+            ProductName = i.Product.Name,
             Price = i.price,
             Quantity = i.quantity
         };
