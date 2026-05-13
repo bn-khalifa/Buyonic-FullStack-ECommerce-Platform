@@ -1,8 +1,10 @@
 ﻿using Buyonic.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -94,6 +96,7 @@ namespace Buyonic.API.Controllers
         }
 
         // DELETE: api/category/5
+        [Authorize(Roles ="Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

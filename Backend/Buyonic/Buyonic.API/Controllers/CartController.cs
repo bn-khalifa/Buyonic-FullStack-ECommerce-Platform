@@ -1,8 +1,10 @@
 ﻿using Buyonic.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize(Roles ="Customer")]
     [Route("api/[controller]")]
     [ApiController]
 

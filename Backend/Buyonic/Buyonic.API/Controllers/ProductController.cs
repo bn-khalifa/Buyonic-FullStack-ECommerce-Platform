@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase

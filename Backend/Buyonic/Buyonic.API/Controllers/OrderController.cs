@@ -1,8 +1,10 @@
 ﻿using Buyonic.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -15,6 +17,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET api/order/customer/{customerId}
+        [Authorize(Roles ="Admin,Customer")]
         [HttpGet("customer/{customerId}")]
         public async Task<IActionResult> GetOrdersByCustomer(int customerId)
         {
@@ -23,6 +26,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET api/order/{orderId}
+        [Authorize(Roles ="Admin,Customer")]
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetOrder(int orderId)
         {
@@ -34,17 +38,19 @@ namespace Buyonic.API.Controllers
         }
 
         // POST api/order
+        [Authorize(Roles ="Customer")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var order = await _orderManager.CreateOrderFromCartAsync(dto);
+            var order = await _orderManager.CreateOrderAsync(dto);
             return Ok(order);
         }
 
         // PUT api/order/{orderId}/status
+        [Authorize(Roles ="Seller,Admin")]
         [HttpPut("{orderId}/status")]
         public async Task<IActionResult> UpdateStatus(int orderId, string status)
         {

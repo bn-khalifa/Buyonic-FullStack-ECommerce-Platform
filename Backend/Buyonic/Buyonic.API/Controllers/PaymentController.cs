@@ -1,9 +1,11 @@
 ﻿using Buyonic.BLL.DTOs.Payment;
 using Buyonic.BLL.Managers.Payment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
@@ -35,6 +37,7 @@ namespace Buyonic.API.Controllers
         }
 
         // GET api/payment/customer/{customerId}
+        [Authorize(Roles ="Admin,Customer")]
         [HttpGet("customer/{customerId}")]
         public async Task<IActionResult> GetCustomerPayments(int customerId)
         {
@@ -43,6 +46,7 @@ namespace Buyonic.API.Controllers
         }
 
         // POST api/payment/add
+        [Authorize(Roles ="Admin")]
         [HttpPost("add")]
         public async Task<IActionResult> AddCustomerPayment(AddCustomerPaymentDTO dto)
         {
@@ -54,6 +58,7 @@ namespace Buyonic.API.Controllers
         }
 
         // DELETE api/payment/{customerPaymentId}
+        [Authorize(Roles ="Admin")]
         [HttpDelete("{customerPaymentId}")]
         public async Task<IActionResult> RemoveCustomerPayment(int customerPaymentId)
         {

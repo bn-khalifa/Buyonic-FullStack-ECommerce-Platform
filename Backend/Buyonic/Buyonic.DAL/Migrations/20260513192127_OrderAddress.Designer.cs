@@ -4,6 +4,7 @@ using Buyonic.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Buyonic.DAL.Migrations
 {
     [DbContext(typeof(BuyonicContext))]
-    partial class BuyonicContextModelSnapshot : ModelSnapshot
+    [Migration("20260513192127_OrderAddress")]
+    partial class OrderAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,11 +252,11 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -265,20 +268,20 @@ namespace Buyonic.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Electronic devices and accessories",
-                            Name = "Electronics"
+                            description = "Electronic devices and accessories",
+                            name = "Electronics"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Men and women clothing",
-                            Name = "Clothing"
+                            description = "Men and women clothing",
+                            name = "Clothing"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Home and garden supplies",
-                            Name = "Home & Garden"
+                            description = "Home and garden supplies",
+                            name = "Home & Garden"
                         });
                 });
 
@@ -493,52 +496,52 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("ReviewCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("Rating")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ReviewCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StockQuantity")
+                    b.Property<int>("categoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("discount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("imageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<float?>("rating")
+                        .HasColumnType("real");
+
+                    b.Property<int>("sellerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("stockQuantity")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("categoryId");
 
-                    b.HasIndex("SellerId");
+                    b.HasIndex("sellerId");
 
                     b.ToTable("Products");
 
@@ -546,47 +549,50 @@ namespace Buyonic.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            CategoryId = 1,
-                            Description = "15-inch laptop",
-                            Discount = 0m,
-                            Name = "Laptop Pro",
-                            Price = 1200m,
-                            Rating = 4.7m,
                             ReviewCount = 0,
-                            SellerId = 1,
-                            StockQuantity = 50,
+                            categoryId = 1,
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
-                            isDeleted = false
+                            description = "15-inch laptop",
+                            discount = 0f,
+                            imageUrl = "",
+                            isDeleted = false,
+                            name = "Laptop Pro",
+                            price = 1200m,
+                            rating = 4.7f,
+                            sellerId = 1,
+                            stockQuantity = 50
                         },
                         new
                         {
                             Id = 2,
-                            CategoryId = 1,
-                            Description = "Ergonomic mouse",
-                            Discount = 0m,
-                            Name = "Wireless Mouse",
-                            Price = 25m,
-                            Rating = 4.3m,
                             ReviewCount = 0,
-                            SellerId = 1,
-                            StockQuantity = 200,
+                            categoryId = 1,
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
-                            isDeleted = false
+                            description = "Ergonomic mouse",
+                            discount = 0f,
+                            imageUrl = "",
+                            isDeleted = false,
+                            name = "Wireless Mouse",
+                            price = 25m,
+                            rating = 4.3f,
+                            sellerId = 1,
+                            stockQuantity = 200
                         },
                         new
                         {
                             Id = 3,
-                            CategoryId = 2,
-                            Description = "Comfortable fit",
-                            Discount = 0m,
-                            Name = "Cotton T-Shirt",
-                            Price = 15m,
-                            Rating = 4.0m,
                             ReviewCount = 0,
-                            SellerId = 1,
-                            StockQuantity = 300,
+                            categoryId = 2,
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
-                            isDeleted = false
+                            description = "Comfortable fit",
+                            discount = 0f,
+                            imageUrl = "",
+                            isDeleted = false,
+                            name = "Cotton T-Shirt",
+                            price = 15m,
+                            rating = 4f,
+                            sellerId = 1,
+                            stockQuantity = 300
                         });
                 });
 
@@ -630,19 +636,18 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("Rating")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("rating")
+                        .HasColumnType("real");
 
-                    b.Property<string>("StoreName")
-                        .IsRequired()
+                    b.Property<string>("storeName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("userId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("userId")
                         .IsUnique();
 
                     b.ToTable("Sellers");
@@ -651,9 +656,9 @@ namespace Buyonic.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Rating = 4.5m,
-                            StoreName = "TechZone",
-                            UserId = 3
+                            rating = 4.5f,
+                            storeName = "TechZone",
+                            userId = 3
                         });
                 });
 
@@ -990,14 +995,14 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.Product", b =>
                 {
                     b.HasOne("Buyonic.DAL.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
+                        .WithMany("products")
+                        .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Buyonic.DAL.Seller", "Seller")
                         .WithMany("Products")
-                        .HasForeignKey("SellerId")
+                        .HasForeignKey("sellerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1029,7 +1034,7 @@ namespace Buyonic.DAL.Migrations
                 {
                     b.HasOne("Buyonic.DAL.ApplicationUser", "User")
                         .WithOne("Seller")
-                        .HasForeignKey("Buyonic.DAL.Seller", "UserId")
+                        .HasForeignKey("Buyonic.DAL.Seller", "userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1131,7 +1136,7 @@ namespace Buyonic.DAL.Migrations
 
             modelBuilder.Entity("Buyonic.DAL.Category", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("products");
                 });
 
             modelBuilder.Entity("Buyonic.DAL.Customer", b =>

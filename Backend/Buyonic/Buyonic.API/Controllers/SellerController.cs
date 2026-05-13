@@ -26,7 +26,6 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/with-products
-        [Authorize(Roles = "Admin")]
         [HttpGet("with-products")]
         public async Task<IActionResult> GetAllWithProducts()
         {
@@ -36,7 +35,6 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/5
-        [Authorize(Roles = "Admin,Seller")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -54,7 +52,6 @@ namespace Buyonic.API.Controllers
         }
 
         // GET: api/seller/5/with-products
-        [Authorize(Roles = "Admin,Seller")]
         [HttpGet("{id}/with-products")]
         public async Task<IActionResult> GetByIdWithProducts(int id)
         {
