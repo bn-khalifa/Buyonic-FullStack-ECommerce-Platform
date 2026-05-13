@@ -6,6 +6,7 @@ namespace Buyonic.DAL
     {
         public int Id { get; set; }
         public string name { get; set; } = string.Empty;
+        public string? picture { get; set; }
         public string description { get; set; } = string.Empty;
         public decimal price { get; set; }
         public float discount { get; set; } = 0;

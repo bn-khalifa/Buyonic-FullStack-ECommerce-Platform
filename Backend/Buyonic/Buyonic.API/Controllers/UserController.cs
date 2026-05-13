@@ -21,10 +21,18 @@ namespace Buyonic.API.Controllers
 
         // Customer Related Actions
         [HttpGet("customer")]
-        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetAllCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetAllCustomers([FromQuery] bool includeOrders)
         {
-            var customers = await _customerManager.GetCustomersAsync();
-            return Ok(customers);
+            if (includeOrders)
+            {
+                var customers = await _customerManager.GetAllCustomersWithOrdersAsync();
+                return Ok(customers);
+            }
+            else
+            {
+                 var customers = await _customerManager.GetCustomersAsync();
+                 return Ok(customers);
+            }
         }
 
         [HttpGet("customer/{id:int}")]
@@ -36,7 +44,7 @@ namespace Buyonic.API.Controllers
         }
 
         [HttpGet("customer/search")]
-        public async Task<ActionResult<SellerDTO>> GetCustomererByEmail([FromQuery] string email)
+        public async Task<ActionResult<SellerDTO>> GetCustomerByEmail([FromQuery] string email)
         {
             var customer = await _customerManager.GetCustomerByEmailAsync(email);
             if (customer == null) return NotFound();

@@ -14,53 +14,53 @@ namespace Buyonic.BLL
         {
             var customer = await _uniteOfWork.CustomerRepository.GetCustomerByEmailAsync(email);
             if (customer == null) return null;
-            return new CustomerDTO
-            {
-                Id = customer.Id,
-                FirstName = customer.User.firstName,
-                LastName = customer.User.lastName,
-                Email = customer.User.Email,
-                Address = customer.address,
-                JoinedAt = customer.User.createdAt,
-                IsActive = customer.User.isActive
-            };
+            return CustomerDTOsMappers.CustomerDtoMapper(customer);
         }
 
         public async Task<IEnumerable<CustomerDTO>> GetCustomersAsync()
         {
             var customers = await _uniteOfWork.CustomerRepository.GetAllAsync();
-            return customers.Select(c => new CustomerDTO
-            {
-                Id = c.Id,
-                FirstName = c.User.firstName,
-                LastName = c.User.lastName,
-                Email = c.User.Email,
-                Address = c.address,
-                JoinedAt = c.User.createdAt,
-                IsActive = c.User.isActive
-            });
+            return customers.Select(CustomerDTOsMappers.CustomerDtoMapper);
         }
 
         public async Task<CustomerDTO> GetCustomerByIdAsync(int id)
         {
             var customer = await _uniteOfWork.CustomerRepository.GetCustomerByIdAsync(id);
             if (customer == null) return null;
-            return new CustomerDTO
-            {
-                Id = customer.Id,
-                FirstName = customer.User.firstName,
-                LastName = customer.User.lastName,
-                Email = customer.User.Email,
-                Address = customer.address,
-                JoinedAt = customer.User.createdAt,
-                IsActive = customer.User.isActive
-            };
+            return CustomerDTOsMappers.CustomerDtoMapper(customer);
         }
 
         public async Task InsertCustomerAsync(Customer customer)
         {
             _uniteOfWork.CustomerRepository.Add(customer);
             await _uniteOfWork.SaveAsync();
+        }
+
+        public async Task<bool> DeleteCustomerAsync(int id)
+        {
+            bool result = await _uniteOfWork.CustomerRepository.DeleteCustomerByID(id);
+            return result;
+        }
+
+        public async Task UpdateCustomerAsync(CustomerDTO c)
+        {
+            var customer = await _uniteOfWork.CustomerRepository.GetCustomerByIdAsync(c.Id);
+
+            customer.User.firstName = c.FirstName;
+            customer.User.lastName = c.LastName;
+            customer.User.Email = c.Email;
+            customer.address = c.Address;
+            customer.User.isActive = c.IsActive;
+            customer.User.updatedAt = DateTime.UtcNow;
+
+            _uniteOfWork.CustomerRepository.Update(customer);
+            await _uniteOfWork.SaveAsync();
+        }
+
+        public async Task<IEnumerable<CustomerWithOrdersDTO>> GetAllCustomersWithOrdersAsync()
+        {
+            var customers = await _uniteOfWork.CustomerRepository.GetAllCustomersWithOrdersAsync();
+            return customers.Select(CustomerDTOsMappers.CustomerWithOrdersDtoMapper);
         }
     }
 }

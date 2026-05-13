@@ -32,7 +32,7 @@ namespace Buyonic.API
 
             // Repositories & UnitOfWork & Managers
             builder.Services.AddDALServices();
-            builder.Services.AddBLLServices();
+            builder.Services.AddBLLServices(builder.Configuration);
 
 
             // Swagger

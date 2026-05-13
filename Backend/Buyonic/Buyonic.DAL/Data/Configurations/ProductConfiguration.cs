@@ -12,6 +12,7 @@ namespace Buyonic.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
+            builder.Property(p => p.price).HasColumnType("decimal(18,2)");
             /*
             // Table name (optional)
             builder.ToTable("Products");

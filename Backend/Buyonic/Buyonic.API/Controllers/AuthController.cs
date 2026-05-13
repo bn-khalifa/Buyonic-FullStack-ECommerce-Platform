@@ -72,5 +72,24 @@ namespace Buyonic.API.Controllers
             return Ok(new { token });
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] string email)
+        {
+            var resetBaseUrl = $"{Request.Scheme}://{Request.Host}/reset-password";
+            var result = await _authManager.ForgotPasswordAsync(email, resetBaseUrl);
+            // to avoid exposing whether email exists
+            return Ok("If this email is registered, a reset link has been sent.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = await _authManager.ResetPasswordAsync(dto);
+            if (!result) return BadRequest("Invalid or expired token.");
+
+            return Ok("Password reset successful.");
+        }
     }
 }
