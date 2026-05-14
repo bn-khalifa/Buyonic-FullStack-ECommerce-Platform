@@ -1,0 +1,565 @@
+
+BUYONIC
+Backend API Documentation
+For Angular Frontend Integration
+
+Base URL: http://localhost:5181/api
+Framework: ASP.NET Core 9  |  Auth: JWT Bearer  |  DB: SQL Server
+ 
+1. Project Overview
+Buyonic is a multi-role e-commerce REST API built with ASP.NET Core 9. It follows a 3-layer architecture: Data Access Layer (DAL), Business Logic Layer (BLL), and Presentation Layer (API). The API serves three user roles: Customer, Seller, and Admin, each with different levels of access.
+
+1.1 Architecture
+•	DAL — Entity Framework Core, SQL Server, Repository Pattern, Unit of Work
+•	BLL — Managers, DTOs, Mappers, Email Service
+•	API — ASP.NET Core Controllers, JWT Authentication, Swagger
+
+1.2 Authentication
+All protected endpoints require a JWT Bearer token in the Authorization header:
+Authorization: Bearer <token>
+Tokens are obtained from POST /api/auth/login. The token contains: userId (nameid), email, given_name, family_name, role, exp.
+
+1.3 Roles
+•	Customer — can browse products, manage cart/wishlist, place orders, submit reviews
+•	Seller — can manage their products and update order statuses
+•	Admin — full access to all resources, user management, category/payment management
+
+1.4 Response Conventions
+•	200 OK — successful GET / action
+•	201 Created — successful POST with new resource
+•	204 No Content — successful PUT / DELETE with no body
+•	400 Bad Request — validation failure or business logic error
+•	401 Unauthorized — missing or invalid token
+•	403 Forbidden — authenticated but insufficient role
+•	404 Not Found — resource does not exist
+
+1.5 JWT Token Structure (Decoded)
+nameid: string          // ApplicationUser.Id (int as string)
+email: string           // user's email
+given_name: string      // firstName
+family_name: string     // lastName
+role: string            // 'Customer' | 'Seller' | 'Admin'
+exp: number             // expiry Unix timestamp (60 min default)
+ 
+2. Auth Controller
+Base route: /api/auth — All endpoints are public (no authentication required).
+
+2.1 Register
+POST	/api/auth/register
+Auth	Public
+Description	Register a new Customer or Seller account.
+Request Body	{   "firstName": "string",       // required   "lastName": "string",        // required   "email": "string",           // required, valid email   "password": "string",        // required   "confirmPassword": "string", // required, must match password   "accountType": "string",     // required: "Customer" or "Seller"   "storeName": "string?",      // required if Seller   "address": "string?"         // optional for Customer }
+Response	200 OK: "Registration successful." 400 Bad Request: array of IdentityError objects
+
+2.2 Login
+POST	/api/auth/login
+Auth	Public
+Description	Authenticate and receive a JWT token. Store the token client-side and attach to all subsequent requests.
+Request Body	{   "email": "string",    // required   "password": "string"  // required }
+Response	200 OK: { "token": "eyJhbGci..." } 401 Unauthorized: "Invalid email or password."
+
+2.3 Forgot Password
+POST	/api/auth/forgot-password
+Auth	Public
+Description	Send a password reset email. Always returns 200 regardless of whether the email exists (security best practice). The email contains a reset link with ?email=...&token=... query parameters.
+Request Body	"user@email.com"   // plain string body, not JSON object
+Response	200 OK: "If this email is registered, a reset link has been sent."
+
+2.4 Reset Password
+POST	/api/auth/reset-password
+Auth	Public
+Description	Reset user password using the token received by email. Extract email and token from the reset link URL query parameters.
+Request Body	{   "email": "string",           // required   "token": "string",           // required, from email link (URL-decoded automatically)   "newPassword": "string",     // required   "confirmPassword": "string"  // required, must match newPassword }
+Response	200 OK: "Password reset successful." 400 Bad Request: "Invalid or expired token."
+ 
+3. Customer Controller
+Base route: /api/customer — Requires authentication. Most actions restricted to Admin or Customer role.
+
+3.1 Get All Customers
+GET	/api/customer?includeOrders=false
+Auth	Admin only
+Description	Get all customers. Pass includeOrders=true to include each customer's orders and order items.
+Request Body	None
+Response	200 OK: CustomerDTO[] or CustomerWithOrdersDTO[]
+
+3.2 Get Customer By ID
+GET	/api/customer/{id}
+Auth	Admin, Customer
+Description	Get a single customer by their Customer.Id (not ApplicationUser.Id).
+Request Body	None
+Response	200 OK: CustomerDTO 404 Not Found
+
+3.3 Search Customer By Email
+GET	/api/customer/search?email=user@mail.com
+Auth	Admin only
+Description	Find a customer by email address.
+Request Body	None
+Response	200 OK: CustomerDTO 404 Not Found
+
+3.4 Update Customer
+PUT	/api/customer/update
+Auth	Admin, Customer
+Description	Update customer profile information.
+Request Body	{   "id": number,   "firstName": "string",   "lastName": "string",   "email": "string",   "address": "string?",   "joinedAt": "datetime?",   "isActive": boolean }
+Response	200 OK: "Customer Updated Successfully" 400 Bad Request: error message
+
+3.5 Delete Customer
+DELETE	/api/customer/delete/{id}
+Auth	Admin only
+Description	Soft-deletes the customer's ApplicationUser account (sets isDeleted=true) and removes the Customer record.
+Request Body	None
+Response	200 OK: "Customer Successfully Deleted" 400 Bad Request: error message
+ 
+4. Seller Controller
+Base route: /api/seller — Requires authentication.
+
+4.1 Get All Sellers
+GET	/api/seller
+Auth	Any authenticated user
+Description	Get all sellers without their products.
+Request Body	None
+Response	200 OK: SellerDTO[]
+
+4.2 Get All Sellers With Products
+GET	/api/seller/with-products
+Auth	Any authenticated user
+Description	Get all sellers including their product lists.
+Request Body	None
+Response	200 OK: SellerWithProductsDTO[]
+
+4.3 Get Seller By ID
+GET	/api/seller/{id}
+Auth	Any authenticated user
+Description	Get a single seller by ID.
+Request Body	None
+Response	200 OK: SellerDTO 404 Not Found: { "message": "Seller not found" }
+
+4.4 Get Seller By ID With Products
+GET	/api/seller/{id}/with-products
+Auth	Any authenticated user
+Description	Get a single seller with all their products.
+Request Body	None
+Response	200 OK: SellerWithProductsDTO 404 Not Found
+
+4.5 Search Seller By Email
+GET	/api/seller/by-email?email=store@mail.com
+Auth	Admin only
+Description	Find a seller by email address.
+Request Body	None
+Response	200 OK: SellerDTO 404 Not Found
+
+4.6 Create Seller
+POST	/api/seller
+Auth	Admin only
+Description	Create a new seller profile linked to an existing ApplicationUser.
+Request Body	{   "storeName": "string",  // required, max 100 chars   "userId": number        // required, existing ApplicationUser.Id }
+Response	201 Created: SellerDTO
+
+4.7 Update Seller
+PUT	/api/seller/{id}
+Auth	Admin, Seller
+Description	Update a seller's store name or rating.
+Request Body	{   "storeName": "string?",  // optional   "rating": number?        // optional, 0-5 }
+Response	204 No Content 404 Not Found
+
+4.8 Delete Seller
+DELETE	/api/seller/{id}
+Auth	Admin only
+Description	Delete a seller record.
+Request Body	None
+Response	204 No Content 404 Not Found
+ 
+5. User Controller
+Base route: /api/user — Admin-facing aggregated operations.
+
+5.1 Create Admin
+POST	/api/user/admin
+Auth	Admin only
+Description	Create a new Admin user. AccountType is forced to 'Admin' server-side.
+Request Body	{   "firstName": "string",   "lastName": "string",   "email": "string",   "password": "string",   "confirmPassword": "string",   "accountType": "string"  // will be overridden to "Admin" }
+Response	200 OK: "Admin created successfully." 400 Bad Request: IdentityError[]
+
+5.2 Get All Sellers (Admin)
+GET	/api/user/seller?includeProducts=false
+Auth	Admin only
+Description	Get all sellers. Pass includeProducts=true to include their product lists.
+Request Body	None
+Response	200 OK: SellerDTO[] or SellerWithProductsDTO[]
+
+5.3 Get Seller By ID (Admin)
+GET	/api/user/seller/{id}?includeProducts=false
+Auth	Admin, Seller
+Description	Get a seller by ID, optionally including their products.
+Request Body	None
+Response	200 OK: SellerDTO or SellerWithProductsDTO 404 Not Found
+
+5.4 Search Seller By Email (Admin)
+GET	/api/user/seller/search?email=...&includeProducts=false
+Auth	Admin only
+Description	Search for a seller by email, optionally including products.
+Request Body	None
+Response	200 OK: SellerDTO or SellerWithProductsDTO 404 Not Found
+ 
+6. Product Controller
+Base route: /api/product — Requires authentication for all endpoints. Write operations require Admin or Seller role.
+
+6.1 Get All Products
+GET	/api/product
+Auth	Any authenticated user
+Description	Get all products with basic info.
+Request Body	None
+Response	200 OK: ProductDTO[]
+
+6.2 Get Products With Sellers
+GET	/api/product/with-sellers
+Auth	Any authenticated user
+Description	Get all products including seller store name.
+Request Body	None
+Response	200 OK: ProductWithSellerDTO[]
+
+6.3 Get Products With Categories
+GET	/api/product/with-categories
+Auth	Any authenticated user
+Description	Get all products including category name.
+Request Body	None
+Response	200 OK: ProductWithCategoryDTO[]
+
+6.4 Get Product By ID
+GET	/api/product/{id}
+Auth	Any authenticated user
+Description	Get a single product by ID.
+Request Body	None
+Response	200 OK: ProductDTO 404 Not Found: { "message": "Product not found" }
+
+6.5 Get Products By Category
+GET	/api/product/by-category/{categoryId}
+Auth	Any authenticated user
+Description	Get all products belonging to a specific category.
+Request Body	None
+Response	200 OK: ProductDTO[]
+
+6.6 Get Products By Seller
+GET	/api/product/by-seller/{sellerId}
+Auth	Any authenticated user
+Description	Get all products listed by a specific seller.
+Request Body	None
+Response	200 OK: ProductDTO[]
+
+6.7 Create Product
+POST	/api/product
+Auth	Admin, Seller
+Description	Add a new product.
+Request Body	{   "name": "string",         // required, max 200   "description": "string",  // required, max 2000   "imageUrl": "string?",   "price": number,          // 1-1000000   "discount": number,       // 0-100   "stockQuantity": number,  // >= 0   "categoryId": number,     // required   "sellerId": number        // required }
+Response	201 Created: ProductDTO
+
+6.8 Update Product
+PUT	/api/product/{id}
+Auth	Admin, Seller
+Description	Update product fields. All fields are optional (partial update).
+Request Body	{   "name": "string?",   "description": "string?",   "imageUrl": "string?",   "price": number?,   "discount": number?,   "stockQuantity": number?,   "categoryId": number?,   "sellerId": number? }
+Response	204 No Content 404 Not Found
+
+6.9 Delete Product
+DELETE	/api/product/{id}
+Auth	Admin, Seller
+Description	Delete a product by ID.
+Request Body	None
+Response	204 No Content 404 Not Found
+ 
+7. Category Controller
+Base route: /api/category — Requires authentication. Delete restricted to Admin.
+
+7.1 Get All Categories
+GET	/api/category
+Auth	Any authenticated user
+Description	Get all categories.
+Request Body	None
+Response	200 OK: CategoryDTO[]
+
+7.2 Get All Categories With Products
+GET	/api/category/with-products
+Auth	Any authenticated user
+Description	Get all categories including their products.
+Request Body	None
+Response	200 OK: CategoryWithProductsDTO[]
+
+7.3 Get Category By ID
+GET	/api/category/{id}
+Auth	Any authenticated user
+Description	Get a category by ID.
+Request Body	None
+Response	200 OK: CategoryDTO 404 Not Found
+
+7.4 Get Category By ID With Products
+GET	/api/category/{id}/with-products
+Auth	Any authenticated user
+Description	Get a category with its products.
+Request Body	None
+Response	200 OK: CategoryWithProductsDTO 404 Not Found
+
+7.5 Get Category By Name
+GET	/api/category/by-name/{name}
+Auth	Any authenticated user
+Description	Find a category by name.
+Request Body	None
+Response	200 OK: CategoryDTO 404 Not Found
+
+7.6 Create Category
+POST	/api/category
+Auth	Any authenticated user
+Description	Create a new category.
+Request Body	{ "id": 0, "name": "string", "description": "string" }
+Response	201 Created: CategoryDTO
+
+7.7 Update Category
+PUT	/api/category/{id}
+Auth	Any authenticated user
+Description	Update a category.
+Request Body	{ "id": number, "name": "string", "description": "string" }
+Response	204 No Content 404 Not Found
+
+7.8 Delete Category
+DELETE	/api/category/{id}
+Auth	Admin only
+Description	Delete a category.
+Request Body	None
+Response	204 No Content 404 Not Found
+ 
+8. Order Controller
+Base route: /api/order — Requires authentication.
+
+8.1 Get Orders By Customer
+GET	/api/order/customer/{customerId}
+Auth	Admin, Customer
+Description	Get all orders for a specific customer including order items.
+Request Body	None
+Response	200 OK: OrderDTO[]
+
+8.2 Get Order By ID
+GET	/api/order/{orderId}
+Auth	Admin, Customer
+Description	Get a single order with all its items.
+Request Body	None
+Response	200 OK: OrderDTO 404 Not Found: "Order not found."
+
+8.3 Create Order
+POST	/api/order
+Auth	Customer only
+Description	Place a new order. The server calculates totalAmount from product prices. Order status is set to 'Pending' automatically.
+Request Body	{   "customerId": number,   "paymentMethodId": number,   "shippingAddress": "string",   "orderItems": [     { "productId": number, "quantity": number }   ] }
+Response	200 OK: OrderDTO
+
+8.4 Update Order Status
+PUT	/api/order/{orderId}/status?status=Delivered
+Auth	Seller, Admin
+Description	Update the status of an order. Valid statuses: Pending, Processing, Shipped, Delivered, Cancelled.
+Request Body	None (status passed as query string)
+Response	200 OK: OrderDTO 404 Not Found: "Order not found."
+ 
+9. Cart Controller
+Base route: /api/cart — Requires Customer role.
+
+9.1 Get Cart
+GET	/api/cart/{customerId}
+Auth	Customer only
+Description	Get cart with all items for a customer. Returns CartDTO with computed TotalPrice.
+Request Body	None
+Response	200 OK: CartDTO 404 Not Found: "Cart not found for this customer."
+
+9.2 Add To Cart
+POST	/api/cart/add?customerId=1&productId=2&quantity=1
+Auth	Customer only
+Description	Add a product to the customer's cart. Parameters are passed as query strings.
+Request Body	None (query params: customerId, productId, quantity)
+Response	200 OK: "Product added to cart successfully." 400 Bad Request: "Quantity must be greater than zero."
+
+9.3 Update Cart Item
+PUT	/api/cart/update?cartId=1&productId=2&quantity=3
+Auth	Customer only
+Description	Update the quantity of an item in the cart.
+Request Body	None (query params: cartId, productId, quantity)
+Response	200 OK: "Cart item updated successfully."
+
+9.4 Remove From Cart
+DELETE	/api/cart/remove?cartId=1&productId=2
+Auth	Customer only
+Description	Remove a specific product from the cart.
+Request Body	None (query params: cartId, productId)
+Response	200 OK: "Product removed from cart successfully."
+
+9.5 Clear Cart
+DELETE	/api/cart/clear/{cartId}
+Auth	Customer only
+Description	Remove all items from a cart.
+Request Body	None
+Response	200 OK: "Cart cleared successfully."
+ 
+10. Wishlist Controller
+Base route: /api/wishlist — Requires Customer role. Customer ID is extracted from JWT token server-side; never trust client-provided IDs.
+
+10.1 Get Wishlist
+GET	/api/wishlist
+Auth	Customer only
+Description	Get the authenticated customer's wishlist with product details.
+Request Body	None
+Response	200 OK: WishlistDTO 404 Not Found: "Wishlist not found." 401 Unauthorized
+
+10.2 Add To Wishlist
+POST	/api/wishlist/add
+Auth	Customer only
+Description	Add a product to the wishlist. Prevents duplicates. Auto-creates wishlist if none exists.
+Request Body	{ "productId": number }
+Response	200 OK: "Product added to wishlist." 400 Bad Request: "Product already in wishlist or not found."
+
+10.3 Remove From Wishlist
+DELETE	/api/wishlist/remove/{productId}
+Auth	Customer only
+Description	Remove a specific product from the wishlist.
+Request Body	None
+Response	200 OK: "Product removed from wishlist." 404 Not Found: "Product not found in wishlist."
+
+10.4 Clear Wishlist
+DELETE	/api/wishlist/clear
+Auth	Customer only
+Description	Remove all products from the wishlist.
+Request Body	None
+Response	200 OK: "Wishlist cleared." 404 Not Found: "Wishlist not found."
+ 
+11. Review Controller
+Base route: /api/review — Requires authentication. Submit requires Customer role.
+
+11.1 Get Product Reviews
+GET	/api/review/product/{productId}
+Auth	Any authenticated user
+Description	Get all reviews for a specific product.
+Request Body	None
+Response	200 OK: ProductReviewDTO[]
+
+11.2 Submit Review
+POST	/api/review
+Auth	Customer only
+Description	Submit a product review. The customer must have a DELIVERED order containing this product. Rating updates the product's average automatically. CustomerId is extracted from JWT token — do not send it from the client.
+Request Body	{   "productId": number,   // required   "customerId": number,  // sent but overridden by server from token   "rating": number,      // required, 1-5   "comment": "string?"   // optional }
+Response	200 OK: "Review submitted successfully." 403 Forbidden: no delivered order for this product 400 Bad Request: validation errors
+ 
+12. Payment Controller
+Base route: /api/payment — Requires authentication.
+
+12.1 Get All Payment Methods
+GET	/api/payment/methods
+Auth	Any authenticated user
+Description	Get all available payment methods.
+Request Body	None
+Response	200 OK: PaymentMethodDTO[]
+
+12.2 Get Payment Method By ID
+GET	/api/payment/methods/{id}
+Auth	Any authenticated user
+Description	Get a specific payment method.
+Request Body	None
+Response	200 OK: PaymentMethodDTO 404 Not Found: "Payment method not found."
+
+12.3 Get Customer Payments
+GET	/api/payment/customer/{customerId}
+Auth	Admin, Customer
+Description	Get all payment records for a customer.
+Request Body	None
+Response	200 OK: CustomerPaymentDTO[]
+
+12.4 Add Customer Payment
+POST	/api/payment/add
+Auth	Admin only
+Description	Link a payment method to a customer.
+Request Body	{   "customerId": number,   "paymentMethodId": number }
+Response	200 OK: CustomerPaymentDTO
+
+12.5 Remove Customer Payment
+DELETE	/api/payment/{customerPaymentId}
+Auth	Admin only
+Description	Remove a payment method from a customer.
+Request Body	None
+Response	200 OK: "Payment method removed successfully." 404 Not Found: "Customer payment not found."
+ 
+13. DTO Reference
+All TypeScript interfaces for the Angular frontend should match these shapes exactly.
+
+13.1 Auth DTOs
+RegisterRequest   { firstName, lastName, email, password, confirmPassword, accountType, storeName?, address? }
+LoginRequest      { email, password }
+LoginResponse     { token: string }
+ResetPasswordDTO  { email, token, newPassword, confirmPassword }
+
+13.2 Customer DTOs
+CustomerDTO           { id, firstName, lastName, email, address?, joinedAt?, isActive }
+CustomerWithOrdersDTO { id, firstName, lastName, email, address?, orders: OrderDTO[] }
+
+13.3 Seller DTOs
+SellerDTO             { id, storeName, rating?, firstName, lastName, email }
+SellerWithProductsDTO { id, storeName, rating?, firstName, lastName, email, products: ProductDTO[] }
+CreateSellerDTO       { storeName, userId }
+UpdateSellerDTO       { storeName?, rating? }
+
+13.4 Product DTOs
+ProductDTO            { id, name, imageUrl?, price, discount, rating?, stockQuantity, description, categoryId, sellerId, reviewCount }
+ProductWithCategoryDTO{ id, name, imageUrl?, price, discount, rating?, stockQuantity, description, categoryName }
+ProductWithSellerDTO  { id, name, imageUrl?, price, discount, rating?, stockQuantity, description, sellerStoreName }
+CreateProductDTO      { name, description, imageUrl?, price, discount, stockQuantity, categoryId, sellerId }
+UpdateProductDTO      { name?, description?, imageUrl?, price?, discount?, stockQuantity?, categoryId?, sellerId? }
+
+13.5 Order DTOs
+OrderDTO              { id, customerId, paymentMethodId, status, shippingAddress, createdAt, updatedAt?, deliveredAt?, totalAmount, orderItems: OrderItemDTO[] }
+OrderItemDTO          { productId, productName, price, quantity, subTotal }
+CreateOrderDTO        { customerId, paymentMethodId, shippingAddress, orderItems: CreateOrderItemDTO[] }
+CreateOrderItemDTO    { productId, quantity }
+
+13.6 Cart DTOs
+CartDTO               { id, customerId, cartItems: CartItemDTO[], totalPrice }
+CartItemDTO           { productId, productName, productPrice, quantity, subTotal }
+
+13.7 Wishlist DTOs
+WishlistDTO           { id, customerId, items: WishlistItemDTO[] }
+WishlistItemDTO       { id, productId, productName, price, rating?, discount }
+AddToWishlistDTO      { productId }
+
+13.8 Payment DTOs
+PaymentMethodDTO      { id, methodName }
+CustomerPaymentDTO    { id, customerId, paymentMethodId, methodName }
+AddCustomerPaymentDTO { customerId, paymentMethodId }
+
+13.9 Review DTOs
+ProductReviewDTO      { productId, customerId, rating (1-5), comment? }
+
+13.10 Category DTOs
+CategoryDTO           { id, name, description }
+CategoryWithProductsDTO { id, name, description, products: ProductDTO[] }
+ 
+14. Angular Integration Notes
+
+14.1 Environment
+environment.ts: { apiUrl: 'http://localhost:5181/api' }
+
+14.2 JWT Interceptor
+Attach token automatically to every HTTP request:
+headers: { Authorization: `Bearer ${token}` }
+
+14.3 Token Decoding
+Use jwt-decode to extract role and user info:
+npm install jwt-decode
+import { jwtDecode } from 'jwt-decode';
+const decoded = jwtDecode<DecodedToken>(token);
+// decoded.role => 'Customer' | 'Seller' | 'Admin'
+
+14.4 Route Guards
+•	authGuard — check if token exists, redirect to /auth/login if not
+•	roleGuard — check decoded token role against route data.role
+
+14.5 Important Notes
+•	Cart endpoints use query params, not request body — use HttpParams
+•	Order status update uses query param: ?status=Delivered
+•	Wishlist and Review endpoints extract customerId from token server-side — do not send customerId from Angular for these
+•	Forgot-password sends a plain string body, not a JSON object — set Content-Type: application/json and stringify the email
+•	Reset password token comes URL-encoded in the reset link — pass it as-is, server decodes it
+•	CORS is enabled for http://localhost:4200
+
+
+End of Buyonic API Documentation

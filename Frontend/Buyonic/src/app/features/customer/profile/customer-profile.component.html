@@ -1,0 +1,76 @@
+<div class="profile-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>👤 My Profile</h1>
+      <p>Manage your account information</p>
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay"><div class="spinner"></div><p>Loading profile…</p></div>
+    } @else if (error) {
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <h3>Unable to load profile</h3>
+        <p>{{ error }}</p>
+      </div>
+    } @else if (profile && form) {
+      <div class="profile-layout">
+        <!-- Avatar card -->
+        <div class="avatar-card card">
+          <div class="avatar-circle">{{ profile.firstName.charAt(0) }}{{ profile.lastName.charAt(0) }}</div>
+          <h3 class="avatar-name">{{ profile.firstName }} {{ profile.lastName }}</h3>
+          <p class="avatar-email">{{ profile.email }}</p>
+          <span class="badge badge-success mt-sm">{{ profile.isActive ? 'Active' : 'Inactive' }}</span>
+          @if (profile.joinedAt) {
+            <p class="join-date">Member since {{ profile.joinedAt | date:'mediumDate' }}</p>
+          }
+        </div>
+
+        <!-- Edit form -->
+        <div class="form-card card">
+          <h3 class="form-card-title">Edit Information</h3>
+          <form [formGroup]="form" (ngSubmit)="onSave()" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="prof-first">First Name</label>
+                <input id="prof-first" type="text" class="form-control" [class.is-invalid]="f['firstName'].invalid && f['firstName'].touched" formControlName="firstName">
+                @if (f['firstName'].invalid && f['firstName'].touched) {
+                  <span class="invalid-feedback">First name is required (min 2 chars).</span>
+                }
+              </div>
+              <div class="form-group">
+                <label for="prof-last">Last Name</label>
+                <input id="prof-last" type="text" class="form-control" [class.is-invalid]="f['lastName'].invalid && f['lastName'].touched" formControlName="lastName">
+                @if (f['lastName'].invalid && f['lastName'].touched) {
+                  <span class="invalid-feedback">Last name is required (min 2 chars).</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="prof-email">Email Address</label>
+              <input id="prof-email" type="email" class="form-control" [class.is-invalid]="f['email'].invalid && f['email'].touched" formControlName="email">
+              @if (f['email'].invalid && f['email'].touched) {
+                <span class="invalid-feedback">Valid email is required.</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="prof-address">Address <span class="optional">(optional)</span></label>
+              <input id="prof-address" type="text" class="form-control" formControlName="address" placeholder="Delivery address">
+            </div>
+
+            <button id="prof-save" type="submit" class="btn btn-primary" [disabled]="saving">
+              @if (saving) { <span class="spinner-sm"></span> Saving... }
+              @else { Save Changes }
+            </button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (toast) {
+    <div class="toast-message animate-fadeInUp" [class.toast-error]="toastType === 'error'">{{ toast }}</div>
+  }
+</div>

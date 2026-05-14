@@ -1,0 +1,209 @@
+<section class="auth-page">
+  <div class="auth-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <div class="auth-container animate-fadeInUp">
+    <div class="brand">
+      <div class="brand-icon">🛒</div>
+      <h1 class="brand-name">Buyonic</h1>
+      <p class="brand-tagline">Join thousands of buyers and sellers</p>
+    </div>
+
+    <div class="auth-card">
+      <h2 class="auth-title">Create your account</h2>
+      <p class="auth-subtitle">It's free and takes less than a minute</p>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          <span>⚠️</span> {{ errorMessage }}
+        </div>
+      }
+      @if (successMessage) {
+        <div class="alert alert-success" role="status">
+          <span>✅</span> {{ successMessage }}
+        </div>
+      }
+
+      <!-- Account type selector -->
+      <div class="account-type-selector">
+        <button
+          type="button"
+          class="type-btn"
+          [class.active]="form.get('accountType')?.value === 'Customer'"
+          (click)="form.get('accountType')?.setValue('Customer')"
+          id="reg-type-customer"
+        >
+          🛍️ Customer
+        </button>
+        <button
+          type="button"
+          class="type-btn"
+          [class.active]="form.get('accountType')?.value === 'Seller'"
+          (click)="form.get('accountType')?.setValue('Seller')"
+          id="reg-type-seller"
+        >
+          🏪 Seller
+        </button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-row">
+          <!-- First Name -->
+          <div class="form-group">
+            <label for="reg-first-name">First Name</label>
+            <input
+              id="reg-first-name"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="f['firstName'].invalid && f['firstName'].touched"
+              formControlName="firstName"
+              placeholder="John"
+              autocomplete="given-name"
+            >
+            @if (f['firstName'].invalid && f['firstName'].touched) {
+              <span class="invalid-feedback">
+                @if (f['firstName'].errors?.['required']) { First name is required. }
+                @else if (f['firstName'].errors?.['minlength']) { Minimum 2 characters. }
+              </span>
+            }
+          </div>
+
+          <!-- Last Name -->
+          <div class="form-group">
+            <label for="reg-last-name">Last Name</label>
+            <input
+              id="reg-last-name"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="f['lastName'].invalid && f['lastName'].touched"
+              formControlName="lastName"
+              placeholder="Doe"
+              autocomplete="family-name"
+            >
+            @if (f['lastName'].invalid && f['lastName'].touched) {
+              <span class="invalid-feedback">
+                @if (f['lastName'].errors?.['required']) { Last name is required. }
+                @else if (f['lastName'].errors?.['minlength']) { Minimum 2 characters. }
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="reg-email">Email Address</label>
+          <input
+            id="reg-email"
+            type="email"
+            class="form-control"
+            [class.is-invalid]="f['email'].invalid && f['email'].touched"
+            formControlName="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+          >
+          @if (f['email'].invalid && f['email'].touched) {
+            <span class="invalid-feedback">
+              @if (f['email'].errors?.['required']) { Email is required. }
+              @else if (f['email'].errors?.['email']) { Enter a valid email. }
+            </span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <div class="input-wrapper">
+            <input
+              id="reg-password"
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="f['password'].invalid && f['password'].touched"
+              formControlName="password"
+              placeholder="Min. 6 characters"
+              autocomplete="new-password"
+            >
+            <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          @if (f['password'].invalid && f['password'].touched) {
+            <span class="invalid-feedback">
+              @if (f['password'].errors?.['required']) { Password is required. }
+              @else if (f['password'].errors?.['minlength']) { Minimum 6 characters. }
+            </span>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="reg-confirm">Confirm Password</label>
+          <input
+            id="reg-confirm"
+            type="password"
+            class="form-control"
+            [class.is-invalid]="(f['confirmPassword'].touched || f['confirmPassword'].dirty) && form.errors?.['mismatch']"
+            formControlName="confirmPassword"
+            placeholder="Repeat your password"
+            autocomplete="new-password"
+          >
+          @if (f['confirmPassword'].touched && form.errors?.['mismatch']) {
+            <span class="invalid-feedback">Passwords do not match.</span>
+          }
+        </div>
+
+        <!-- Seller-only: Store Name -->
+        @if (isSeller) {
+          <div class="form-group">
+            <label for="reg-store">Store Name</label>
+            <input
+              id="reg-store"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="f['storeName'].invalid && f['storeName'].touched"
+              formControlName="storeName"
+              placeholder="Your store name"
+            >
+            @if (f['storeName'].invalid && f['storeName'].touched) {
+              <span class="invalid-feedback">Store name is required for sellers.</span>
+            }
+          </div>
+        }
+
+        <!-- Customer-only: Address (optional) -->
+        @if (!isSeller) {
+          <div class="form-group">
+            <label for="reg-address">Address <span class="optional">(optional)</span></label>
+            <input
+              id="reg-address"
+              type="text"
+              class="form-control"
+              formControlName="address"
+              placeholder="Your delivery address"
+              autocomplete="street-address"
+            >
+          </div>
+        }
+
+        <button
+          id="reg-submit"
+          type="submit"
+          class="btn btn-primary btn-lg w-full"
+          [disabled]="loading"
+        >
+          @if (loading) {
+            <span class="spinner-sm"></span> Creating account...
+          } @else {
+            Create Account →
+          }
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Already have an account?
+        <a routerLink="/auth/login" class="auth-link">Sign in</a>
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,55 @@
+<div class="profile-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>⚙️ Store Settings</h1>
+      <p>Manage your seller profile</p>
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay"><div class="spinner"></div><p>Loading…</p></div>
+    } @else if (profile && form) {
+      <div class="profile-layout">
+        <div class="avatar-card card">
+          <div class="avatar-circle">🏪</div>
+          <h3 class="avatar-name">{{ profile.storeName }}</h3>
+          <p class="avatar-email">{{ profile.email }}</p>
+          <p class="avatar-sub">{{ profile.firstName }} {{ profile.lastName }}</p>
+          @if (profile.rating) {
+            <div class="rating-display">
+              ⭐ {{ profile.rating.toFixed(1) }} / 5.0
+            </div>
+          }
+        </div>
+
+        <div class="form-card card">
+          <h3 class="form-card-title">Edit Store</h3>
+          @if (toast) {
+            <div class="alert" [class.alert-success]="toastType === 'success'" [class.alert-danger]="toastType === 'error'">
+              {{ toast }}
+            </div>
+          }
+          <form [formGroup]="form" (ngSubmit)="onSave()" novalidate>
+            <div class="form-group">
+              <label for="sp-store">Store Name *</label>
+              <input id="sp-store" type="text" class="form-control" [class.is-invalid]="f['storeName'].invalid && f['storeName'].touched" formControlName="storeName">
+              @if (f['storeName'].invalid && f['storeName'].touched) {
+                <span class="invalid-feedback">Store name is required (max 100 chars).</span>
+              }
+            </div>
+            <div class="form-group">
+              <label for="sp-rating">Rating <span class="optional">(0-5, optional)</span></label>
+              <input id="sp-rating" type="number" class="form-control" [class.is-invalid]="f['rating'].invalid && f['rating'].touched" formControlName="rating" min="0" max="5" step="0.1">
+              @if (f['rating'].invalid && f['rating'].touched) {
+                <span class="invalid-feedback">Rating must be 0–5.</span>
+              }
+            </div>
+            <button id="sp-save" type="submit" class="btn btn-primary" [disabled]="saving">
+              @if (saving) { <span class="spinner-sm"></span> Saving... }
+              @else { Save Changes }
+            </button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</div>

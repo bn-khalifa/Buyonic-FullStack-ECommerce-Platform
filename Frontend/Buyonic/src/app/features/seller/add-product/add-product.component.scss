@@ -1,0 +1,37 @@
+.add-product-page { padding: 2.5rem 0 4rem; min-height: 100vh; }
+
+.form-card {
+  max-width: 760px;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  @media (max-width: 640px) { grid-template-columns: 1fr; }
+}
+
+.optional { color: var(--text-muted); font-size: 0.75rem; font-weight: 400; }
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.spinner-sm {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
