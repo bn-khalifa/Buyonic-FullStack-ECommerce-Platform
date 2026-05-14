@@ -16,7 +16,8 @@ namespace Buyonic.BLL.Managers.ProductMng
 
         Task<IEnumerable<ProductDTO>> GetProductsBySellerAsync(int sellerId);
 
-        Task<ProductDTO> AddProductAsync(CreateProductDTO dto);
+        //Task<ProductDTO> AddProductAsync(CreateProductDTO dto);
+        Task<ProductDTO> AddProductAsync(CreateProductDTO dto, string sellerEmail);
 
         Task<bool> UpdateProductAsync(int id, UpdateProductDTO dto);
 

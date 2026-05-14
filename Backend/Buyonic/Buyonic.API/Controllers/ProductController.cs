@@ -2,6 +2,7 @@
 using Buyonic.BLL.Managers.ProductMng;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Buyonic.API.Controllers
 {
@@ -73,17 +74,27 @@ namespace Buyonic.API.Controllers
             return Ok(products);
         }
 
+        //[Authorize(Roles = "Admin,Seller")]
+        //[HttpPost]
+        //public async Task<IActionResult> Create(CreateProductDTO product)
+        //{
+        //    var createdProduct = await _productManager.AddProductAsync(product);
+
+        //    return CreatedAtAction(
+        //        nameof(GetById),
+        //        new { id = createdProduct.Id },
+        //        createdProduct
+        //    );
+        //}
         [Authorize(Roles = "Admin,Seller")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDTO product)
         {
-            var createdProduct = await _productManager.AddProductAsync(product);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (email == null) return Unauthorized();
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = createdProduct.Id },
-                createdProduct
-            );
+            var createdProduct = await _productManager.AddProductAsync(product, email);
+            return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
         }
 
         [Authorize(Roles = "Admin,Seller")]
