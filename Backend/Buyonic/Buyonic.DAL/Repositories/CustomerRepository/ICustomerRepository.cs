@@ -7,6 +7,7 @@
         Task<IEnumerable<Customer>> GetAllCustomersWithWishlistsAsync();
         Task<Customer> GetCustomerByIdAsync(int id);
         Task<Customer> GetCustomerByEmailAsync(string email);
+        Task<Customer?> GetCustomerByUserIdAsync(int userId);
         Task<bool> DeleteCustomerByID(int id);
         //Task<bool> UpdateCustomer(Customer customer);
     }

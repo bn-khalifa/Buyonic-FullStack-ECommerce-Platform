@@ -14,7 +14,10 @@ namespace Buyonic.BLL
 
                 FirstName = s.User!.firstName,
                 LastName = s.User.lastName,
-                Email = s.User.Email!
+                Email = s.User.Email!,
+                UserId = s.UserId,
+                IsActive = s.User.isActive,
+                IsDeleted = s.User.isDeleted
             };
         }
 

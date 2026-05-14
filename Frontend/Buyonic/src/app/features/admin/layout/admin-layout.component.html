@@ -1,0 +1,15 @@
+<app-navbar />
+<div class="admin-shell">
+  <aside class="admin-aside">
+    <div class="aside-brand">Admin</div>
+    <nav class="aside-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Overview</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      <a routerLink="/admin/orders" routerLinkActive="active">Orders</a>
+      <a routerLink="/admin/admins" routerLinkActive="active">Add admin</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <router-outlet />
+  </main>
+</div>

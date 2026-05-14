@@ -30,8 +30,7 @@ export class SellerProfileComponent implements OnInit {
         this.sellerNumericId = data.id;
         this.loading = false;
         this.form = this.fb.group({
-          storeName: [data.storeName, [Validators.required, Validators.maxLength(100)]],
-          rating: [data.rating ?? '', [Validators.min(0), Validators.max(5)]]
+          storeName: [data.storeName, [Validators.required, Validators.maxLength(100)]]
         });
       },
       error: () => { this.loading = false; }
@@ -44,10 +43,7 @@ export class SellerProfileComponent implements OnInit {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     if (this.sellerNumericId == null) return;
     this.saving = true;
-    const payload = {
-      storeName: this.form.value.storeName,
-      rating: this.form.value.rating !== '' ? Number(this.form.value.rating) : undefined
-    };
+    const payload = { storeName: this.form.value.storeName };
     this.sellerService.update(this.sellerNumericId, payload).subscribe({
       next: () => {
         this.saving = false;

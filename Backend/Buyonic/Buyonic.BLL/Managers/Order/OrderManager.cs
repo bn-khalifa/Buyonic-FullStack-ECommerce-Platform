@@ -17,6 +17,18 @@ namespace Buyonic.BLL
             return orders.Select(OrderDTOsMappers.OrderDtoMapper);
         }
 
+        public async Task<IEnumerable<OrderDTO>> GetOrdersBySellerIdAsync(int sellerId)
+        {
+            var orders = await _uniteOfWork.OrderRepository.GetOrdersBySellerIdAsync(sellerId);
+            return orders.Select(OrderDTOsMappers.OrderDtoMapper);
+        }
+
+        public async Task<IEnumerable<OrderDTO>> GetAllOrdersAsync()
+        {
+            var orders = await _uniteOfWork.OrderRepository.GetAllOrdersWithItemsAsync();
+            return orders.Select(OrderDTOsMappers.OrderDtoMapper);
+        }
+
         public async Task<OrderDTO> GetOrderWithItemsAsync(int orderId)
         {
             var order = await _uniteOfWork.OrderRepository.GetOrderWithItemsAsync(orderId);

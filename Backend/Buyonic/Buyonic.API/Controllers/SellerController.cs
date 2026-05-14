@@ -127,6 +127,19 @@ namespace Buyonic.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateSellerDTO seller)
         {
+            if (User.IsInRole("Seller") && !User.IsInRole("Admin"))
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                if (string.IsNullOrEmpty(email))
+                    return Unauthorized();
+
+                var me = await _sellerManager.GetSellerByEmailAsync(email);
+                if (me == null || me.Id != id)
+                    return Forbid();
+
+                seller = new UpdateSellerDTO { StoreName = seller.StoreName };
+            }
+
             var updated = await _sellerManager.UpdateSellerAsync(id, seller);
 
             if (!updated)

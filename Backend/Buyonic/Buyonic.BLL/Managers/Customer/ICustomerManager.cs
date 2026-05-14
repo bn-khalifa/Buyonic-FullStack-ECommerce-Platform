@@ -7,6 +7,7 @@ namespace Buyonic.BLL
         Task<IEnumerable<CustomerWithOrdersDTO>> GetAllCustomersWithOrdersAsync();
         Task<CustomerDTO> GetCustomerByIdAsync(int id);
         Task<CustomerDTO> GetCustomerByEmailAsync(string email);
+        Task<CustomerDTO?> GetCustomerByUserIdAsync(int userId);
         Task InsertCustomerAsync(Customer customer);
         Task<bool> DeleteCustomerAsync(int id);
         Task UpdateCustomerAsync(CustomerDTO c);

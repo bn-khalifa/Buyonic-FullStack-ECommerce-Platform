@@ -13,6 +13,16 @@ export class OrderService {
     return this.http.get<OrderDTO[]>(`${this.api}/customer/${customerId}`);
   }
 
+  /** Orders that include at least one product from this seller (Seller or Admin JWT). */
+  getBySeller(sellerId: number): Observable<OrderDTO[]> {
+    return this.http.get<OrderDTO[]>(`${this.api}/seller/${sellerId}`);
+  }
+
+  /** All platform orders (Admin JWT). */
+  getAll(): Observable<OrderDTO[]> {
+    return this.http.get<OrderDTO[]>(`${this.api}/all`);
+  }
+
   getById(orderId: number): Observable<OrderDTO> {
     return this.http.get<OrderDTO>(`${this.api}/${orderId}`);
   }

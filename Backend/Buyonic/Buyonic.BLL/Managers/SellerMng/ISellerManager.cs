@@ -18,6 +18,8 @@ namespace Buyonic.BLL
 
         Task<SellerDTO> AddSellerAsync(CreateSellerDTO dto);
 
+        Task<SellerDTO?> GetSellerByUserIdAsync(int userId);
+
         Task<bool> UpdateSellerAsync(int id, UpdateSellerDTO dto);
 
         Task<bool> DeleteSellerAsync(int id);

@@ -61,6 +61,9 @@ namespace Buyonic.BLL
             var isCorrect = await _userManager.CheckPasswordAsync(user, dto.Password);
             if (!isCorrect) return null;
 
+            if (user.isDeleted || !user.isActive)
+                return null;
+
             return await GenerateTokenAsync(user);
         }
 

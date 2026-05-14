@@ -27,6 +27,14 @@ export const routes: Routes = [
     loadChildren: () => import('./features/seller/seller.routes').then(m => m.sellerRoutes)
   },
 
+  // Admin feature (protected)
+  {
+    path: 'admin',
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'Admin' },
+    loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes)
+  },
+
   // Shared components
   {
     path: 'unauthorized',

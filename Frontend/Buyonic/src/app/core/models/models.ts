@@ -5,7 +5,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   confirmPassword: string;
-  accountType: string;         // 'Customer' | 'Seller'
+  accountType: string;         // 'Customer' | 'Seller' | 'Admin'
   storeName?: string;
   address?: string;
 }
@@ -44,6 +44,8 @@ export interface CustomerDTO {
   address?: string;
   joinedAt?: string;
   isActive: boolean;
+  isDeleted?: boolean;
+  userId?: number;
 }
 
 export interface CustomerWithOrdersDTO {
@@ -73,6 +75,9 @@ export interface SellerDTO {
   firstName: string;
   lastName: string;
   email: string;
+  userId: number;
+  isActive: boolean;
+  isDeleted: boolean;
 }
 
 export interface SellerWithProductsDTO {
@@ -93,6 +98,23 @@ export interface CreateSellerDTO {
 export interface UpdateSellerDTO {
   storeName?: string;
   rating?: number;
+}
+
+/** Admin user search / detail (GET /api/user/lookup). */
+export interface UserLookupResultDTO {
+  accountType: string;
+  applicationUserId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  isActive: boolean;
+  isDeleted: boolean;
+  customer?: CustomerDTO;
+  seller?: SellerDTO;
+}
+
+export interface SetUserActiveDTO {
+  isActive: boolean;
 }
 
 // ─── Product ─────────────────────────────────────────────────────────────────

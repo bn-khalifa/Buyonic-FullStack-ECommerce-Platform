@@ -44,6 +44,13 @@ namespace Buyonic.DAL
                 .FirstOrDefaultAsync(s => s.User!.Email == email);
         }
 
+        public async Task<Seller?> GetSellerByUserIdAsync(int userId)
+        {
+            return await _context.Sellers
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.UserId == userId);
+        }
+
         public async Task<Seller?> GetSellerWithProductsByIdAsync(int id)
         {
             return await _context.Sellers

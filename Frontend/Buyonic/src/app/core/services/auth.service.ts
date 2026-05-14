@@ -93,7 +93,7 @@ export class AuthService {
     switch (role) {
       case 'Customer': this.router.navigate(['/customer']); break;
       case 'Seller':   this.router.navigate(['/seller']);   break;
-      case 'Admin':    this.router.navigate(['/admin']);    break;
+      case 'Admin':    this.router.navigate(['/admin/dashboard']);    break;
       default:         this.router.navigate(['/auth/login']); break;
     }
   }

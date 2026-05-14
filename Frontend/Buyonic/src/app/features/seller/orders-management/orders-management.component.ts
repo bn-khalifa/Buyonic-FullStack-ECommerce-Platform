@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { switchMap } from 'rxjs';
 import { OrderService } from '../../../core/services/order.service';
-import { ProductService } from '../../../core/services/product.service';
 import { SellerService } from '../../../core/services/seller.service';
 import { OrderDTO } from '../../../core/models/models';
 
@@ -15,11 +14,9 @@ import { OrderDTO } from '../../../core/models/models';
 })
 export class OrdersManagementComponent implements OnInit {
   private orderService = inject(OrderService);
-  private productService = inject(ProductService);
   private sellerService = inject(SellerService);
 
   orders: OrderDTO[] = [];
-  productIds: Set<number> = new Set();
   loading = true;
   toast = '';
   updatingOrderId: number | null = null;
@@ -28,10 +25,10 @@ export class OrdersManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.sellerService.getMe().pipe(
-      switchMap(seller => this.productService.getBySeller(seller.id))
+      switchMap(seller => this.orderService.getBySeller(seller.id))
     ).subscribe({
-      next: (products) => {
-        products.forEach(p => this.productIds.add(p.id));
+      next: (orders) => {
+        this.orders = orders;
         this.loading = false;
       },
       error: () => { this.loading = false; }

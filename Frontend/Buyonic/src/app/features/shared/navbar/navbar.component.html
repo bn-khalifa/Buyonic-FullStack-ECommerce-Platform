@@ -1,7 +1,7 @@
 <nav class="navbar">
   <div class="nav-inner">
     <!-- Logo -->
-    <a class="nav-logo" [routerLink]="role === 'Seller' ? '/seller' : '/customer'">
+    <a class="nav-logo" [routerLink]="role === 'Seller' ? '/seller' : role === 'Admin' ? '/admin/dashboard' : '/customer'">
       <span class="nav-logo-icon">🛒</span>
       <span class="nav-logo-text">Buyonic</span>
     </a>
@@ -14,6 +14,12 @@
         <a routerLink="/customer/cart" routerLinkActive="active" class="nav-link" id="nav-cart">🛍️ Cart</a>
         <a routerLink="/customer/wishlist" routerLinkActive="active" class="nav-link" id="nav-wishlist">❤️ Wishlist</a>
         <a routerLink="/customer/orders" routerLinkActive="active" class="nav-link" id="nav-orders">📦 Orders</a>
+      }
+      @if (role === 'Admin') {
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link" id="nav-admin-home">Overview</a>
+        <a routerLink="/admin/users" routerLinkActive="active" class="nav-link" id="nav-admin-users">Users</a>
+        <a routerLink="/admin/orders" routerLinkActive="active" class="nav-link" id="nav-admin-orders">Orders</a>
+        <a routerLink="/admin/admins" routerLinkActive="active" class="nav-link" id="nav-admin-add">Admins</a>
       }
       @if (role === 'Seller') {
         <a routerLink="/seller" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link" id="nav-seller-home">Dashboard</a>
@@ -51,6 +57,12 @@
         <a routerLink="/customer/wishlist" class="mobile-link" (click)="mobileOpen = false">Wishlist</a>
         <a routerLink="/customer/orders" class="mobile-link" (click)="mobileOpen = false">Orders</a>
         <a routerLink="/customer/profile" class="mobile-link" (click)="mobileOpen = false">Profile</a>
+      }
+      @if (role === 'Admin') {
+        <a routerLink="/admin/dashboard" class="mobile-link" (click)="mobileOpen = false">Overview</a>
+        <a routerLink="/admin/users" class="mobile-link" (click)="mobileOpen = false">Users</a>
+        <a routerLink="/admin/orders" class="mobile-link" (click)="mobileOpen = false">Orders</a>
+        <a routerLink="/admin/admins" class="mobile-link" (click)="mobileOpen = false">Admins</a>
       }
       @if (role === 'Seller') {
         <a routerLink="/seller" class="mobile-link" (click)="mobileOpen = false">Dashboard</a>
