@@ -1,11 +1,19 @@
-﻿using Buyonic.BLL.DTOs.Productdto;
+﻿namespace Buyonic.BLL;
 
-namespace Buyonic.BLL.DTOs.Sellerdto;
+ public class SellerWithProductsDTO
+    {
+        public int Id { get; set; }
 
-public class SellerWithProductsDTO
-{
-    public int Id { get; set; }
-    public string StoreName { get; set; }
-    public float? Rating { get; set; }
-    public IEnumerable<ProductDTO> Products { get; set; }
+        public string StoreName { get; set; } = null!;
+
+        public decimal? Rating { get; set; }
+
+        public string FirstName { get; set; } = null!;
+
+        public string LastName { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
+        public IEnumerable<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+    
 }

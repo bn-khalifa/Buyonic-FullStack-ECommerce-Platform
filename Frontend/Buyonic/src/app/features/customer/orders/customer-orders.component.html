@@ -1,0 +1,78 @@
+<div class="orders-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>📦 My Orders</h1>
+      <p>Track and manage all your orders</p>
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading orders…</p>
+      </div>
+    } @else if (error || orders.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No orders yet</h3>
+        <p>Place your first order from the product catalog!</p>
+      </div>
+    } @else {
+      <div class="orders-list">
+        @for (order of orders; track order.id) {
+          <div class="order-card card">
+            <div class="order-header" (click)="toggleExpand(order.id)" style="cursor:pointer">
+              <div class="order-meta">
+                <span class="order-id">#ORD-{{ order.id }}</span>
+                <span class="badge {{ getStatusClass(order.status) }}">
+                  {{ getStatusIcon(order.status) }} {{ order.status }}
+                </span>
+              </div>
+              <div class="order-summary">
+                <span class="order-date">{{ order.createdAt | date:'mediumDate' }}</span>
+                <span class="order-total">${{ order.totalAmount.toFixed(2) }}</span>
+                <span class="expand-icon">{{ expandedOrder === order.id ? '▲' : '▼' }}</span>
+              </div>
+            </div>
+
+            @if (expandedOrder === order.id) {
+              <div class="order-details animate-fadeIn">
+                <div class="order-info-row">
+                  <div class="info-item">
+                    <span class="info-label">Shipping Address</span>
+                    <span class="info-value">{{ order.shippingAddress }}</span>
+                  </div>
+                  @if (order.deliveredAt) {
+                    <div class="info-item">
+                      <span class="info-label">Delivered At</span>
+                      <span class="info-value">{{ order.deliveredAt | date:'medium' }}</span>
+                    </div>
+                  }
+                </div>
+
+                <h4 class="items-title">Order Items</h4>
+                <div class="order-items">
+                  @for (item of order.orderItems; track item.productId) {
+                    <div class="order-item">
+                      <div class="oi-info">
+                        <span class="oi-icon">📦</span>
+                        <div>
+                          <p class="oi-name">{{ item.productName }}</p>
+                          <p class="oi-qty">Qty: {{ item.quantity }} × ${{ item.price.toFixed(2) }}</p>
+                        </div>
+                      </div>
+                      <span class="oi-subtotal">${{ item.subTotal.toFixed(2) }}</span>
+                    </div>
+                  }
+                </div>
+
+                <div class="order-footer">
+                  <span>Total: <strong>${{ order.totalAmount.toFixed(2) }}</strong></span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

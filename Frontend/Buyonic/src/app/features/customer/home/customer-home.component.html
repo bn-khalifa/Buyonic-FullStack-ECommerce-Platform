@@ -1,0 +1,125 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-greeting">Welcome back, {{ firstName }}! 👋</p>
+      <h1 class="hero-title">Discover Amazing Products</h1>
+      <p class="hero-subtitle">Explore thousands of products from top sellers at unbeatable prices.</p>
+      <div class="hero-actions">
+        <a routerLink="/customer/browse" class="btn btn-primary btn-lg" id="hero-browse-btn">
+          Browse All Products →
+        </a>
+        <a routerLink="/customer/orders" class="btn btn-outline btn-lg" id="hero-orders-btn">
+          My Orders
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-blob">
+        <span class="blob-emoji">🛍️</span>
+        <div class="blob-ring ring-1"></div>
+        <div class="blob-ring ring-2"></div>
+        <div class="blob-ring ring-3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cart toast -->
+  @if (cartMessage) {
+    <div class="cart-toast animate-fadeInUp">{{ cartMessage }}</div>
+  }
+
+  <!-- Featured Products -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">✨ Featured Products</h2>
+        <a routerLink="/customer/browse" class="section-link" id="view-all-link">View all →</a>
+      </div>
+
+      @if (loading) {
+        <div class="loading-overlay">
+          <div class="spinner"></div>
+          <p>Loading products…</p>
+        </div>
+      } @else if (featuredProducts.length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h3>No products yet</h3>
+          <p>Check back soon for amazing deals!</p>
+        </div>
+      } @else {
+        <div class="products-grid">
+          @for (product of featuredProducts; track product.id) {
+            <div class="product-card animate-fadeInUp">
+              <div class="product-image">
+                @if (product.imageUrl) {
+                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy">
+                } @else {
+                  <div class="product-placeholder">🏷️</div>
+                }
+                @if (product.discount > 0) {
+                  <span class="discount-badge">-{{ product.discount }}%</span>
+                }
+              </div>
+              <div class="product-body">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <div class="product-rating">
+                  @for (star of getStars(product.rating); track $index) {
+                    <span [class.filled]="star === '★'">{{ star }}</span>
+                  }
+                  <span class="review-count">({{ product.reviewCount }})</span>
+                </div>
+                <div class="product-price">
+                  @if (product.discount > 0) {
+                    <span class="price-original">${{ product.price.toFixed(2) }}</span>
+                  }
+                  <span class="price-final">${{ getDiscountedPrice(product).toFixed(2) }}</span>
+                </div>
+                <div class="product-stock" [class.low-stock]="product.stockQuantity < 5">
+                  {{ product.stockQuantity > 0 ? (product.stockQuantity < 5 ? '⚠️ Only ' + product.stockQuantity + ' left' : '✅ In stock') : '❌ Out of stock' }}
+                </div>
+                <button
+                  class="btn btn-primary w-full"
+                  [disabled]="product.stockQuantity === 0"
+                  (click)="addToCart(product.id)"
+                  [id]="'add-to-cart-' + product.id"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Quick stats -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🏪</div>
+          <div class="stat-value">{{ products.length }}+</div>
+          <div class="stat-label">Products Available</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🚀</div>
+          <div class="stat-value">Fast</div>
+          <div class="stat-label">Delivery Options</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔒</div>
+          <div class="stat-value">Secure</div>
+          <div class="stat-label">Payment Methods</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value">Top</div>
+          <div class="stat-label">Rated Sellers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

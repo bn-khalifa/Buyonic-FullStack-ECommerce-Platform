@@ -1,4 +1,4 @@
-﻿namespace Buyonic.BLL.DTOs.Categorydto
+﻿namespace Buyonic.BLL
 {
     public class CategoryDTO
     {

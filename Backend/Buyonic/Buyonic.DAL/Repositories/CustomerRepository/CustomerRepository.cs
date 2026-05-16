@@ -16,8 +16,12 @@ namespace Buyonic.DAL
         // returns customers and their orders
         public async Task<IEnumerable<Customer>> GetAllCustomersWithOrdersAsync()
         {
-            var customers = await _context.Customers.Include(c => c.Orders).ToListAsync();
-            return customers;
+            return await _context.Customers
+                .Include(c => c.User)
+                .Include(c => c.Orders)
+                    .ThenInclude(o => o.OrderItems)
+                        .ThenInclude(i => i.Product)
+                .ToListAsync();
         }
 
         // returns customers and their carts
@@ -53,6 +57,31 @@ namespace Buyonic.DAL
             return await _context.Customers
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(c => c.User.Email == email);
+        }
+
+        public async Task<Customer?> GetCustomerByUserIdAsync(int userId)
+        {
+            return await _context.Customers
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.userId == userId);
+        }
+
+        public async Task<bool> DeleteCustomerByID(int id)
+        {
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
+            if (customer is null) return false;
+
+            var user = await _userManager.FindByIdAsync(customer.userId.ToString());
+            if (user is null) return false;
+
+            user.isDeleted = true;
+            user.isActive = false;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) return false;
+
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -1,0 +1,108 @@
+<section class="auth-page">
+  <div class="auth-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="auth-container animate-fadeInUp">
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">🛒</div>
+      <h1 class="brand-name">Buyonic</h1>
+      <p class="brand-tagline">Smart commerce, redefined</p>
+    </div>
+
+    <div class="auth-card">
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-subtitle">Sign in to your account to continue</p>
+
+      <!-- Error Alert -->
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          <span>⚠️</span> {{ errorMessage }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Email -->
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input
+              id="login-email"
+              type="email"
+              class="form-control"
+              [class.is-invalid]="email.invalid && email.touched"
+              formControlName="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+            >
+          </div>
+          @if (email.invalid && email.touched) {
+            <span class="invalid-feedback">
+              @if (email.errors?.['required']) { Email is required. }
+              @else if (email.errors?.['email']) { Enter a valid email address. }
+            </span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              id="login-password"
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              [class.is-invalid]="password.invalid && password.touched"
+              formControlName="password"
+              placeholder="Your password"
+              autocomplete="current-password"
+            >
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="showPassword = !showPassword"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          @if (password.invalid && password.touched) {
+            <span class="invalid-feedback">
+              @if (password.errors?.['required']) { Password is required. }
+              @else if (password.errors?.['minlength']) { Password must be at least 6 characters. }
+            </span>
+          }
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="forgot-link">
+          <a routerLink="/auth/forgot-password">Forgot your password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button
+          id="login-submit"
+          type="submit"
+          class="btn btn-primary btn-lg w-full"
+          [disabled]="loading"
+        >
+          @if (loading) {
+            <span class="spinner-sm"></span> Signing in...
+          } @else {
+            Sign In →
+          }
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Don't have an account?
+        <a routerLink="/auth/register" class="auth-link">Create one free</a>
+      </p>
+    </div>
+  </div>
+</section>

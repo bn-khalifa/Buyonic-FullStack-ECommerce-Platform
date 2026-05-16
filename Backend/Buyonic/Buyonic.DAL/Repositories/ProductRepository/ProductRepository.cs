@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Buyonic.DAL.Repositories.ProductRepository
+namespace Buyonic.DAL
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
@@ -8,53 +8,58 @@ namespace Buyonic.DAL.Repositories.ProductRepository
         {
         }
 
-        // products with sellers
         public async Task<IEnumerable<Product>> GetAllProductsWithSellersAsync()
         {
             return await _context.Products
+                .Where(p => !p.isDeleted)
                 .Include(p => p.Seller)
                 .ToListAsync();
         }
 
-        // products with categories
         public async Task<IEnumerable<Product>> GetAllProductsWithCategoriesAsync()
         {
             return await _context.Products
+                .Where(p => !p.isDeleted)
                 .Include(p => p.Category)
                 .ToListAsync();
         }
 
-        // products with order items
-        public async Task<IEnumerable<Product>> GetAllProductsWithOrderItemsAsync()
+        public async Task<Product?> GetProductByIdAsync(int id)
         {
             return await _context.Products
-                .Include(p => p.OrderItems)
-                .ToListAsync();
-        }
-
-        // get product by id
-        public async Task<Product> GetProductByIdAsync(int id)
-        {
-            return await _context.Products
+                .Where(p => !p.isDeleted)
                 .Include(p => p.Seller)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        // products by category
         public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
         {
             return await _context.Products
-                .Where(p => p.categoryId == categoryId)
+                .Where(p => !p.isDeleted && p.CategoryId == categoryId)
                 .ToListAsync();
         }
 
-        // products by seller
         public async Task<IEnumerable<Product>> GetProductsBySellerAsync(int sellerId)
         {
             return await _context.Products
-                .Where(p => p.sellerId == sellerId)
+                .Where(p => !p.isDeleted && p.SellerId == sellerId)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetAllAsync()
+        {
+            return await _context.Products
+                .Where(p => !p.isDeleted)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetAllProductsWithOrderItemsAsync()
+        {
+            return await _context.Products
+        .Where(p => !p.isDeleted)
+        .Include(p => p.OrderItems)
+        .ToListAsync();
         }
     }
 }

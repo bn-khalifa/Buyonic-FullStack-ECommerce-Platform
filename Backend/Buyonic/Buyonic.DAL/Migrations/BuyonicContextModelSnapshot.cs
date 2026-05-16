@@ -70,9 +70,6 @@ namespace Buyonic.DAL.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SellerId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -110,8 +107,6 @@ namespace Buyonic.DAL.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("SellerId");
-
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
@@ -119,7 +114,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3d762414-871e-4c80-becc-49ce3bc8550e",
+                            ConcurrencyStamp = "9357542d-5001-4544-a8d5-b9ac495c2dc9",
                             Email = "ahmed@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -140,7 +135,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ecfc7444-95e0-4f8d-a4bf-c2fc0245e8cf",
+                            ConcurrencyStamp = "cb3cedf8-311d-4f8d-a74f-5a7c1483e791",
                             Email = "sara@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -161,7 +156,7 @@ namespace Buyonic.DAL.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "162ad971-c072-4c7b-9560-8c95da7ab1c5",
+                            ConcurrencyStamp = "84c8b3e5-3e8d-4051-8c9f-3e1f4b3c8c8e",
                             Email = "store@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -254,37 +249,36 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("description")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            description = "Electronic devices and accessories",
-                            name = "Electronics"
+                            Description = "Electronic devices and accessories",
+                            Name = "Electronics"
                         },
                         new
                         {
                             Id = 2,
-                            description = "Men and women clothing",
-                            name = "Clothing"
+                            Description = "Men and women clothing",
+                            Name = "Clothing"
                         },
                         new
                         {
                             Id = 3,
-                            description = "Home and garden supplies",
-                            name = "Home & Garden"
+                            Description = "Home and garden supplies",
+                            Name = "Home & Garden"
                         });
                 });
 
@@ -363,6 +357,10 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime2");
 
@@ -397,6 +395,7 @@ namespace Buyonic.DAL.Migrations
                         new
                         {
                             Id = 1,
+                            ShippingAddress = "Cairo",
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
                             customerId = 1,
                             paymentMethodId = 1,
@@ -494,100 +493,133 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("categoryId")
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("Rating")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ReviewCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SellerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<float>("discount")
-                        .HasColumnType("real");
-
-                    b.Property<string>("imageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<float?>("rating")
-                        .HasColumnType("real");
-
-                    b.Property<int>("sellerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("stockQuantity")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("categoryId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("sellerId");
+                    b.HasIndex("SellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            categoryId = 1,
+                            CategoryId = 1,
+                            Description = "15-inch laptop",
+                            Discount = 0m,
+                            Name = "Laptop Pro",
+                            Price = 1200m,
+                            Rating = 4.7m,
+                            ReviewCount = 0,
+                            SellerId = 1,
+                            StockQuantity = 50,
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
-                            description = "15-inch laptop",
-                            discount = 0f,
-                            imageUrl = "",
-                            isDeleted = false,
-                            name = "Laptop Pro",
-                            price = 1200m,
-                            rating = 4.7f,
-                            sellerId = 1,
-                            stockQuantity = 50
+                            isDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            categoryId = 1,
+                            CategoryId = 1,
+                            Description = "Ergonomic mouse",
+                            Discount = 0m,
+                            Name = "Wireless Mouse",
+                            Price = 25m,
+                            Rating = 4.3m,
+                            ReviewCount = 0,
+                            SellerId = 1,
+                            StockQuantity = 200,
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
-                            description = "Ergonomic mouse",
-                            discount = 0f,
-                            imageUrl = "",
-                            isDeleted = false,
-                            name = "Wireless Mouse",
-                            price = 25m,
-                            rating = 4.3f,
-                            sellerId = 1,
-                            stockQuantity = 200
+                            isDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            categoryId = 2,
+                            CategoryId = 2,
+                            Description = "Comfortable fit",
+                            Discount = 0m,
+                            Name = "Cotton T-Shirt",
+                            Price = 15m,
+                            Rating = 4.0m,
+                            ReviewCount = 0,
+                            SellerId = 1,
+                            StockQuantity = 300,
                             createdAt = new DateTime(2026, 6, 6, 10, 30, 0, 0, DateTimeKind.Utc),
-                            description = "Comfortable fit",
-                            discount = 0f,
-                            imageUrl = "",
-                            isDeleted = false,
-                            name = "Cotton T-Shirt",
-                            price = 15m,
-                            rating = 4f,
-                            sellerId = 1,
-                            stockQuantity = 300
+                            isDeleted = false
                         });
+                });
+
+            modelBuilder.Entity("Buyonic.DAL.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Buyonic.DAL.Seller", b =>
@@ -598,31 +630,30 @@ namespace Buyonic.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<float?>("rating")
-                        .HasColumnType("real");
+                    b.Property<decimal?>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("storeName")
+                    b.Property<string>("StoreName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            rating = 4.5f,
-                            storeName = "TechZone",
-                            userId = 3
+                            Rating = 4.5m,
+                            StoreName = "TechZone",
+                            UserId = 3
                         });
                 });
 
@@ -858,16 +889,6 @@ namespace Buyonic.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Buyonic.DAL.ApplicationUser", b =>
-                {
-                    b.HasOne("Buyonic.DAL.Seller", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Seller");
-                });
-
             modelBuilder.Entity("Buyonic.DAL.Cart", b =>
                 {
                     b.HasOne("Buyonic.DAL.Customer", "Customer")
@@ -969,14 +990,14 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.Product", b =>
                 {
                     b.HasOne("Buyonic.DAL.Category", "Category")
-                        .WithMany("products")
-                        .HasForeignKey("categoryId")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Buyonic.DAL.Seller", "Seller")
                         .WithMany("Products")
-                        .HasForeignKey("sellerId")
+                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -985,11 +1006,30 @@ namespace Buyonic.DAL.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("Buyonic.DAL.Review", b =>
+                {
+                    b.HasOne("Buyonic.DAL.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Buyonic.DAL.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Buyonic.DAL.Seller", b =>
                 {
                     b.HasOne("Buyonic.DAL.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("userId")
+                        .WithOne("Seller")
+                        .HasForeignKey("Buyonic.DAL.Seller", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1080,6 +1120,8 @@ namespace Buyonic.DAL.Migrations
             modelBuilder.Entity("Buyonic.DAL.ApplicationUser", b =>
                 {
                     b.Navigation("Customer");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("Buyonic.DAL.Cart", b =>
@@ -1089,7 +1131,7 @@ namespace Buyonic.DAL.Migrations
 
             modelBuilder.Entity("Buyonic.DAL.Category", b =>
                 {
-                    b.Navigation("products");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Buyonic.DAL.Customer", b =>

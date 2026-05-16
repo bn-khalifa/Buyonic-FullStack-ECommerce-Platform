@@ -1,0 +1,113 @@
+<div class="browse-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>Browse Products</h1>
+      <p>Discover {{ filtered.length }} products from our sellers</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          id="browse-search"
+          type="text"
+          class="search-input"
+          placeholder="Search products…"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+        >
+      </div>
+
+      <select
+        id="browse-category"
+        class="filter-select"
+        [(ngModel)]="selectedCategory"
+        (change)="applyFilters()"
+      >
+        <option [ngValue]="0">All Categories</option>
+        @for (cat of categories; track cat.id) {
+          <option [ngValue]="cat.id">{{ cat.name }}</option>
+        }
+      </select>
+
+      <select
+        id="browse-sort"
+        class="filter-select"
+        [(ngModel)]="sortBy"
+        (change)="applyFilters()"
+      >
+        <option value="name">Sort: Name</option>
+        <option value="price-asc">Sort: Price ↑</option>
+        <option value="price-desc">Sort: Price ↓</option>
+        <option value="rating">Sort: Rating</option>
+      </select>
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading products…</p>
+      </div>
+    } @else if (filtered.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No products found</h3>
+        <p>Try adjusting your search or filters.</p>
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of filtered; track product.id) {
+          <div class="product-card">
+            <div class="product-image">
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" loading="lazy">
+              } @else {
+                <div class="product-placeholder">🏷️</div>
+              }
+              @if (product.discount > 0) {
+                <span class="discount-badge">-{{ product.discount }}%</span>
+              }
+              <button
+                class="wishlist-btn"
+                (click)="addToWishlist(product.id)"
+                [id]="'wishlist-' + product.id"
+                title="Add to wishlist"
+              >❤️</button>
+            </div>
+            <div class="product-body">
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-desc">{{ product.description | slice:0:80 }}{{ product.description.length > 80 ? '…' : '' }}</p>
+              <div class="product-rating">
+                @for (star of getStars(product.rating); track $index) {
+                  <span [class.filled]="star === '★'">{{ star }}</span>
+                }
+                <span class="review-count">({{ product.reviewCount }})</span>
+              </div>
+              <div class="product-price">
+                @if (product.discount > 0) {
+                  <span class="price-original">${{ product.price.toFixed(2) }}</span>
+                }
+                <span class="price-final">${{ getDiscountedPrice(product).toFixed(2) }}</span>
+              </div>
+              <div class="product-actions">
+                <button
+                  class="btn btn-primary w-full"
+                  [disabled]="product.stockQuantity === 0"
+                  (click)="addToCart(product.id)"
+                  [id]="'cart-' + product.id"
+                >
+                  {{ product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (toast) {
+    <div class="toast-message animate-fadeInUp">{{ toast }}</div>
+  }
+</div>

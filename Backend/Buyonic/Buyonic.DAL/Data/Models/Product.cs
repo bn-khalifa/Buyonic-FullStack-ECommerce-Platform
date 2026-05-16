@@ -5,27 +5,42 @@ namespace Buyonic.DAL
     public class Product : IAuditableEntity
     {
         public int Id { get; set; }
-        public string name { get; set; } = string.Empty;
 
-        public string? imageUrl { get; set; } = string.Empty;
-        public string description { get; set; } = string.Empty;
-        public decimal price { get; set; }
-        public float discount { get; set; } = 0;
-        public int stockQuantity { get; set; }
-        public float? rating { get; set; }
-        [ForeignKey("Seller")]
-        public int sellerId { get; set; }
-        [ForeignKey("Category")]
-        public int categoryId { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public DateTime createdAt { get; set; }
+        public string? ImageUrl { get; set; }
+
+        public string Description { get; set; } = string.Empty;
+
+        public decimal Price { get; set; }
+
+        public decimal Discount { get; set; } = 0;
+
+        public int StockQuantity { get; set; }
+
+        public decimal? Rating { get; set; }
+
+        [ForeignKey(nameof(Seller))]
+        public int SellerId { get; set; }
+
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
+
+        public DateTime createdAt { get; set; } = DateTime.UtcNow;
         public DateTime? updatedAt { get; set; }
+       
         public bool isDeleted { get; set; } = false;
+        
+        public int ReviewCount { get; set; } = 0;
 
-        public Category?Category { get; set; }
-        public Seller?Seller { get; set; }
-        public ICollection<OrderItem>?OrderItems { get; set; } = new List<OrderItem>();
-        public ICollection<CartItem>?artItems { get; set; } = new List<CartItem>();
-        public ICollection<WishlistItem>?WishlistItems { get; set; } = new List<WishlistItem>();
+        public Category? Category { get; set; }
+
+        public Seller? Seller { get; set; }
+
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
+        public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
     }
 }

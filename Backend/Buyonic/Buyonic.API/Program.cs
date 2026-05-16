@@ -1,9 +1,7 @@
-using Buyonic.BLL.Managers.CategoryMng;
-using Buyonic.BLL.Managers.ProductMng;
-using Buyonic.BLL.Managers.SellerMng;
-using Buyonic.DAL;
-using Buyonic.DAL.Repositories.ProductRepository;
+
+
 using Buyonic.BLL;
+using Buyonic.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +17,14 @@ namespace Buyonic.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.ReferenceHandler =
+                System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+
+            //builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
 
             // DbContext
             builder.Services.AddDbContext<BuyonicContext>(options =>
@@ -31,9 +35,10 @@ namespace Buyonic.API
                 .AddEntityFrameworkStores<BuyonicContext>()
                 .AddDefaultTokenProviders();
 
+
             // Repositories & UnitOfWork & Managers
             builder.Services.AddDALServices();
-            builder.Services.AddBLLServices();
+            builder.Services.AddBLLServices(builder.Configuration);
 
 
             // Swagger
@@ -79,7 +84,7 @@ namespace Buyonic.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
             });
-            
+
             // CORS
             builder.Services.AddCors(options =>
             {
@@ -91,18 +96,6 @@ namespace Buyonic.API
                 });
             });
 
-            // Managers ← ضيفيهم هنا
-            builder.Services.AddScoped<ISellerManager, SellerManager>();
-            builder.Services.AddScoped<IProductManager, ProductManager>();
-            builder.Services.AddScoped<ICategoryManager, CategoryManager>();
-
-            // to avoid Circular Reference!
-            builder.Services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.ReferenceHandler =
-                        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-                });
 
             var app = builder.Build();
 
@@ -113,6 +106,7 @@ namespace Buyonic.API
                 app.MapOpenApi();
             }
 
+            app.UseCors("AngularPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

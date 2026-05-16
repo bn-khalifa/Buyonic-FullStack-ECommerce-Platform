@@ -1,7 +1,6 @@
-﻿using Buyonic.BLL.DTOs.Categorydto;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 
-namespace Buyonic.BLL.Managers.CategoryMng
+namespace Buyonic.BLL
 {
     public interface ICategoryManager
     {
@@ -10,8 +9,8 @@ namespace Buyonic.BLL.Managers.CategoryMng
         Task<CategoryDTO?> GetCategoryByIdAsync(int id);
         Task<CategoryWithProductsDTO?> GetCategoryByIdWithProductsAsync(int id);
         Task<CategoryDTO?> GetCategoryByNameAsync(string name);
-        Task AddCategoryAsync(Category category);
-        Task UpdateCategoryAsync(Category category);
+        Task AddCategoryAsync(CategoryDTO category);
+        Task UpdateCategoryAsync(int id, CategoryDTO category);
         Task DeleteCategoryAsync(int id);
     }
 }

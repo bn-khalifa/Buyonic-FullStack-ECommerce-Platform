@@ -8,7 +8,7 @@ namespace Buyonic.DAL
 
         Task<IEnumerable<Product>> GetAllProductsWithOrderItemsAsync();
 
-        Task<Product> GetProductByIdAsync(int id);
+        Task<Product?> GetProductByIdAsync(int id);
 
         Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
 

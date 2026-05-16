@@ -8,23 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Managers\Order\**" />
-    <EmbeddedResource Remove="Managers\Order\**" />
-    <None Remove="Managers\Order\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Buyonic.DAL\Buyonic.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Managers\Category\" />
-    <Folder Include="Managers\Order\" />
-    <Folder Include="Managers\Product\" />
   </ItemGroup>
 
 </Project>

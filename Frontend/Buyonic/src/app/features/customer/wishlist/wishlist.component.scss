@@ -1,0 +1,94 @@
+.wishlist-page { padding: 2.5rem 0 4rem; min-height: 100vh; }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  p { color: var(--text-muted); font-size: 0.875rem; }
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.wishlist-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+  &:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  .item-icon { font-size: 2.5rem; background: var(--bg-secondary); padding: 0.5rem; border-radius: var(--radius-md); }
+  .item-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg-secondary);
+    flex-shrink: 0;
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  }
+}
+
+.remove-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  &:hover { background: rgba(239, 68, 68, 0.2); }
+}
+
+.item-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-rating {
+  display: flex;
+  gap: 1px;
+  span { font-size: 0.78rem; color: var(--text-muted); &.filled { color: var(--warning); } }
+}
+
+.item-price-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  .price-original { color: var(--text-muted); text-decoration: line-through; font-size: 0.78rem; }
+  .price-final { font-size: 1rem; font-weight: 700; color: var(--primary-light); }
+}
+
+.toast-message {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: rgba(22, 33, 62, 0.95);
+  border: 1px solid var(--border-hover);
+  color: var(--text-primary);
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+}

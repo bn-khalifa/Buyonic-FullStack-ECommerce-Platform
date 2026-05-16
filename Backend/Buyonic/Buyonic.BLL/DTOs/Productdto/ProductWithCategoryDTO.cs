@@ -1,15 +1,23 @@
-﻿namespace Buyonic.BLL.DTOs.Productdto
+﻿namespace Buyonic.BLL
 {
     public class ProductWithCategoryDTO
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+
+        public string Name { get; set; } = null!;
+
         public decimal Price { get; set; }
+
         public string? ImageUrl { get; set; }
-        public float Discount { get; set; }
-        public float? Rating { get; set; }
+
+        public decimal Discount { get; set; }
+
+        public decimal? Rating { get; set; }
+
         public int StockQuantity { get; set; }
-        public string Description { get; set; }
-        public string CategoryName { get; set; }
+
+        public string Description { get; set; } = null!;
+
+        public string CategoryName { get; set; } = null!;
     }
 }

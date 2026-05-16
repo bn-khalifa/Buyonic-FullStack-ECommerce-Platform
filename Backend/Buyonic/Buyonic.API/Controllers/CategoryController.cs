@@ -1,9 +1,10 @@
-﻿using Buyonic.BLL.Managers.CategoryMng;
-using Buyonic.DAL;
+﻿using Buyonic.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Buyonic.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -69,28 +70,43 @@ namespace Buyonic.API.Controllers
 
         // POST: api/category
         [HttpPost]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(CategoryDTO category)
         {
             await _categoryManager.AddCategoryAsync(category);
-            return Ok(category);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = category.Id },
+                category
+            );
         }
 
         // PUT: api/category/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Category category)
+        public async Task<IActionResult> Update(int id, CategoryDTO category)
         {
-            if (id != category.Id)
-                return BadRequest();
-            category.Id = id;
-            await _categoryManager.UpdateCategoryAsync(category);
+            var result = await _categoryManager.GetCategoryByIdAsync(id);
+
+            if (result == null)
+                return NotFound();
+
+            await _categoryManager.UpdateCategoryAsync(id, category);
+
             return NoContent();
         }
 
         // DELETE: api/category/5
+        [Authorize(Roles ="Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var result = await _categoryManager.GetCategoryByIdAsync(id);
+
+            if (result == null)
+                return NotFound();
+
             await _categoryManager.DeleteCategoryAsync(id);
+
             return NoContent();
         }
     }

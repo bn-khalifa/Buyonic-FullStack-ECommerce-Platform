@@ -1,0 +1,85 @@
+.orders-mgmt-page { padding: 2.5rem 0 4rem; min-height: 100vh; }
+
+.orders-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.order-card {
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .order-meta { display: flex; align-items: center; gap: 0.75rem; }
+    .order-id { font-weight: 700; font-family: monospace; font-size: 0.9rem; }
+    .order-info { display: flex; gap: 1rem; font-size: 0.875rem; color: var(--text-muted); strong { color: var(--primary-light); } }
+  }
+}
+
+.order-items-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+
+  .oi-pill {
+    padding: 0.2rem 0.6rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+}
+
+.status-updater {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  .status-label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); }
+
+  .status-select {
+    padding: 0.45rem 0.85rem;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:focus { outline: none; border-color: var(--primary); }
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+    option { background: var(--bg-card); }
+  }
+}
+
+.spinner-sm {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(108,99,255,0.3);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast-message {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: rgba(22, 33, 62, 0.95);
+  border: 1px solid var(--border-hover);
+  color: var(--text-primary);
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+}

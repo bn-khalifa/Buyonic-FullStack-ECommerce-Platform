@@ -1,0 +1,65 @@
+<div class="wishlist-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>❤️ My Wishlist</h1>
+      @if (wishlist && wishlist.items.length > 0) {
+        <div class="header-actions">
+          <p>{{ wishlist.items.length }} saved item(s)</p>
+          <button class="btn btn-danger btn-sm" (click)="clear()" id="clear-wishlist-btn">Clear All</button>
+        </div>
+      }
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading wishlist…</p>
+      </div>
+    } @else if (error || !wishlist || wishlist.items.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">❤️</div>
+        <h3>Your wishlist is empty</h3>
+        <p>Save items you love to find them later.</p>
+      </div>
+    } @else {
+      <div class="wishlist-grid">
+        @for (item of wishlist.items; track item.id) {
+          <div class="wishlist-card card">
+            <div class="item-header">
+              @if (item.imageUrl) {
+                <div class="item-thumb">
+                  <img [src]="item.imageUrl" [alt]="item.productName" loading="lazy">
+                </div>
+              } @else {
+                <div class="item-icon">🏷️</div>
+              }
+              <button
+                class="remove-btn"
+                (click)="remove(item.productId)"
+                [id]="'remove-wishlist-' + item.productId"
+                title="Remove"
+              >✕</button>
+            </div>
+            <h3 class="item-name">{{ item.productName }}</h3>
+            <div class="item-rating">
+              @for (star of getStars(item.rating); track $index) {
+                <span [class.filled]="star === '★'">{{ star }}</span>
+              }
+            </div>
+            <div class="item-price-row">
+              @if (item.discount > 0) {
+                <span class="badge badge-danger">-{{ item.discount }}%</span>
+                <span class="price-original">${{ item.price.toFixed(2) }}</span>
+              }
+              <span class="price-final">${{ (item.price * (1 - item.discount/100)).toFixed(2) }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (toast) {
+    <div class="toast-message animate-fadeInUp">{{ toast }}</div>
+  }
+</div>

@@ -1,47 +1,57 @@
-﻿using Buyonic.BLL.DTOs.Productdto;
+﻿using Buyonic.DAL;
 
-using Buyonic.DAL;
-
-namespace Buyonic.BLL.Mappers
+namespace Buyonic.BLL
 {
     public class ProductDTOsMappers
     {
-        public static ProductDTO ProductDtoMapper(Product p) => new ProductDTO
+        public static ProductDTO ProductDtoMapper(Product p)
         {
-            Id = p.Id,
-            Name = p.name,
-            ImageUrl = p.imageUrl,
-            Price = p.price,
-            Discount = p.discount,
-            Rating = p.rating,
-            StockQuantity = p.stockQuantity,
-            Description = p.description
-        };
+            return new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                Discount = p.Discount,
+                Rating = p.Rating,
+                StockQuantity = p.StockQuantity,
+                Description = p.Description,
+                CategoryId = p.CategoryId,
+                SellerId = p.SellerId,
+                ReviewCount = p.ReviewCount
+            };
+        }
 
-        public static ProductWithSellerDTO ProductWithSellerDtoMapper(Product p) => new ProductWithSellerDTO
+        public static ProductWithSellerDTO ProductWithSellerDtoMapper(Product p)
         {
-            Id = p.Id,
-            Name = p.name,
-            ImageUrl = p.imageUrl,
-            Price = p.price,
-            Discount = p.discount,
-            Rating = p.rating,
-            StockQuantity = p.stockQuantity,
-            Description = p.description,
-            SellerStoreName = p.Seller.storeName
-        };
-        public static ProductWithCategoryDTO ProductWithCategoryDtoMapper(Product p) => new ProductWithCategoryDTO
-        {
-            Id = p.Id,
-            Name = p.name,
-            ImageUrl = p.imageUrl,
-            Price = p.price,
-            Discount = p.discount,
-            Rating = p.rating,
-            StockQuantity = p.stockQuantity,
-            Description = p.description,
-            CategoryName = p.Category.name
-        };
+            return new ProductWithSellerDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                Discount = p.Discount,
+                Rating = p.Rating,
+                StockQuantity = p.StockQuantity,
+                Description = p.Description,
+                SellerStoreName = p.Seller!.StoreName
+            };
+        }
 
+        public static ProductWithCategoryDTO ProductWithCategoryDtoMapper(Product p)
+        {
+            return new ProductWithCategoryDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ImageUrl = p.ImageUrl,
+                Price = p.Price,
+                Discount = p.Discount,
+                Rating = p.Rating,
+                StockQuantity = p.StockQuantity,
+                Description = p.Description,
+                CategoryName = p.Category!.Name
+            };
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Buyonic.BLL.DTOs.Categorydto;
-using Buyonic.DAL;
+﻿using Buyonic.DAL;
 
 namespace Buyonic.BLL.Mappers
 {
@@ -8,16 +7,22 @@ namespace Buyonic.BLL.Mappers
         public static CategoryDTO CategoryDtoMapper(Category c) => new CategoryDTO
         {
             Id = c.Id,
-            Name = c.name,
-            Description = c.description
+            Name = c.Name,
+            Description = c.Description
         };
 
-        public static CategoryWithProductsDTO CategoryWithProductsDtoMapper(Category c) => new CategoryWithProductsDTO
+        public static CategoryWithProductsDTO CategoryWithProductsDtoMapper(Category c)
         {
-            Id = c.Id,
-            Name = c.name,
-            Description = c.description,
-            Products = c.products.Select(ProductDTOsMappers.ProductDtoMapper)
-        };
+            return new CategoryWithProductsDTO
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+
+                Products = c.Products?
+                    .Select(ProductDTOsMappers.ProductDtoMapper)
+                    ?? new List<ProductDTO>()
+            };
+        }
     }
 }

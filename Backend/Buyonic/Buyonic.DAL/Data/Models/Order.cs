@@ -14,6 +14,7 @@ namespace Buyonic.DAL
         public DateTime? updatedAt { get; set; }
         public DateTime? deliveredAt { get; set; }
         public decimal totalAmount { get; set; }
+        public string ShippingAddress { get; set; }
 
         public Customer Customer { get; set; }
         public PaymentMethod PaymentMethod { get; set; }

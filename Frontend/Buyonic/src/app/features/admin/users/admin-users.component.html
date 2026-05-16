@@ -1,0 +1,162 @@
+<div class="admin-users-page">
+  <div class="page-header">
+    <h1>User management</h1>
+    <p class="sub">Search by email or id (customer id, seller id, or application user id). Manage customers and sellers below.</p>
+  </div>
+
+  <div class="search-bar card">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Email or numeric id…"
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="runSearch()"
+    />
+    <button type="button" class="btn btn-primary" (click)="runSearch()" [disabled]="searching || !searchQuery.trim()">
+      @if (searching) { <span class="spinner-sm"></span> } @else { Search }
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay"><div class="spinner"></div><p>Loading users…</p></div>
+  } @else {
+    <section class="table-section">
+      <h2>Customers</h2>
+      <div class="table-wrap card">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of customers; track c.id) {
+              <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.firstName }} {{ c.lastName }}</td>
+                <td>{{ c.email }}</td>
+                <td>
+                  @if (c.isActive) { <span class="badge badge-success">Active</span> }
+                  @else { <span class="badge badge-warning">Inactive</span> }
+                  @if (c.isDeleted) { <span class="badge badge-danger">Deleted</span> }
+                </td>
+                <td class="actions">
+                  <button type="button" class="btn btn-ghost btn-sm" (click)="openPanelFromCustomer(c)">Details</button>
+                  @if (c.isActive) {
+                    <button type="button" class="btn btn-outline btn-sm" (click)="setActiveForCustomer(c, false)" [disabled]="c.userId == null">Deactivate</button>
+                  } @else {
+                    <button type="button" class="btn btn-outline btn-sm" (click)="setActiveForCustomer(c, true)" [disabled]="c.userId == null">Activate</button>
+                  }
+                  <button type="button" class="btn  btn-sm" (click)="deleteCustomer(c)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <h2>Sellers</h2>
+      <div class="table-wrap card">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Store</th>
+              <th>Contact</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of sellers; track s.id) {
+              <tr>
+                <td>{{ s.id }}</td>
+                <td>{{ s.storeName }}</td>
+                <td>{{ s.firstName }} {{ s.lastName }}<br /><span class="muted">{{ s.email }}</span></td>
+                <td>
+                  @if (s.isActive) { <span class="badge badge-success">Active</span> }
+                  @else { <span class="badge badge-warning">Inactive</span> }
+                  @if (s.isDeleted) { <span class="badge badge-danger">Deleted</span> }
+                </td>
+                <td class="actions">
+                  <button type="button" class="btn btn-ghost btn-sm" (click)="openPanelFromSeller(s)">Details</button>
+                  @if (s.isActive) {
+                    <button type="button" class="btn btn-outline btn-sm" (click)="setActive(s.userId, false)">Deactivate</button>
+                  } @else {
+                    <button type="button" class="btn btn-outline btn-sm" (click)="setActive(s.userId, true)">Activate</button>
+                  }
+                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteSeller(s)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @if (panelOpen && panelLookup) {
+    <div class="panel-backdrop" (click)="closePanel()"></div>
+    <div class="detail-panel card">
+      <button type="button" class="panel-close" (click)="closePanel()" aria-label="Close">×</button>
+      <h3>User details</h3>
+      <dl class="detail-dl">
+        <dt>Account type</dt><dd>{{ panelLookup.accountType || '—' }}</dd>
+        <dt>Application user id</dt><dd>{{ panelLookup.applicationUserId }}</dd>
+        <dt>Name</dt><dd>{{ panelLookup.firstName }} {{ panelLookup.lastName }}</dd>
+        <dt>Email</dt><dd>{{ panelLookup.email }}</dd>
+        <dt>Flags</dt>
+        <dd>
+          @if (panelLookup.isActive) { <span class="badge badge-success">Active</span> } @else { <span class="badge badge-warning">Inactive</span> }
+          @if (panelLookup.isDeleted) { <span class="badge badge-danger">Deleted</span> }
+        </dd>
+      </dl>
+      @if (panelLookup.customer) {
+        <h4>Customer profile</h4>
+        <p class="muted">Customer id {{ panelLookup.customer.id }} · Address: {{ panelLookup.customer.address || '—' }}</p>
+      }
+      @if (panelLookup.seller) {
+        <h4>Seller profile</h4>
+        <p class="muted">Seller id {{ panelLookup.seller.id }} · {{ panelLookup.seller.storeName }}</p>
+      }
+      <div class="panel-actions">
+        @if (panelLookup.isActive) {
+          <button type="button" class="btn btn-outline" (click)="setActive(panelLookup.applicationUserId, false)">Deactivate account</button>
+        } @else {
+          <button type="button" class="btn btn-primary" (click)="setActive(panelLookup.applicationUserId, true)">Activate account</button>
+        }
+        @if (panelLookup.customer) {
+          <button type="button" class="btn btn-danger" (click)="deleteCustomer(panelLookup.customer)">Delete customer</button>
+        }
+        @if (panelLookup.seller) {
+          <button type="button" class="btn btn-danger" (click)="deleteSeller(panelLookup.seller)">Delete seller</button>
+        }
+      </div>
+      <h4>Orders</h4>
+      @if (panelOrdersLoading) {
+        <p class="muted">Loading orders…</p>
+      } @else if (panelOrders.length === 0) {
+        <p class="muted">No orders for this profile.</p>
+      } @else {
+        <ul class="order-mini-list">
+          @for (o of panelOrders; track o.id) {
+            <li>
+              <strong>#{{ o.id }}</strong> · {{ o.status }} · {{ o.createdAt | date:'medium' }} · ${{ o.totalAmount.toFixed(2) }}
+              <span class="muted"> — {{ o.orderItems.length }} line(s)</span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+
+  @if (toast) {
+    <div class="toast-msg">{{ toast }}</div>
+  }
+</div>
