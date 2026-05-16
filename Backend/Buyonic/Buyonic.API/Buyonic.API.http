@@ -1,7 +1,8 @@
 
 ### Get All Products
 GET http://localhost:5181/api/product
-Accept: application/json
+Content-Type: application/json
+
 
 ### Create Product
 POST http://localhost:5181/api/product

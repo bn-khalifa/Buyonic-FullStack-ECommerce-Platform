@@ -71,16 +71,52 @@ export class RegisterComponent implements OnInit {
         this.successMessage = 'Registration successful! Redirecting to login…';
         setTimeout(() => this.router.navigate(['/auth/login']), 2000);
       },
-      error: (err) => {
-        this.loading = false;
-        if (err.status === 400 && Array.isArray(err.error)) {
-          this.errorMessage = err.error.map((e: any) => e.description).join(' ');
-        } else if (err.status === 400) {
-          this.errorMessage = err.error || 'Registration failed.';
-        } else {
-          this.errorMessage = 'Server error. Please try again later.';
-        }
-      }
+error: (err) => {
+
+  this.loading = false;
+
+  try {
+
+    const responseError =
+      typeof err.error === 'string'
+        ? JSON.parse(err.error)
+        : err.error;
+
+    // لو Array جاية من Identity
+    if (Array.isArray(responseError)) {
+
+      this.errorMessage = responseError
+        .map((e: any) => e.description)
+        .join(' ');
+
+    }
+
+    // Validation Errors
+    else if (responseError?.errors) {
+
+      this.errorMessage = Object.values(responseError.errors)
+        .flat()
+        .join(' ');
+
+    }
+
+    // String عادي
+    else if (typeof responseError === 'string') {
+
+      this.errorMessage = responseError;
+
+    }
+
+    else {
+
+      this.errorMessage = 'Registration failed.';
+    }
+
+  } catch {
+
+    this.errorMessage = 'Server error. Please try again later.';
+  }
+}
     });
   }
 }

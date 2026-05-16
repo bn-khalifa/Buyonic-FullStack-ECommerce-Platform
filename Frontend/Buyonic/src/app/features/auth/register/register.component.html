@@ -15,16 +15,43 @@
       <h2 class="auth-title">Create your account</h2>
       <p class="auth-subtitle">It's free and takes less than a minute</p>
 
-      @if (errorMessage) {
-        <div class="alert alert-danger" role="alert">
-          <span>⚠️</span> {{ errorMessage }}
-        </div>
-      }
-      @if (successMessage) {
-        <div class="alert alert-success" role="status">
-          <span>✅</span> {{ successMessage }}
-        </div>
-      }
+     @if (errorMessage) {
+  <div class="message-box error-box">
+    <div class="message-icon">⚠️</div>
+
+    <div class="message-content">
+      <h4>Error</h4>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="close-btn"
+      (click)="errorMessage = ''"
+    >
+      ✕
+    </button>
+  </div>
+}
+
+@if (successMessage) {
+  <div class="message-box success-box">
+    <div class="message-icon">✅</div>
+
+    <div class="message-content">
+      <h4>Success</h4>
+      <p>{{ successMessage }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="close-btn"
+      (click)="successMessage = ''"
+    >
+      ✕
+    </button>
+  </div>
+}
 
       <!-- Account type selector -->
       <div class="account-type-selector">

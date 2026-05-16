@@ -184,3 +184,135 @@
     &:hover { color: var(--accent); text-decoration: underline; }
   }
 }
+/* Messages */
+
+.message-box {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+
+  padding: 1rem 1rem 1rem 0.9rem;
+  margin-bottom: 1.25rem;
+
+  border-radius: 18px;
+
+  backdrop-filter: blur(18px);
+
+  animation: slideFade .35s ease;
+
+  overflow: hidden;
+
+  .message-icon {
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  .message-content {
+    flex: 1;
+
+    h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.18rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      opacity: 0.95;
+    }
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+
+    color: inherit;
+
+    cursor: pointer;
+
+    font-size: 0.9rem;
+    opacity: 0.7;
+
+    transition: var(--transition);
+
+    padding: 0.15rem;
+
+    &:hover {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+  }
+}
+
+/* Error */
+
+.error-box {
+  background: rgba(255, 77, 109, 0.12);
+
+  border: 1px solid rgba(255, 77, 109, 0.25);
+
+  color: #ffb8c6;
+
+  box-shadow:
+    0 8px 25px rgba(255, 77, 109, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 4px;
+
+    background: #ff4d6d;
+  }
+}
+
+/* Success */
+
+.success-box {
+  background: rgba(46, 204, 113, 0.12);
+
+  border: 1px solid rgba(46, 204, 113, 0.25);
+
+  color: #b9ffd3;
+
+  box-shadow:
+    0 8px 25px rgba(46, 204, 113, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 4px;
+
+    background: #2ecc71;
+  }
+}
+
+/* Animation */
+
+@keyframes slideFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

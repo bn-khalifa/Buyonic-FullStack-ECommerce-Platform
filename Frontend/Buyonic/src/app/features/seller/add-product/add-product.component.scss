@@ -35,3 +35,14 @@
   display: inline-block;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+#ap-cat {
+  background-color: #1D1B3C;
+  color: white;
+  border: 1px solid #1D1B3C;
+}
+
+#ap-cat option {
+  background-color: #1D1B3C;
+  color: white;
+}
