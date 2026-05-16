@@ -158,6 +158,6 @@ table {
 
 .btn-danger {
   border-color: var(--danger);
-  color: var(--danger);
-  &:hover { background: rgba(239, 68, 68, 0.15); }
+  // color: var(--danger);
+  &:hover { background: rgba(239, 68, 68, 0.15);color:red}
 }

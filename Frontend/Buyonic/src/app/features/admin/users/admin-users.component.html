@@ -51,7 +51,7 @@
                   } @else {
                     <button type="button" class="btn btn-outline btn-sm" (click)="setActiveForCustomer(c, true)" [disabled]="c.userId == null">Activate</button>
                   }
-                  <button type="button" class="btn  btn-sm" (click)="deleteCustomer(c)">Delete</button>
+                  <button type="button" class="btn btn-danger  text-light btn-sm" (click)="deleteCustomer(c)">Delete</button>
                 </td>
               </tr>
             }
@@ -91,7 +91,7 @@
                   } @else {
                     <button type="button" class="btn btn-outline btn-sm" (click)="setActive(s.userId, true)">Activate</button>
                   }
-                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteSeller(s)">Delete</button>
+                  <button type="button" class="btn btn-danger btn-sm text-light " (click)="deleteSeller(s)">Delete</button>
                 </td>
               </tr>
             }
