@@ -19,6 +19,19 @@
 
 .optional { color: var(--text-muted); font-size: 0.75rem; font-weight: 400; }
 
+.field-hint {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+
+  a {
+    color: var(--primary-light);
+    text-decoration: none;
+    font-weight: 600;
+    &:hover { text-decoration: underline; }
+  }
+}
+
 .form-actions {
   display: flex;
   gap: 1rem;

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { CategoryDTO, CategoryWithProductsDTO } from '../models/models';
+import { CategoryDTO, CategoryWithProductsDTO, CreateCategoryDTO } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
@@ -21,7 +21,7 @@ export class CategoryService {
     return this.http.get<CategoryDTO>(`${this.api}/${id}`);
   }
 
-  create(payload: CategoryDTO): Observable<CategoryDTO> {
+  create(payload: CreateCategoryDTO): Observable<CategoryDTO> {
     return this.http.post<CategoryDTO>(this.api, payload);
   }
 

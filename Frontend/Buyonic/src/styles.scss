@@ -368,8 +368,8 @@ img {
   p { font-size: 0.875rem; }
 }
 
-/* Stars */
-.stars {
+/* Legacy star utility (prefer app-star-rating component) */
+.rating-stars-legacy {
   display: inline-flex;
   gap: 2px;
   color: var(--warning);

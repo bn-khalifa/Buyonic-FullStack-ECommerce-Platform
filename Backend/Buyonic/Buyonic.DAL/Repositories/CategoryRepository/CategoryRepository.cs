@@ -24,8 +24,9 @@ namespace Buyonic.DAL
 
         public async Task<Category?> GetCategoryByNameAsync(string name)
         {
+            var normalized = name.Trim().ToLower();
             return await _context.Categories
-                .FirstOrDefaultAsync(c => c.Name == name);
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == normalized);
         }
     }
 }

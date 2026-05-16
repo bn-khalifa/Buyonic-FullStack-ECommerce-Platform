@@ -18,16 +18,18 @@ export class StarRatingComponent implements OnChanges {
 
   slots: StarSlot[] = [];
   effectiveRating: number | null = null;
+  normalizedReviewCount = 0;
   ariaLabel = 'No reviews yet';
 
   ngOnChanges(): void {
-    this.effectiveRating = resolveProductRating(this.rating, this.reviewCount);
-    this.slots = getStarSlots(this.rating, this.reviewCount);
+    this.normalizedReviewCount = Number(this.reviewCount) || 0;
+    this.effectiveRating = resolveProductRating(this.rating, this.normalizedReviewCount);
+    this.slots = getStarSlots(this.rating, this.normalizedReviewCount);
 
     if (this.effectiveRating === null) {
       this.ariaLabel = 'No reviews yet';
     } else {
-      this.ariaLabel = `Rated ${this.effectiveRating.toFixed(1)} out of 5 from ${this.reviewCount} reviews`;
+      this.ariaLabel = `Rated ${this.effectiveRating.toFixed(1)} out of 5 from ${this.normalizedReviewCount} reviews`;
     }
   }
 }

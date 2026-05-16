@@ -185,6 +185,11 @@ export interface CategoryDTO {
   description: string;
 }
 
+export interface CreateCategoryDTO {
+  name: string;
+  description: string;
+}
+
 export interface CategoryWithProductsDTO {
   id: number;
   name: string;

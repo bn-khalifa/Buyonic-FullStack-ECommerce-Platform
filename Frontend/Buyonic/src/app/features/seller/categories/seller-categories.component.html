@@ -1,0 +1,86 @@
+<div class="categories-page">
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1>🗂️ Categories</h1>
+        <p>Manage product categories for your store. Seeded and custom categories appear in product forms.</p>
+      </div>
+      <a routerLink="/seller" class="btn btn-ghost">← Dashboard</a>
+    </div>
+
+    <div class="layout-grid">
+      <div class="form-card card">
+        <h2>Add New Category</h2>
+
+        @if (errorMessage) {
+          <div class="alert alert-danger"><span>⚠️</span> {{ errorMessage }}</div>
+        }
+        @if (successMessage) {
+          <div class="alert alert-success"><span>✅</span> {{ successMessage }}</div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <div class="form-group">
+            <label for="cat-name">Category Name *</label>
+            <input
+              id="cat-name"
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="e.g. Accessories"
+              [class.is-invalid]="f['name'].invalid && f['name'].touched"
+            >
+            @if (f['name'].invalid && f['name'].touched) {
+              <span class="invalid-feedback">Name is required (max 100 characters).</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="cat-desc">Description *</label>
+            <textarea
+              id="cat-desc"
+              class="form-control textarea"
+              rows="3"
+              formControlName="description"
+              placeholder="Brief description of this category"
+              [class.is-invalid]="f['description'].invalid && f['description'].touched"
+            ></textarea>
+            @if (f['description'].invalid && f['description'].touched) {
+              <span class="invalid-feedback">Description is required (max 500 characters).</span>
+            }
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="submitting">
+            {{ submitting ? 'Adding…' : '+ Add Category' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="list-card card">
+        <h2>All Categories ({{ categories.length }})</h2>
+        <p class="list-hint">These categories are available when adding or editing products.</p>
+
+        @if (loading) {
+          <div class="loading-inline">
+            <div class="spinner"></div>
+            <span>Loading categories…</span>
+          </div>
+        } @else if (categories.length === 0) {
+          <p class="empty-text">No categories yet. Add your first category.</p>
+        } @else {
+          <ul class="category-list">
+            @for (category of categories; track category.id) {
+              <li class="category-item">
+                <div class="category-item-main">
+                  <strong>{{ category.name }}</strong>
+                  <p>{{ category.description }}</p>
+                </div>
+                <span class="category-id">#{{ category.id }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+  </div>
+</div>

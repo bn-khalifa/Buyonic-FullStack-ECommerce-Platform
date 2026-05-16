@@ -17,10 +17,9 @@ export function getStarSlots(rating?: number | null, reviewCount = 0): StarSlot[
     return Array.from({ length: 5 }, () => 'empty' as StarSlot);
   }
 
-  return Array.from({ length: 5 }, (_, index) => {
-    const threshold = index + 1;
-    if (resolved >= threshold) return 'full';
-    if (resolved >= threshold - 0.5) return 'half';
-    return 'empty';
-  });
+  const fullStars = Math.round(resolved);
+
+  return Array.from({ length: 5 }, (_, index) =>
+    index < fullStars ? 'full' : 'empty'
+  );
 }

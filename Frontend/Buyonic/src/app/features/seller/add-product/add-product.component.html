@@ -79,11 +79,15 @@
         <div class="form-group">
           <label for="ap-cat">Category *</label>
           <select id="ap-cat" class="form-control" [class.is-invalid]="f['categoryId'].invalid && f['categoryId'].touched" formControlName="categoryId">
-            <option [value]="null">— Select Category —</option>
+            <option [ngValue]="null">— Select Category —</option>
             @for (cat of categories; track cat.id) {
-              <option [value]="cat.id">{{ cat.name }}</option>
+              <option [ngValue]="cat.id">{{ cat.name }}</option>
             }
           </select>
+          <p class="field-hint">
+            Need a new category?
+            <a routerLink="/seller/categories">Manage categories</a>
+          </p>
           @if (f['categoryId'].invalid && f['categoryId'].touched) {
             <span class="invalid-feedback">Please select a category.</span>
           }

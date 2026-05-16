@@ -49,10 +49,7 @@ export class AddProductComponent implements OnInit {
       error: () => {}
     });
 
-    this.categoryService.getAll().subscribe({
-      next: (cats) => { this.categories = cats; },
-      error: () => {}
-    });
+    this.loadCategories();
 
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
@@ -63,6 +60,13 @@ export class AddProductComponent implements OnInit {
   }
 
   get f() { return this.form.controls; }
+
+  private loadCategories(): void {
+    this.categoryService.getAll().subscribe({
+      next: (cats) => { this.categories = cats.sort((a, b) => a.name.localeCompare(b.name)); },
+      error: () => {}
+    });
+  }
 
   private loadProductForEdit(id: number): void {
     this.loadingProduct = true;
