@@ -1,6 +1,7 @@
 ﻿using Buyonic.BLL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Buyonic.API.Controllers
 {
@@ -32,6 +33,27 @@ namespace Buyonic.API.Controllers
             var sellers = await _sellerManager.GetSellersWithProductsAsync();
 
             return Ok(sellers);
+        }
+
+        // GET: api/seller/me  (must be before {id} so "me" is not bound as an int)
+        [Authorize(Roles = "Seller")]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentSeller()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (email == null)
+                return Unauthorized();
+
+            var seller = await _sellerManager.GetSellerByEmailAsync(email);
+            if (seller == null)
+            {
+                return NotFound(new
+                {
+                    message = "Seller profile not found for this account."
+                });
+            }
+
+            return Ok(seller);
         }
 
         // GET: api/seller/5
@@ -105,6 +127,19 @@ namespace Buyonic.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateSellerDTO seller)
         {
+            if (User.IsInRole("Seller") && !User.IsInRole("Admin"))
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+                if (string.IsNullOrEmpty(email))
+                    return Unauthorized();
+
+                var me = await _sellerManager.GetSellerByEmailAsync(email);
+                if (me == null || me.Id != id)
+                    return Forbid();
+
+                seller = new UpdateSellerDTO { StoreName = seller.StoreName };
+            }
+
             var updated = await _sellerManager.UpdateSellerAsync(id, seller);
 
             if (!updated)

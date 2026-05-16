@@ -1,0 +1,103 @@
+<div class="cart-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>🛍️ My Cart</h1>
+      @if (cart && cart.cartItems.length > 0) {
+        <p>{{ cart.cartItems.length }} item(s) in your cart</p>
+      }
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading cart…</p>
+      </div>
+    } @else if (error && (!cart || cart.cartItems.length === 0)) {
+      <div class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Start shopping to add items here!</p>
+      </div>
+    } @else if (cart) {
+      <div class="cart-layout">
+        <!-- Cart Items -->
+        <div class="cart-items">
+          @for (item of cart.cartItems; track item.productId) {
+            <div class="cart-item card">
+              <div class="item-info">
+                <div class="item-icon">📦</div>
+                <div class="item-details">
+                  <h3 class="item-name">{{ item.productName }}</h3>
+                  <p class="item-price">${{ item.productPrice.toFixed(2) }} each</p>
+                </div>
+              </div>
+
+              <div class="item-quantity">
+                <button
+                  class="qty-btn"
+                  (click)="updateQuantity(item.productId, item.quantity - 1)"
+                  [disabled]="item.quantity <= 1 || updatingItem === item.productId"
+                  [id]="'qty-dec-' + item.productId"
+                >−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button
+                  class="qty-btn"
+                  (click)="updateQuantity(item.productId, item.quantity + 1)"
+                  [disabled]="updatingItem === item.productId"
+                  [id]="'qty-inc-' + item.productId"
+                >+</button>
+              </div>
+
+              <div class="item-subtotal">${{ item.subTotal.toFixed(2) }}</div>
+
+              <button
+                class="btn btn-danger btn-sm btn-icon"
+                (click)="removeItem(item.productId)"
+                [id]="'remove-' + item.productId"
+                title="Remove"
+              >🗑️</button>
+            </div>
+          }
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary card">
+          <h3 class="summary-title">Order Summary</h3>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>${{ cart.totalPrice.toFixed(2) }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="free-shipping">FREE</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>${{ cart.totalPrice.toFixed(2) }}</span>
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary btn-lg w-full"
+            id="checkout-btn"
+            (click)="checkout()"
+            [disabled]="checkingOut || !cart.cartItems.length"
+          >
+            @if (checkingOut) {
+              <span class="spinner-sm"></span> Placing order…
+            } @else {
+              Proceed to Checkout →
+            }
+          </button>
+          <button class="btn btn-ghost btn-sm w-full mt-sm" (click)="clearCart()" id="clear-cart-btn">
+            🗑️ Clear Cart
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (toast) {
+    <div class="toast-message animate-fadeInUp">{{ toast }}</div>
+  }
+</div>

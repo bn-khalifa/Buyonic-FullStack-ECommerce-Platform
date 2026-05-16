@@ -11,6 +11,8 @@ namespace Buyonic.BLL
             LastName = c.User.lastName,
             Email = c.User.Email!,
             IsActive = c.User.isActive,
+            IsDeleted = c.User.isDeleted,
+            UserId = c.userId,
             Address = c.address,
             JoinedAt = c.User.createdAt
         };

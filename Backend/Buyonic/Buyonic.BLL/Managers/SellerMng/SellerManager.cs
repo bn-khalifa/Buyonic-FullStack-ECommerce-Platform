@@ -81,6 +81,13 @@ namespace Buyonic.BLL
             return SellerDTOsMappers.SellerDtoMapper(createdSeller!);
         }
 
+        public async Task<SellerDTO?> GetSellerByUserIdAsync(int userId)
+        {
+            var seller = await _unitOfWork.SellerRepository.GetSellerByUserIdAsync(userId);
+            if (seller == null) return null;
+            return SellerDTOsMappers.SellerDtoMapper(seller);
+        }
+
         public async Task<bool> UpdateSellerAsync(int id, UpdateSellerDTO dto)
         {
             var seller = await _unitOfWork.SellerRepository.GetByIdAsync(id);

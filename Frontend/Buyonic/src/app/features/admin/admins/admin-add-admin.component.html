@@ -1,0 +1,49 @@
+<div class="add-admin-page">
+  <div class="page-header">
+    <h1>Add administrator</h1>
+    <p class="sub">Creates a new account with the Admin role. The new user can sign in immediately.</p>
+  </div>
+
+  <div class="form-card card">
+    @if (successMessage) {
+      <div class="alert alert-success">{{ successMessage }}</div>
+    }
+    @if (errorMessage) {
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="row2">
+        <div class="form-group">
+          <label for="aa-fn">First name</label>
+          <input id="aa-fn" class="form-control" formControlName="firstName" [class.is-invalid]="f['firstName'].invalid && f['firstName'].touched" />
+        </div>
+        <div class="form-group">
+          <label for="aa-ln">Last name</label>
+          <input id="aa-ln" class="form-control" formControlName="lastName" [class.is-invalid]="f['lastName'].invalid && f['lastName'].touched" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aa-em">Email</label>
+        <input id="aa-em" type="email" class="form-control" formControlName="email" [class.is-invalid]="f['email'].invalid && f['email'].touched" />
+      </div>
+      <div class="form-group">
+        <label for="aa-pw">Password</label>
+        <div class="pw-row">
+          <input id="aa-pw" [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password" [class.is-invalid]="(f['password'].invalid && f['password'].touched) || (form.errors?.['mismatch'] && f['confirmPassword'].touched)" />
+          <button type="button" class="btn btn-ghost btn-sm" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aa-cpw">Confirm password</label>
+        <input id="aa-cpw" type="password" class="form-control" formControlName="confirmPassword" [class.is-invalid]="(f['confirmPassword'].invalid && f['confirmPassword'].touched) || (form.errors?.['mismatch'] && f['confirmPassword'].touched)" />
+        @if (form.errors?.['mismatch'] && f['confirmPassword'].touched) {
+          <span class="invalid-feedback d-block">Passwords do not match.</span>
+        }
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        @if (loading) { <span class="spinner-sm"></span> } @else { Create admin }
+      </button>
+    </form>
+  </div>
+</div>

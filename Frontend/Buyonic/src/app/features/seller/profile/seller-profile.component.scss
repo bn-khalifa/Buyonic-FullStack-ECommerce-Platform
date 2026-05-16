@@ -1,0 +1,49 @@
+.profile-page { padding: 2.5rem 0 4rem; min-height: 100vh; }
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.avatar-card {
+  text-align: center;
+  position: sticky;
+  top: 84px;
+  .avatar-circle {
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 0 30px rgba(108, 99, 255, 0.4);
+  }
+  .avatar-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .avatar-email, .avatar-sub { font-size: 0.8rem; color: var(--text-muted); }
+  .rating-display { margin-top: 0.75rem; color: var(--warning); font-weight: 600; font-size: 0.9rem; }
+}
+
+.form-card-title {
+  font-size: 1.1rem; font-weight: 700;
+  margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.optional { color: var(--text-muted); font-size: 0.75rem; font-weight: 400; }
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: -0.25rem 0 1rem;
+  line-height: 1.4;
+}
+
+.spinner-sm {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+  border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -2,6 +2,7 @@
 using Buyonic.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Buyonic.API.Controllers
 {
@@ -32,6 +33,20 @@ namespace Buyonic.API.Controllers
                 var customers = await _customerManager.GetCustomersAsync();
                 return Ok(customers);
             }
+        }
+
+        // GET: api/customer/me  (before {id} so "me" is not parsed as an int)
+        [Authorize(Roles = "Customer")]
+        [HttpGet("me")]
+        public async Task<ActionResult<CustomerDTO>> GetCurrentCustomer()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (email == null) return Unauthorized();
+
+            var customer = await _customerManager.GetCustomerByEmailAsync(email);
+            if (customer == null) return NotFound();
+
+            return Ok(customer);
         }
 
         [Authorize(Roles = "Admin,Customer")]

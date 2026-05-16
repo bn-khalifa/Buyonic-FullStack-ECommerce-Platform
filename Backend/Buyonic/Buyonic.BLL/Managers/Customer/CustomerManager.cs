@@ -30,6 +30,13 @@ namespace Buyonic.BLL
             return CustomerDTOsMappers.CustomerDtoMapper(customer);
         }
 
+        public async Task<CustomerDTO?> GetCustomerByUserIdAsync(int userId)
+        {
+            var customer = await _uniteOfWork.CustomerRepository.GetCustomerByUserIdAsync(userId);
+            if (customer == null) return null;
+            return CustomerDTOsMappers.CustomerDtoMapper(customer);
+        }
+
         public async Task InsertCustomerAsync(Customer customer)
         {
             _uniteOfWork.CustomerRepository.Add(customer);
@@ -45,6 +52,8 @@ namespace Buyonic.BLL
         public async Task UpdateCustomerAsync(CustomerDTO c)
         {
             var customer = await _uniteOfWork.CustomerRepository.GetCustomerByIdAsync(c.Id);
+            if (customer == null)
+                throw new InvalidOperationException($"Customer with id {c.Id} was not found.");
 
             customer.User.firstName = c.FirstName;
             customer.User.lastName = c.LastName;

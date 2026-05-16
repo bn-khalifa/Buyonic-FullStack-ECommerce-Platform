@@ -16,6 +16,7 @@ namespace Buyonic.BLL
             Id = i.Id,
             ProductId = i.productId,
             ProductName = i.Product.Name,
+            ImageUrl = i.Product.ImageUrl,
             Price = i.Product.Price,
             Rating = i.Product.Rating,
             Discount = i.Product.Discount

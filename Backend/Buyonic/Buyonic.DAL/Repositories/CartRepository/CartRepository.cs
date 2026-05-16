@@ -11,6 +11,8 @@ namespace Buyonic.DAL
         public async Task<Cart> GetCartByCustomerIdAsync(int customerId)
         {
             return await _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Product)
                 .FirstOrDefaultAsync(c => c.customerId == customerId);
         }
 

@@ -10,6 +10,8 @@
 
         Task<Seller?> GetSellerByEmailAsync(string email);
 
+        Task<Seller?> GetSellerByUserIdAsync(int userId);
+
         Task<Seller?> GetSellerWithProductsByIdAsync(int id);
 
         Task<Seller?> GetSellerWithProductsByEmailAsync(string email);

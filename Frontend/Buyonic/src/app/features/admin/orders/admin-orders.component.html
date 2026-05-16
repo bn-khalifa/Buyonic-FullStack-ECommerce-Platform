@@ -1,0 +1,44 @@
+<div class="admin-orders-page">
+  <div class="page-header">
+    <h1>All orders</h1>
+    <p class="sub">Every order placed on the platform.</p>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay"><div class="spinner"></div><p>Loading…</p></div>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else if (orders.length === 0) {
+    <p class="muted">No orders yet.</p>
+  } @else {
+    <div class="orders-list">
+      @for (o of orders; track o.id) {
+        <div class="order-card card">
+          <button type="button" class="order-summary" (click)="toggle(o.id)">
+            <div class="row1">
+              <span class="oid">#{{ o.id }}</span>
+              <span class="badge {{ statusClass(o.status) }}">{{ o.status }}</span>
+              <span class="muted">Customer {{ o.customerId }}</span>
+            </div>
+            <div class="row2">
+              <span>{{ o.createdAt | date:'medium' }}</span>
+              <strong>${{ o.totalAmount.toFixed(2) }}</strong>
+              <span class="chev">{{ expandedId === o.id ? '▼' : '▶' }}</span>
+            </div>
+          </button>
+          @if (expandedId === o.id) {
+            <div class="order-body">
+              <p><span class="label">Shipping</span> {{ o.shippingAddress }}</p>
+              <p><span class="label">Payment method id</span> {{ o.paymentMethodId }}</p>
+              <ul class="items">
+                @for (it of o.orderItems; track it.productId) {
+                  <li>{{ it.productName }} × {{ it.quantity }} @ ${{ it.price.toFixed(2) }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

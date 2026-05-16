@@ -59,6 +59,13 @@ namespace Buyonic.DAL
                 .FirstOrDefaultAsync(c => c.User.Email == email);
         }
 
+        public async Task<Customer?> GetCustomerByUserIdAsync(int userId)
+        {
+            return await _context.Customers
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.userId == userId);
+        }
+
         public async Task<bool> DeleteCustomerByID(int id)
         {
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);

@@ -1,0 +1,86 @@
+<div class="my-products-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>📋 My Products</h1>
+      <a routerLink="/seller/add-product" class="btn btn-primary" id="add-product-link">+ Add New</a>
+    </div>
+
+    @if (loading) {
+      <div class="loading-overlay"><div class="spinner"></div><p>Loading products…</p></div>
+    } @else if (products.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No products yet</h3>
+        <p>Start adding products to your store!</p>
+      </div>
+    } @else {
+      <div class="products-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Stock</th>
+              <th>Rating</th>
+              <th>Reviews</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of products; track product.id) {
+              <tr>
+                <td>
+                  <div class="product-cell">
+                    @if (product.imageUrl) {
+                      <img class="product-thumb" [src]="product.imageUrl" [alt]="product.name">
+                    } @else {
+                      <div class="product-thumb-placeholder">🏷️</div>
+                    }
+                    <span class="product-cell-name">{{ product.name }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="price-final">${{ getDiscountedPrice(product).toFixed(2) }}</span>
+                  @if (product.discount > 0) {
+                    <span class="price-original ml-sm">${{ product.price.toFixed(2) }}</span>
+                  }
+                </td>
+                <td>
+                  @if (product.discount > 0) {
+                    <span class="badge badge-danger">-{{ product.discount }}%</span>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </td>
+                <td>
+                  <span [class]="product.stockQuantity === 0 ? 'badge badge-danger' : product.stockQuantity < 5 ? 'badge badge-warning' : 'badge badge-success'">
+                    {{ product.stockQuantity }}
+                  </span>
+                </td>
+                <td>⭐ {{ product.rating?.toFixed(1) ?? '—' }}</td>
+                <td>{{ product.reviewCount }}</td>
+                <td>
+                  <div class="action-btns">
+                    <button
+                      class="btn btn-danger btn-sm"
+                      (click)="delete(product.id)"
+                      [disabled]="deletingId === product.id"
+                      [id]="'del-' + product.id"
+                    >
+                      {{ deletingId === product.id ? '…' : '🗑️' }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (toast) {
+    <div class="toast-message animate-fadeInUp" [class.toast-error]="toastType === 'error'">{{ toast }}</div>
+  }
+</div>
