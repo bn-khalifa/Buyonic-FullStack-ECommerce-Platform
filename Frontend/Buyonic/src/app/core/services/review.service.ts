@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ProductReviewDTO, CreateReviewDTO } from '../models/models';
+import { ProductReviewDTO, CreateReviewDTO, ReviewEligibilityDTO, ProductDTO } from '../models/models';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {
@@ -13,7 +13,11 @@ export class ReviewService {
     return this.http.get<ProductReviewDTO[]>(`${this.api}/product/${productId}`);
   }
 
-  submitReview(payload: CreateReviewDTO): Observable<string> {
-    return this.http.post<string>(this.api, payload);
+  submitReview(payload: CreateReviewDTO): Observable<ProductDTO> {
+    return this.http.post<ProductDTO>(this.api, payload);
+  }
+
+  getReviewEligibility(productId: number): Observable<ReviewEligibilityDTO> {
+    return this.http.get<ReviewEligibilityDTO>(`${this.api}/eligibility/${productId}`);
   }
 }

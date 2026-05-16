@@ -185,6 +185,11 @@ export interface CategoryDTO {
   description: string;
 }
 
+export interface CreateCategoryDTO {
+  name: string;
+  description: string;
+}
+
 export interface CategoryWithProductsDTO {
   id: number;
   name: string;
@@ -283,10 +288,13 @@ export interface AddCustomerPaymentDTO {
 
 // ─── Review ──────────────────────────────────────────────────────────────────
 export interface ProductReviewDTO {
+  id?: number;
   productId: number;
   customerId: number;
   rating: number;
   comment?: string;
+  createdAt?: string;
+  customerName?: string;
 }
 
 export interface CreateReviewDTO {
@@ -294,4 +302,10 @@ export interface CreateReviewDTO {
   customerId: number;
   rating: number;
   comment?: string;
+}
+
+export interface ReviewEligibilityDTO {
+  canReview: boolean;
+  hasReviewed: boolean;
+  message?: string;
 }

@@ -32,14 +32,14 @@ namespace Buyonic.BLL.Managers.ProductMng
             return products.Select(ProductDTOsMappers.ProductWithCategoryDtoMapper);
         }
 
-        public async Task<ProductWithSellerDTO?> GetProductByIdAsync(int id)
+        public async Task<ProductDTO?> GetProductByIdAsync(int id)
         {
             var product = await _unitOfWork.ProductRepository.GetProductByIdAsync(id);
 
             if (product == null)
                 return null;
 
-            return ProductDTOsMappers.ProductWithSellerDtoMapper(product);
+            return ProductDTOsMappers.ProductDtoMapper(product);
         }
 
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(int categoryId)
@@ -98,12 +98,24 @@ namespace Buyonic.BLL.Managers.ProductMng
             return ProductDTOsMappers.ProductDtoMapper(product);
         }
 
-        public async Task<bool> UpdateProductAsync(int id, UpdateProductDTO dto)
+        public async Task<bool> UpdateProductAsync(int id, UpdateProductDTO dto, string? userEmail = null, bool isAdmin = false)
         {
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(id);
 
             if (product == null || product.isDeleted)
                 return false;
+
+            if (!isAdmin)
+            {
+                if (string.IsNullOrWhiteSpace(userEmail))
+                    return false;
+
+                var seller = await _unitOfWork.SellerRepository.GetSellerByEmailAsync(userEmail);
+                if (seller == null || product.SellerId != seller.Id)
+                    return false;
+
+                dto.SellerId = null;
+            }
 
             if (!string.IsNullOrWhiteSpace(dto.Name))
                 product.Name = dto.Name;

@@ -4,7 +4,8 @@ namespace Buyonic.BLL
 {
     public interface IReviewManager
     {
-        public Task<bool> SubmitReviewAsync(ProductReviewDTO review);
+        Task<ProductDTO?> SubmitReviewAsync(ProductReviewDTO review);
         public Task<IEnumerable<ProductReviewDTO>> GetProductReviews(int id);
+        Task<ReviewEligibilityDTO> GetReviewEligibilityAsync(int customerId, int productId);
     }
 }

@@ -43,15 +43,20 @@ namespace Buyonic.BLL
             if (category == null) return null;
             return CategoryDTOsMappers.CategoryDtoMapper(category);
         }
-        public async Task AddCategoryAsync(CategoryDTO dto)
+        public async Task<CategoryDTO> AddCategoryAsync(CreateCategoryDTO dto)
         {
+            var existing = await _unitOfWork.CategoryRepository.GetCategoryByNameAsync(dto.Name);
+            if (existing != null)
+                throw new InvalidOperationException($"A category named '{dto.Name}' already exists.");
+
             var category = new Category
             {
-                Name = dto.Name,
-                Description = dto.Description
+                Name = dto.Name.Trim(),
+                Description = dto.Description.Trim()
             };
             _unitOfWork.CategoryRepository.Add(category);
             await _unitOfWork.SaveAsync();
+            return CategoryDTOsMappers.CategoryDtoMapper(category);
         }
 
         public async Task UpdateCategoryAsync(int id, CategoryDTO dto)

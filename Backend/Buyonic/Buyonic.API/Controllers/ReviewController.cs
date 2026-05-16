@@ -27,6 +27,20 @@ namespace Buyonic.API.Controllers
         }
 
         [Authorize(Roles = "Customer")]
+        [HttpGet("eligibility/{productId:int}")]
+        public async Task<IActionResult> GetReviewEligibility([FromRoute] int productId)
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (email == null) return Unauthorized();
+
+            var customer = await _customerManager.GetCustomerByEmailAsync(email);
+            if (customer == null) return Unauthorized();
+
+            var eligibility = await _reviewManager.GetReviewEligibilityAsync(customer.Id, productId);
+            return Ok(eligibility);
+        }
+
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         public async Task<IActionResult> SubmitReview([FromBody] ProductReviewDTO dto)
         {
@@ -43,11 +57,11 @@ namespace Buyonic.API.Controllers
             // Override customerId from token — never trust client-sent IDs
             dto.CustomerId = customer.Id;
 
-            var result = await _reviewManager.SubmitReviewAsync(dto);
-            if (!result)
-                return Forbid(); // customer has no delivered order for this product
+            var product = await _reviewManager.SubmitReviewAsync(dto);
+            if (product == null)
+                return Forbid();
 
-            return Ok("Review submitted successfully.");
+            return Ok(product);
         }
     }
 }

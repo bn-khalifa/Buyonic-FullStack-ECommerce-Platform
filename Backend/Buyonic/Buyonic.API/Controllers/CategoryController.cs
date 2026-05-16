@@ -69,16 +69,22 @@ namespace Buyonic.API.Controllers
         }
 
         // POST: api/category
+        [Authorize(Roles = "Seller,Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryDTO category)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryDTO category)
         {
-            await _categoryManager.AddCategoryAsync(category);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = category.Id },
-                category
-            );
+            try
+            {
+                var created = await _categoryManager.AddCategoryAsync(category);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // PUT: api/category/5

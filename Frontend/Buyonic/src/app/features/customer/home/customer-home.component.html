@@ -29,6 +29,38 @@
     <div class="cart-toast animate-fadeInUp">{{ cartMessage }}</div>
   }
 
+  <!-- Categories -->
+  <section class="categories-section section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">🗂️ Shop by Category</h2>
+        <a routerLink="/customer/browse" class="section-link">All categories →</a>
+      </div>
+
+      @if (categoriesLoading) {
+        <div class="categories-loading">
+          <div class="spinner"></div>
+          <p>Loading categories…</p>
+        </div>
+      } @else if (categories.length === 0) {
+        <p class="categories-empty">No categories available yet.</p>
+      } @else {
+        <div class="categories-scroll" tabindex="0" aria-label="Product categories">
+          @for (category of categories; track category.id) {
+            <a
+              class="category-card"
+              [routerLink]="['/customer/browse']"
+              [queryParams]="{ category: category.id }"
+            >
+              <span class="category-icon">{{ getCategoryIcon(category.name) }}</span>
+              <span class="category-name">{{ category.name }}</span>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
   <!-- Featured Products -->
   <section class="section">
     <div class="container">
@@ -53,23 +85,25 @@
           @for (product of featuredProducts; track product.id) {
             <div class="product-card animate-fadeInUp">
               <div class="product-image">
-                @if (product.imageUrl) {
-                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy">
-                } @else {
-                  <div class="product-placeholder">🏷️</div>
-                }
+                <a [routerLink]="['/customer/product', product.id]" class="product-image-link">
+                  @if (product.imageUrl) {
+                    <img [src]="product.imageUrl" [alt]="product.name" loading="lazy">
+                  } @else {
+                    <div class="product-placeholder">🏷️</div>
+                  }
+                </a>
                 @if (product.discount > 0) {
                   <span class="discount-badge">-{{ product.discount }}%</span>
                 }
               </div>
               <div class="product-body">
-                <h3 class="product-name">{{ product.name }}</h3>
-                <div class="product-rating">
-                  @for (star of getStars(product.rating); track $index) {
-                    <span [class.filled]="star === '★'">{{ star }}</span>
-                  }
-                  <span class="review-count">({{ product.reviewCount }})</span>
-                </div>
+                <h3 class="product-name">
+                  <a [routerLink]="['/customer/product', product.id]">{{ product.name }}</a>
+                </h3>
+                <app-star-rating
+                  [rating]="product.rating"
+                  [reviewCount]="product.reviewCount"
+                />
                 <div class="product-price">
                   @if (product.discount > 0) {
                     <span class="price-original">${{ product.price.toFixed(2) }}</span>
@@ -122,4 +156,6 @@
       </div>
     </div>
   </section>
+
+  <app-footer></app-footer>
 </div>

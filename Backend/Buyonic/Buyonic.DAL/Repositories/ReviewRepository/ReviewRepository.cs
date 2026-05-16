@@ -15,6 +15,15 @@ public class ReviewRepository : GenericRepository<Review>, IReviewRepository
     {
         return await _context.Reviews
             .Where(r => r.ProductId == productId)
+            .Include(r => r.Customer)
+            .ThenInclude(c => c.User)
+            .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
+    }
+
+    public async Task<bool> HasReviewAsync(int customerId, int productId)
+    {
+        return await _context.Reviews
+            .AnyAsync(r => r.CustomerId == customerId && r.ProductId == productId);
     }
 }

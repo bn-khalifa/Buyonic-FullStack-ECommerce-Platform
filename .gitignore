@@ -9,3 +9,4 @@ appsettings.Development.json
 # Build output
 bin/
 obj/
+node_modules/

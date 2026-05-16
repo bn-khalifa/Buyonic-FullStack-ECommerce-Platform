@@ -42,41 +42,56 @@ namespace Buyonic.BLL
             if (dto.OrderItems == null || !dto.OrderItems.Any())
                 throw new InvalidOperationException("Order must have at least one item.");
 
-            decimal total = 0;
-            var orderItems = new List<OrderItem>();
+            Order? createdOrderEntity = null;
 
-            foreach (var item in dto.OrderItems)
+            await _uniteOfWork.ExecuteInTransactionAsync(async () =>
             {
-                var product = await _uniteOfWork.ProductRepository.GetByIdAsync(item.ProductId);
-                if (product == null)
-                    throw new InvalidOperationException($"Product with ID {item.ProductId} not found.");
+                decimal total = 0;
+                var orderItems = new List<OrderItem>();
 
-                total += product.Price * item.Quantity;
-
-                orderItems.Add(new OrderItem
+                foreach (var item in dto.OrderItems)
                 {
-                    productId = item.ProductId,
-                    quantity = item.Quantity,
-                    price = product.Price
-                });
-            }
+                    var product = await _uniteOfWork.ProductRepository.GetByIdAsync(item.ProductId);
+                    if (product == null || product.isDeleted)
+                        throw new InvalidOperationException($"Product with ID {item.ProductId} not found.");
 
-            var order = new global::Buyonic.DAL.Order
-            {
-                customerId = dto.CustomerId,
-                paymentMethodId = dto.PaymentMethodId,
-                ShippingAddress = dto.ShippingAddress,
-                status = "Pending",
-                createdAt = DateTime.UtcNow,
-                totalAmount = total,
+                    if (item.Quantity <= 0)
+                        throw new InvalidOperationException("Order item quantity must be greater than zero.");
 
-                OrderItems = orderItems
-            };
+                    if (product.StockQuantity < item.Quantity)
+                        throw new InvalidOperationException(
+                            $"Insufficient stock for '{product.Name}'. Available: {product.StockQuantity}, requested: {item.Quantity}.");
 
-            _uniteOfWork.OrderRepository.Add(order);
-            await _uniteOfWork.SaveAsync();
+                    product.StockQuantity -= item.Quantity;
+                    _uniteOfWork.ProductRepository.Update(product);
 
-            var createdOrder = await _uniteOfWork.OrderRepository.GetOrderWithItemsAsync(order.Id);
+                    total += product.Price * item.Quantity;
+
+                    orderItems.Add(new OrderItem
+                    {
+                        productId = item.ProductId,
+                        quantity = item.Quantity,
+                        price = product.Price
+                    });
+                }
+
+                var order = new Order
+                {
+                    customerId = dto.CustomerId,
+                    paymentMethodId = dto.PaymentMethodId,
+                    ShippingAddress = dto.ShippingAddress,
+                    status = "Pending",
+                    createdAt = DateTime.UtcNow,
+                    totalAmount = total,
+                    OrderItems = orderItems
+                };
+
+                _uniteOfWork.OrderRepository.Add(order);
+                await _uniteOfWork.SaveAsync();
+                createdOrderEntity = order;
+            });
+
+            var createdOrder = await _uniteOfWork.OrderRepository.GetOrderWithItemsAsync(createdOrderEntity!.Id);
             return OrderDTOsMappers.OrderDtoMapper(createdOrder);
         }
 

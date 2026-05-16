@@ -17,6 +17,8 @@
         public IReviewRepository ReviewRepository { get; }
         IWishlistRepository WishlistRepository { get; }
         public Task SaveAsync();
+
+        Task ExecuteInTransactionAsync(Func<Task> action);
     }
 }
 

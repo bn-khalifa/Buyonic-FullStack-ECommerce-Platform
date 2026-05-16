@@ -1,17 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { SellerService } from '../../../core/services/seller.service';
-import { CategoryDTO, CreateProductDTO } from '../../../core/models/models';
+import { CategoryDTO, CreateProductDTO, UpdateProductDTO } from '../../../core/models/models';
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.scss']
 })
@@ -21,12 +21,16 @@ export class AddProductComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private sellerService = inject(SellerService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   form!: FormGroup;
   categories: CategoryDTO[] = [];
   loading = false;
+  loadingProduct = false;
   errorMessage = '';
   successMessage = '';
+  isEditMode = false;
+  productId: number | null = null;
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -45,13 +49,47 @@ export class AddProductComponent implements OnInit {
       error: () => {}
     });
 
+    this.loadCategories();
+
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.isEditMode = true;
+      this.productId = Number(idParam);
+      this.loadProductForEdit(this.productId);
+    }
+  }
+
+  get f() { return this.form.controls; }
+
+  private loadCategories(): void {
     this.categoryService.getAll().subscribe({
-      next: (cats) => { this.categories = cats; },
+      next: (cats) => { this.categories = cats.sort((a, b) => a.name.localeCompare(b.name)); },
       error: () => {}
     });
   }
 
-  get f() { return this.form.controls; }
+  private loadProductForEdit(id: number): void {
+    this.loadingProduct = true;
+    this.productService.getById(id).subscribe({
+      next: (product) => {
+        this.form.patchValue({
+          name: product.name,
+          description: product.description,
+          imageUrl: product.imageUrl ?? '',
+          price: product.price,
+          discount: product.discount,
+          stockQuantity: product.stockQuantity,
+          categoryId: product.categoryId,
+          sellerId: product.sellerId
+        });
+        this.loadingProduct = false;
+      },
+      error: () => {
+        this.loadingProduct = false;
+        this.errorMessage = 'Product not found or you do not have access.';
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
@@ -60,6 +98,31 @@ export class AddProductComponent implements OnInit {
 
     const raw = this.form.getRawValue() as Record<string, unknown>;
     const { sellerId: _sid, ...rest } = raw;
+
+    if (this.isEditMode && this.productId != null) {
+      const payload: UpdateProductDTO = {
+        name: rest['name'] as string,
+        description: rest['description'] as string,
+        imageUrl: (rest['imageUrl'] as string) || undefined,
+        price: rest['price'] as number,
+        discount: rest['discount'] as number,
+        stockQuantity: rest['stockQuantity'] as number,
+        categoryId: rest['categoryId'] as number
+      };
+
+      this.productService.update(this.productId, payload).subscribe({
+        next: () => {
+          this.loading = false;
+          this.successMessage = 'Product updated successfully! ✅';
+          setTimeout(() => this.router.navigate(['/seller/my-products']), 1500);
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err.error?.message || err.error?.title || err.error || 'Failed to update product.';
+        }
+      });
+      return;
+    }
 
     this.sellerService.getMe().pipe(
       switchMap(seller =>

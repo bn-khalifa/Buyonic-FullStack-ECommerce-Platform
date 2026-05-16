@@ -24,6 +24,7 @@
       @if (role === 'Seller') {
         <a routerLink="/seller" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link" id="nav-seller-home">Dashboard</a>
         <a routerLink="/seller/my-products" routerLinkActive="active" class="nav-link" id="nav-my-products">My Products</a>
+        <a routerLink="/seller/categories" routerLinkActive="active" class="nav-link" id="nav-categories">Categories</a>
         <a routerLink="/seller/add-product" routerLinkActive="active" class="nav-link" id="nav-add-product">+ Add Product</a>
         <a routerLink="/seller/orders" routerLinkActive="active" class="nav-link" id="nav-seller-orders">Orders</a>
       }
@@ -67,6 +68,7 @@
       @if (role === 'Seller') {
         <a routerLink="/seller" class="mobile-link" (click)="mobileOpen = false">Dashboard</a>
         <a routerLink="/seller/my-products" class="mobile-link" (click)="mobileOpen = false">My Products</a>
+        <a routerLink="/seller/categories" class="mobile-link" (click)="mobileOpen = false">Categories</a>
         <a routerLink="/seller/add-product" class="mobile-link" (click)="mobileOpen = false">Add Product</a>
         <a routerLink="/seller/orders" class="mobile-link" (click)="mobileOpen = false">Orders</a>
         <a routerLink="/seller/profile" class="mobile-link" (click)="mobileOpen = false">Profile</a>

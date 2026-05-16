@@ -60,11 +60,13 @@
         @for (product of filtered; track product.id) {
           <div class="product-card">
             <div class="product-image">
-              @if (product.imageUrl) {
-                <img [src]="product.imageUrl" [alt]="product.name" loading="lazy">
-              } @else {
-                <div class="product-placeholder">🏷️</div>
-              }
+              <a [routerLink]="['/customer/product', product.id]" class="product-image-link">
+                @if (product.imageUrl) {
+                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy">
+                } @else {
+                  <div class="product-placeholder">🏷️</div>
+                }
+              </a>
               @if (product.discount > 0) {
                 <span class="discount-badge">-{{ product.discount }}%</span>
               }
@@ -76,14 +78,14 @@
               >❤️</button>
             </div>
             <div class="product-body">
-              <h3 class="product-name">{{ product.name }}</h3>
+              <h3 class="product-name">
+                <a [routerLink]="['/customer/product', product.id]">{{ product.name }}</a>
+              </h3>
               <p class="product-desc">{{ product.description | slice:0:80 }}{{ product.description.length > 80 ? '…' : '' }}</p>
-              <div class="product-rating">
-                @for (star of getStars(product.rating); track $index) {
-                  <span [class.filled]="star === '★'">{{ star }}</span>
-                }
-                <span class="review-count">({{ product.reviewCount }})</span>
-              </div>
+              <app-star-rating
+                [rating]="product.rating"
+                [reviewCount]="product.reviewCount"
+              />
               <div class="product-price">
                 @if (product.discount > 0) {
                   <span class="price-original">${{ product.price.toFixed(2) }}</span>
