@@ -55,8 +55,15 @@ namespace Buyonic.API.Controllers
             var email = User.FindFirstValue(ClaimTypes.Email);
             if (email == null) return Unauthorized();
 
-            await _cartManager.AddToCartAsync(email, productId, quantity);
-            return Ok("Product added to cart successfully.");
+            try
+            {
+                await _cartManager.AddToCartAsync(email, productId, quantity);
+                return Ok("Product added to cart successfully.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //[HttpPut("update")]
@@ -76,8 +83,15 @@ namespace Buyonic.API.Controllers
             var email = User.FindFirstValue(ClaimTypes.Email);
             if (email == null) return Unauthorized();
 
-            await _cartManager.UpdateCartItemAsync(email, productId, quantity);
-            return Ok("Cart item updated successfully.");
+            try
+            {
+                await _cartManager.UpdateCartItemAsync(email, productId, quantity);
+                return Ok("Cart item updated successfully.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //[HttpDelete("remove")]

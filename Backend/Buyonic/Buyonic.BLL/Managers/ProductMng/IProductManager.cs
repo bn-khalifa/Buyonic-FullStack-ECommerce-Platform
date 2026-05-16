@@ -10,7 +10,7 @@ namespace Buyonic.BLL.Managers.ProductMng
 
         Task<IEnumerable<ProductWithCategoryDTO>> GetProductsWithCategoriesAsync();
 
-        Task<ProductWithSellerDTO?> GetProductByIdAsync(int id);
+        Task<ProductDTO?> GetProductByIdAsync(int id);
 
         Task<IEnumerable<ProductDTO>> GetProductsByCategoryAsync(int categoryId);
 
@@ -19,7 +19,7 @@ namespace Buyonic.BLL.Managers.ProductMng
         //Task<ProductDTO> AddProductAsync(CreateProductDTO dto);
         Task<ProductDTO> AddProductAsync(CreateProductDTO dto, string sellerEmail);
 
-        Task<bool> UpdateProductAsync(int id, UpdateProductDTO dto);
+        Task<bool> UpdateProductAsync(int id, UpdateProductDTO dto, string? userEmail = null, bool isAdmin = false);
 
         Task<bool> DeleteProductAsync(int id);
     }

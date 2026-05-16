@@ -1,22 +1,27 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { ProductDTO, CategoryDTO } from '../../../core/models/models';
 import { apiErrorMessage } from '../../../core/utils/api-error';
+import { StarRatingComponent } from '../../shared/star-rating/star-rating.component';
 
 @Component({
   selector: 'app-browse-products',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, StarRatingComponent],
   templateUrl: './browse-products.component.html',
   styleUrls: ['./browse-products.component.scss']
 })
-export class BrowseProductsComponent implements OnInit {
+export class BrowseProductsComponent implements OnInit, OnDestroy {
   private productService = inject(ProductService);
+  private route = inject(ActivatedRoute);
+  private productUpdateSub?: Subscription;
   private categoryService = inject(CategoryService);
   private cartService = inject(CartService);
   private wishlistService = inject(WishlistService);
@@ -31,6 +36,8 @@ export class BrowseProductsComponent implements OnInit {
   sortBy = 'name';
 
   ngOnInit(): void {
+    this.applyCategoryFromQuery();
+
     this.productService.getAll().subscribe({
       next: (data) => {
         this.products = data;
@@ -44,6 +51,29 @@ export class BrowseProductsComponent implements OnInit {
       next: (cats) => { this.categories = cats; },
       error: () => {}
     });
+
+    this.productUpdateSub = this.productService.productUpdated$.subscribe(updated =>
+      this.patchProduct(updated)
+    );
+
+    this.route.queryParamMap.subscribe(() => this.applyCategoryFromQuery());
+  }
+
+  private applyCategoryFromQuery(): void {
+    const categoryParam = Number(this.route.snapshot.queryParamMap.get('category'));
+    if (!Number.isNaN(categoryParam) && categoryParam > 0) {
+      this.selectedCategory = categoryParam;
+      if (this.products.length) this.applyFilters();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.productUpdateSub?.unsubscribe();
+  }
+
+  private patchProduct(updated: ProductDTO): void {
+    this.products = this.products.map(p => p.id === updated.id ? { ...p, ...updated } : p);
+    this.applyFilters();
   }
 
   applyFilters(): void {
@@ -92,8 +122,4 @@ export class BrowseProductsComponent implements OnInit {
     return p.price * (1 - p.discount / 100);
   }
 
-  getStars(rating?: number): string[] {
-    const r = Math.round(rating ?? 0);
-    return Array.from({ length: 5 }, (_, i) => i < r ? '★' : '☆');
-  }
 }

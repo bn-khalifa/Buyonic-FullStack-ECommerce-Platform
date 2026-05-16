@@ -101,14 +101,20 @@ namespace Buyonic.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateProductDTO product)
         {
-            var updated = await _productManager.UpdateProductAsync(id, product);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var isAdmin = User.IsInRole("Admin");
+            var updated = await _productManager.UpdateProductAsync(id, product, email, isAdmin);
 
             if (!updated)
             {
-                return NotFound(new
+                if (!isAdmin && email != null)
                 {
-                    message = "Product not found"
-                });
+                    var existing = await _productManager.GetProductByIdAsync(id);
+                    if (existing != null)
+                        return Forbid();
+                }
+
+                return NotFound(new { message = "Product not found" });
             }
 
             return NoContent();

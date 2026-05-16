@@ -77,8 +77,15 @@ namespace Buyonic.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var order = await _orderManager.CreateOrderAsync(dto);
-            return Ok(order);
+            try
+            {
+                var order = await _orderManager.CreateOrderAsync(dto);
+                return Ok(order);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/order/{orderId}/status

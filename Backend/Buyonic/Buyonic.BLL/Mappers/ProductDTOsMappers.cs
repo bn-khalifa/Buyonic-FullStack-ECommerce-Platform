@@ -13,7 +13,7 @@ namespace Buyonic.BLL
                 ImageUrl = p.ImageUrl,
                 Price = p.Price,
                 Discount = p.Discount,
-                Rating = p.Rating,
+                Rating = p.ReviewCount > 0 ? p.Rating : null,
                 StockQuantity = p.StockQuantity,
                 Description = p.Description,
                 CategoryId = p.CategoryId,
@@ -31,7 +31,7 @@ namespace Buyonic.BLL
                 ImageUrl = p.ImageUrl,
                 Price = p.Price,
                 Discount = p.Discount,
-                Rating = p.Rating,
+                Rating = p.ReviewCount > 0 ? p.Rating : null,
                 StockQuantity = p.StockQuantity,
                 Description = p.Description,
                 SellerStoreName = p.Seller!.StoreName
@@ -47,7 +47,7 @@ namespace Buyonic.BLL
                 ImageUrl = p.ImageUrl,
                 Price = p.Price,
                 Discount = p.Discount,
-                Rating = p.Rating,
+                Rating = p.ReviewCount > 0 ? p.Rating : null,
                 StockQuantity = p.StockQuantity,
                 Description = p.Description,
                 CategoryName = p.Category!.Name

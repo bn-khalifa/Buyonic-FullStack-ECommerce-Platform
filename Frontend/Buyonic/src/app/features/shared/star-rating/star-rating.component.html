@@ -1,0 +1,22 @@
+<div class="star-rating" [class.size-md]="size === 'md'" role="img" [attr.aria-label]="ariaLabel">
+  <div class="stars" aria-hidden="true">
+    @for (slot of slots; track $index) {
+      <span
+        class="star"
+        [class.star-full]="slot === 'full'"
+        [class.star-half]="slot === 'half'"
+        [class.star-empty]="slot === 'empty'"
+      >★</span>
+    }
+  </div>
+  @if (showNumeric) {
+    @if (effectiveRating !== null) {
+      <span class="rating-value">{{ effectiveRating | number:'1.1-1' }}</span>
+    } @else {
+      <span class="rating-value rating-value--muted">—</span>
+    }
+  }
+  @if (showCount) {
+    <span class="review-count">({{ reviewCount }})</span>
+  }
+</div>

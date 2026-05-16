@@ -1,9 +1,13 @@
 <div class="add-product-page">
   <div class="container">
     <div class="page-header">
-      <h1>➕ Add New Product</h1>
-      <p>Fill in the details below to list a new product</p>
+      <h1>{{ isEditMode ? '✏️ Edit Product' : '➕ Add New Product' }}</h1>
+      <p>{{ isEditMode ? 'Update your product listing' : 'Fill in the details below to list a new product' }}</p>
     </div>
+
+    @if (loadingProduct) {
+      <div class="loading-overlay"><div class="spinner"></div><p>Loading product…</p></div>
+    }
 
     <div class="form-card card">
       @if (errorMessage) {
@@ -13,7 +17,7 @@
         <div class="alert alert-success"><span>✅</span> {{ successMessage }}</div>
       }
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate [class.form-disabled]="loadingProduct">
         <!-- Name -->
         <div class="form-group">
           <label for="ap-name">Product Name *</label>
@@ -86,11 +90,11 @@
         </div>
 
         <div class="form-actions">
-          <button id="ap-submit" type="submit" class="btn btn-primary btn-lg" [disabled]="loading">
-            @if (loading) { <span class="spinner-sm"></span> Adding... }
-            @else { ➕ Add Product }
+          <button id="ap-submit" type="submit" class="btn btn-primary btn-lg" [disabled]="loading || loadingProduct">
+            @if (loading) { <span class="spinner-sm"></span> {{ isEditMode ? 'Saving...' : 'Adding...' }} }
+            @else { {{ isEditMode ? '💾 Save Changes' : '➕ Add Product' }} }
           </button>
-          <a href="/seller/my-products" class="btn btn-ghost">Cancel</a>
+          <a routerLink="/seller/my-products" class="btn btn-ghost">Cancel</a>
         </div>
       </form>
     </div>

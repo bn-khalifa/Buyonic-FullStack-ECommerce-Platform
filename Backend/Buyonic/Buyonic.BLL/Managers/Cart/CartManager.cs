@@ -56,8 +56,15 @@ namespace Buyonic.BLL
         //}
         public async Task AddToCartAsync(string customerEmail, int productId, int quantity)
         {
+            if (quantity <= 0)
+                throw new InvalidOperationException("Quantity must be greater than zero.");
+
             var customer = await _uniteOfWork.CustomerRepository.GetCustomerByEmailAsync(customerEmail);
             if (customer == null) throw new InvalidOperationException("Customer not found.");
+
+            var product = await _uniteOfWork.ProductRepository.GetByIdAsync(productId);
+            if (product == null || product.isDeleted)
+                throw new InvalidOperationException("Product not found.");
 
             var cart = await _uniteOfWork.CartRepository.GetCartByCustomerIdAsync(customer.Id);
             if (cart == null)
@@ -68,8 +75,14 @@ namespace Buyonic.BLL
             }
 
             var existingItem = await _uniteOfWork.CartRepository.GetCartItemAsync(cart.Id, productId);
+            var newQuantity = (existingItem?.quantity ?? 0) + quantity;
+
+            if (newQuantity > product.StockQuantity)
+                throw new InvalidOperationException(
+                    $"Cannot add {quantity} item(s). Only {product.StockQuantity} in stock{(existingItem != null ? $" ({existingItem.quantity} already in cart)" : "")}.");
+
             if (existingItem != null)
-                existingItem.quantity += quantity;
+                existingItem.quantity = newQuantity;
             else
                 cart.CartItems.Add(new CartItem { productId = productId, quantity = quantity });
 
@@ -85,8 +98,19 @@ namespace Buyonic.BLL
         //}
         public async Task UpdateCartItemAsync(string customerEmail, int productId, int quantity)
         {
+            if (quantity <= 0)
+                throw new InvalidOperationException("Quantity must be greater than zero.");
+
             var customer = await _uniteOfWork.CustomerRepository.GetCustomerByEmailAsync(customerEmail);
             if (customer == null) return;
+
+            var product = await _uniteOfWork.ProductRepository.GetByIdAsync(productId);
+            if (product == null || product.isDeleted)
+                throw new InvalidOperationException("Product not found.");
+
+            if (quantity > product.StockQuantity)
+                throw new InvalidOperationException(
+                    $"Cannot set quantity to {quantity}. Only {product.StockQuantity} in stock.");
 
             var cart = await _uniteOfWork.CartRepository.GetCartByCustomerIdAsync(customer.Id);
             if (cart == null) return;

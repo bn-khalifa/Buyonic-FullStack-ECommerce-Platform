@@ -4,5 +4,6 @@
     {
         public Task<bool> AddReviewAsync(Review review);
         public Task<List<Review>> GetAllReviewsAsync(int id);
+        Task<bool> HasReviewAsync(int customerId, int productId);
     }
 }

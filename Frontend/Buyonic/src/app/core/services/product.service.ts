@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ProductDTO, ProductWithCategoryDTO, ProductWithSellerDTO, CreateProductDTO, UpdateProductDTO } from '../models/models';
 
@@ -8,6 +8,12 @@ import { ProductDTO, ProductWithCategoryDTO, ProductWithSellerDTO, CreateProduct
 export class ProductService {
   private http = inject(HttpClient);
   private api = `${environment.apiUrl}/product`;
+  private readonly productUpdated = new Subject<ProductDTO>();
+  readonly productUpdated$ = this.productUpdated.asObservable();
+
+  notifyProductUpdated(product: ProductDTO): void {
+    this.productUpdated.next(product);
+  }
 
   getAll(): Observable<ProductDTO[]> {
     return this.http.get<ProductDTO[]>(this.api);

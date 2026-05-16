@@ -53,9 +53,9 @@ namespace Buyonic.DAL
 
             // 7. Products
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "Laptop Pro", Description = "15-inch laptop", Price = 1200m, StockQuantity = 50, Rating = 4.7m, Discount = 0, SellerId = 1, CategoryId = 1, createdAt = seedDate },
-                new Product { Id = 2, Name = "Wireless Mouse", Description = "Ergonomic mouse", Price = 25m, StockQuantity = 200, Rating = 4.3m, Discount = 0, SellerId = 1, CategoryId = 1, createdAt = seedDate },
-                new Product { Id = 3, Name = "Cotton T-Shirt", Description = "Comfortable fit", Price = 15m, StockQuantity = 300, Rating = 4.0m, Discount = 0, SellerId = 1, CategoryId = 2, createdAt = seedDate }
+                new Product { Id = 1, Name = "Laptop Pro", Description = "15-inch laptop", Price = 1200m, StockQuantity = 50, Rating = 4.7m, Discount = 0, SellerId = 1, CategoryId = 1, createdAt = seedDate  ,ImageUrl= "https://res.cloudinary.com/dtw2jaesz/image/upload/v1772064778/twa9gxhj5vscbmoyy9mq.jpg" },
+                new Product { Id = 2, Name = "Wireless Mouse", Description = "Ergonomic mouse", Price = 25m, StockQuantity = 200, Rating = 4.3m, Discount = 0, SellerId = 1, CategoryId = 1, createdAt = seedDate ,ImageUrl= "https://computerguideonline.com/images/mouse-tester.webp" },
+                new Product { Id = 3, Name = "Cotton T-Shirt", Description = "Comfortable fit", Price = 15m, StockQuantity = 300, Rating = 4.0m, Discount = 0, SellerId = 1, CategoryId = 2, createdAt = seedDate ,ImageUrl= "https://res.cloudinary.com/dtw2jaesz/image/upload/v1772829317/mmsjwwf6fzzjxepgshrs.avif" }
             );
 
             // 8. PaymentMethods
