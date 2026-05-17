@@ -51,7 +51,6 @@ namespace Buyonic.API.Controllers
             return dto;
         }
 
-        /// <summary>Search by email, or numeric id (customer id, seller id, or application user id).</summary>
         [Authorize(Roles = "Admin")]
         [HttpGet("lookup")]
         public async Task<IActionResult> LookupUser([FromQuery] string q)

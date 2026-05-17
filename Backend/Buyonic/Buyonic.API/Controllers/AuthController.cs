@@ -75,7 +75,8 @@ namespace Buyonic.API.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
-            var resetBaseUrl = $"{Request.Scheme}://{Request.Host}/reset-password";
+            //var resetBaseUrl = $"{Request.Scheme}://{Request.Host}/reset-password";
+            var resetBaseUrl = "http://localhost:4200/auth/reset-password";
             var result = await _authManager.ForgotPasswordAsync(email, resetBaseUrl);
             // to avoid exposing whether email exists
             return Ok("If this email is registered, a reset link has been sent.");

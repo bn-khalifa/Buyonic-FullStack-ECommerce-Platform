@@ -17,14 +17,6 @@ namespace Buyonic.API.Controllers
             _cartManager = cartManager;
         }
 
-        //[HttpGet("{customerId}")]
-        //public async Task<IActionResult> GetCart(int customerId)
-        //{
-        //    var cart = await _cartManager.GetCartByCustomerIdAsync(customerId);
-        //    if (cart == null)
-        //        return NotFound("Cart not found for this customer.");
-        //    return Ok(cart);
-        //}
         [HttpGet]
         public async Task<IActionResult> GetCart()
         {
@@ -38,14 +30,6 @@ namespace Buyonic.API.Controllers
             return Ok(cart);
         }
 
-        //[HttpPost("add")]
-        //public async Task<IActionResult> AddToCart(int customerId, int productId, int quantity)
-        //{
-        //    if (quantity <= 0)
-        //        return BadRequest("Quantity must be greater than zero.");
-        //    await _cartManager.AddToCartAsync(customerId, productId, quantity);
-        //    return Ok("Product added to cart successfully.");
-        //}
         [HttpPost("add")]
         public async Task<IActionResult> AddToCart(int productId, int quantity)
         {
@@ -66,14 +50,6 @@ namespace Buyonic.API.Controllers
             }
         }
 
-        //[HttpPut("update")]
-        //public async Task<IActionResult> UpdateCartItem(int cartId, int productId, int quantity)
-        //{
-        //    if (quantity <= 0)
-        //        return BadRequest("Quantity must be greater than zero.");
-        //    await _cartManager.UpdateCartItemAsync(cartId, productId, quantity);
-        //    return Ok("Cart item updated successfully.");
-        //}
         [HttpPut("update")]
         public async Task<IActionResult> UpdateCartItem(int productId, int quantity)
         {
@@ -94,12 +70,6 @@ namespace Buyonic.API.Controllers
             }
         }
 
-        //[HttpDelete("remove")]
-        //public async Task<IActionResult> RemoveFromCart(int cartId, int productId)
-        //{
-        //    await _cartManager.RemoveFromCartAsync(cartId, productId);
-        //    return Ok("Product removed from cart successfully.");
-        //}
         [HttpDelete("remove")]
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
@@ -110,12 +80,6 @@ namespace Buyonic.API.Controllers
             return Ok("Product removed from cart successfully.");
         }
 
-        //[HttpDelete("clear/{cartId}")]
-        //public async Task<IActionResult> ClearCart(int cartId)
-        //{
-        //    await _cartManager.ClearCartAsync(cartId);
-        //    return Ok("Cart cleared successfully.");
-        //}
         [HttpDelete("clear")]
         public async Task<IActionResult> ClearCart()
         {

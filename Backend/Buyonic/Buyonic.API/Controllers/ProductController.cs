@@ -74,18 +74,6 @@ namespace Buyonic.API.Controllers
             return Ok(products);
         }
 
-        //[Authorize(Roles = "Admin,Seller")]
-        //[HttpPost]
-        //public async Task<IActionResult> Create(CreateProductDTO product)
-        //{
-        //    var createdProduct = await _productManager.AddProductAsync(product);
-
-        //    return CreatedAtAction(
-        //        nameof(GetById),
-        //        new { id = createdProduct.Id },
-        //        createdProduct
-        //    );
-        //}
         [Authorize(Roles = "Admin,Seller")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDTO product)

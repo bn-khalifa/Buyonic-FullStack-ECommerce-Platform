@@ -56,26 +56,6 @@ namespace Buyonic.BLL.Managers.ProductMng
             return products.Select(ProductDTOsMappers.ProductDtoMapper);
         }
 
-        //public async Task<ProductDTO> AddProductAsync(CreateProductDTO dto)
-        //{
-        //    var product = new Product
-        //    {
-        //        Name = dto.Name,
-        //        ImageUrl = dto.ImageUrl,
-        //        Price = dto.Price,
-        //        Discount = dto.Discount,
-        //        StockQuantity = dto.StockQuantity,
-        //        Description = dto.Description,
-        //        CategoryId = dto.CategoryId,
-        //        SellerId = dto.SellerId
-        //    };
-
-        //    _unitOfWork.ProductRepository.Add(product);
-
-        //    await _unitOfWork.SaveAsync();
-
-        //    return ProductDTOsMappers.ProductDtoMapper(product);
-        //}
         public async Task<ProductDTO> AddProductAsync(CreateProductDTO dto, string sellerEmail)
         {
             var seller = await _unitOfWork.SellerRepository.GetSellerByEmailAsync(sellerEmail);
